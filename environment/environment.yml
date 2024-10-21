@@ -1,0 +1,18 @@
+name: mecc
+channels:
+  - defaults
+dependencies:
+  - python=3.11.4
+  - pip
+  - pip:
+    - mesa==2.3.0
+    - pandas==2.2.2
+    - numpy==1.26.4
+    - matplotlib==3.9.1.post1
+    - plotly==5.23.0
+    - streamlit==1.37.0
+    - ipykernel==6.29.5
+    - ipython==8.27.0
+    - openpyxl
+    - nbformat>=4.2.0
+    - fiona==1.9.0
