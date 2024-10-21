@@ -2,8 +2,9 @@ name: mecc
 channels:
   - conda-forge
 dependencies:
+  - ipykernel
+  - pip=21.0.1
   - python=3.11.4
-  - pip
   - pip:
     - mesa==2.4.0
     - pandas==2.2.2
