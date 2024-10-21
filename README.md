@@ -1,8 +1,6 @@
 # Toy MECC
 
-::: {.callout-note}
 *This is a project for the HSMA 6 Hackday on 22nd Oct 2024*
-:::
 
 A (toy) model for showing the benefit of Making Every Contact Count (MECC) Training
 
