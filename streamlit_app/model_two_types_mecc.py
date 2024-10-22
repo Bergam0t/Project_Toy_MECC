@@ -2,24 +2,32 @@
 import mesa
 from mesa import Agent, Model
 from mesa.time import RandomActivation
-from mesa.space import MultiGrid
+#from mesa.space import MultiGrid
 from mesa.datacollection import DataCollector
 import random
 
 class PersonAgent(Agent):
-    def __init__(self, unique_id, model, initial_smoking_prob, quit_attempt_prob):
+    def __init__(self, unique_id, model, initial_smoking_prob, quit_attempt_prob,visit_prob):
         super().__init__(unique_id, model)
         self.smoker = random.uniform(0, 1) < initial_smoking_prob
         self.quit_attempts = 0
         self.days_smoke_free = 0
         self.quit_attempt_prob = quit_attempt_prob
-        
+        self.visit_prob = visit_prob
+
+#    def move(self):
+#        possible_steps = self.model.grid.get_neighborhood(
+#                self.pos, moore=True, include_center=False)
+#        new_position = random.choice(possible_steps)
+#        self.model.grid.move_agent(self, new_position)
+
     def move(self):
-        possible_steps = self.model.grid.get_neighborhood(
-                self.pos, moore=True, include_center=False)
-        new_position = random.choice(possible_steps)
-        self.model.grid.move_agent(self, new_position)
-    
+        if random.uniform(0,1) < self.visit_prob:
+            PrimaryCareAgent_list = [agent for agent in self.model.schedule.agents if isinstance(agent, PrimaryCareAgent)]
+            if PrimaryCareAgent_list:
+                    visited_service = random.choice(PrimaryCareAgent_list)
+                    visited_service.provide_intervention(self)
+
     def attempt_quit(self):
         if self.smoker and random.uniform(0, 1) < self.quit_attempt_prob:
             self.smoker = False
@@ -51,43 +59,58 @@ class PrimaryCareAgent(Agent):
     def persuasiveness(self):
         return self.base_persuasiveness * (1.3 if self.mecc_trained else 1.0)
         
-    def move(self):
-        possible_steps = self.model.grid.get_neighborhood(
-                self.pos, moore=True, include_center=False)
-        new_position = random.choice(possible_steps)
-        self.model.grid.move_agent(self, new_position)
+#    def move(self):
+#        possible_steps = self.model.grid.get_neighborhood(
+#                self.pos, moore=True, include_center=False)
+#        new_position = random.choice(possible_steps)
+#        self.model.grid.move_agent(self, new_position)
     
-    def provide_intervention(self):
-        neighbors = self.model.grid.get_neighbors(
-            self.pos, moore=True, radius=self.intervention_radius)
-        
-        for neighbor in neighbors:
-            if isinstance(neighbor, PersonAgent) and neighbor.smoker:
-                if random.uniform(0, 1) < self.persuasiveness:
-                    neighbor.quit_attempt_prob *= 1.5
-                    self.interventions_made += 1
+#    def provide_intervention(self):
+#        neighbors = self.model.grid.get_neighbors(
+#            self.pos, moore=True, radius=self.intervention_radius)
+#        
+#        for neighbor in neighbors:
+#            if isinstance(neighbor, PersonAgent) and neighbor.smoker:
+#                if random.uniform(0, 1) < self.persuasiveness:
+#                    neighbor.quit_attempt_prob *= 1.5
+#                    self.interventions_made += 1
     
+    def provide_intervention(self, PersonAgent):
+        if random.uniform(0, 1) < self.persuasiveness:
+            PersonAgent.quit_attempt_prob *= 1.5
+            self.interventions_made += 1
+
     def step(self):
-        self.move()
-        self.provide_intervention()
+        pass
+        #self.move()
+        #self.provide_intervention()
 
 class MECC_Model(Model):  # Renamed from Enhanced_Persuasion_Model
-    def __init__(self, N_people, N_care, initial_smoking_prob, width, height, 
-                 care_persuasiveness, intervention_radius, quit_attempt_prob, mecc_trained=False):
+    def __init__(self, N_people, N_care, initial_smoking_prob, #width, height, 
+                 care_persuasiveness, intervention_radius, quit_attempt_prob,
+                 visit_prob,
+                 seed_value = 42,
+                 mecc_trained=False):
         super().__init__()  # Properly initialize the Model class
         # Convert dictionary values if they're dictionaries
+
+        if seed_value is not None:
+            random.seed(seed_value)  # Set the seed for reproducibility
+
         self.num_people = N_people['value'] if isinstance(N_people, dict) else N_people
         self.num_care = N_care['value'] if isinstance(N_care, dict) else N_care
         self.initial_smoking_prob = initial_smoking_prob['value'] if isinstance(initial_smoking_prob, dict) else initial_smoking_prob
-        self.width = width
-        self.height = height
+        #self.width = width
+        #self.height = height
         self.care_persuasiveness = care_persuasiveness['value'] if isinstance(care_persuasiveness, dict) else care_persuasiveness
         self.intervention_radius = intervention_radius['value'] if isinstance(intervention_radius, dict) else intervention_radius
         self.quit_attempt_prob = quit_attempt_prob['value'] if isinstance(quit_attempt_prob, dict) else quit_attempt_prob
+        self.visit_prob = visit_prob['value'] if isinstance(visit_prob, dict) else visit_prob
+
         self.mecc_trained = mecc_trained
         
         self.schedule = RandomActivation(self)
-        self.grid = MultiGrid(self.width, self.height, True)
+        #self.grid = MultiGrid(self.width, self.height, True)
         
         self.datacollector = DataCollector(
             model_reporters={
@@ -102,11 +125,14 @@ class MECC_Model(Model):  # Renamed from Enhanced_Persuasion_Model
         
         # Create person agents
         for i in range(self.num_people):
-            a = PersonAgent(i, self, self.initial_smoking_prob, self.quit_attempt_prob)
+            a = PersonAgent(i, self
+                            , self.initial_smoking_prob
+                            , self.quit_attempt_prob
+                            ,self.visit_prob)
             self.schedule.add(a)
-            x = self.random.randrange(self.grid.width)
-            y = self.random.randrange(self.grid.height)
-            self.grid.place_agent(a, (x, y))
+            #x = self.random.randrange(self.grid.width)
+            #y = self.random.randrange(self.grid.height)
+            #self.grid.place_agent(a, (x, y))
             
         # Create primary care agents
         for i in range(self.num_care):
@@ -115,9 +141,9 @@ class MECC_Model(Model):  # Renamed from Enhanced_Persuasion_Model
                                self.intervention_radius,
                                self.mecc_trained)
             self.schedule.add(a)
-            x = self.random.randrange(self.grid.width)
-            y = self.random.randrange(self.grid.height)
-            self.grid.place_agent(a, (x, y))
+            #x = self.random.randrange(self.grid.width)
+            #y = self.random.randrange(self.grid.height)
+            #self.grid.place_agent(a, (x, y))
 
     def step(self):
         self.datacollector.collect(self)
