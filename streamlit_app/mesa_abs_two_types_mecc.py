@@ -125,18 +125,16 @@ def create_figure(results, step):
 def create_comparison_figure(results_no_mecc, results_mecc, step):
     """Create side-by-side comparison figures"""
     fig = make_subplots(
-        rows=3, 
+        rows=2, 
         cols=2,
         subplot_titles=(
             'Without MECC Training',
             'With MECC Training',
-            'Interventions & Quit Attempts (No MECC)',
-            'Interventions & Quit Attempts (With MECC)',
-            'Success Metrics Comparison',
-            'Performance Improvement'
+            'Intervention Effectiveness',
+            'Quit Success Comparison'
         ),
-        specs=[[{}, {}], [{}, {}], [{}, {}]],
-        row_heights=[0.4, 0.4, 0.2]
+        specs=[[{}, {}], [{"colspan": 2}, None]],
+        row_heights=[0.6, 0.4]
     )
     
     # Population changes over time - Without MECC
@@ -179,46 +177,6 @@ def create_comparison_figure(results_no_mecc, results_mecc, step):
         row=1, col=2
     )
     
-    # Interventions and Quit Attempts - Without MECC
-    fig.add_trace(
-        go.Scatter(
-            x=results_no_mecc.index[:step+1],
-            y=results_no_mecc['Total Interventions'][:step+1],
-            name="Interventions (No MECC)",
-            line=dict(color="blue", dash='solid')
-        ),
-        row=2, col=1
-    )
-    fig.add_trace(
-        go.Scatter(
-            x=results_no_mecc.index[:step+1],
-            y=results_no_mecc['Total Quit Attempts'][:step+1],
-            name="Quit Attempts (No MECC)",
-            line=dict(color="purple", dash='solid')
-        ),
-        row=2, col=1
-    )
-    
-    # Interventions and Quit Attempts - With MECC
-    fig.add_trace(
-        go.Scatter(
-            x=results_mecc.index[:step+1],
-            y=results_mecc['Total Interventions'][:step+1],
-            name="Interventions (MECC)",
-            line=dict(color="blue", dash='dot')
-        ),
-        row=2, col=2
-    )
-    fig.add_trace(
-        go.Scatter(
-            x=results_mecc.index[:step+1],
-            y=results_mecc['Total Quit Attempts'][:step+1],
-            name="Quit Attempts (MECC)",
-            line=dict(color="purple", dash='dot')
-        ),
-        row=2, col=2
-    )
-    
     # Comparative metrics
     current_interventions_no_mecc = results_no_mecc['Total Interventions'].iloc[step]
     current_interventions_mecc = results_mecc['Total Interventions'].iloc[step]
@@ -230,30 +188,35 @@ def create_comparison_figure(results_no_mecc, results_mecc, step):
     success_rate_mecc = (results_mecc['Total Not Smoking'].iloc[step] / 
                         current_quit_attempts_mecc * 100 if current_quit_attempts_mecc > 0 else 0)
     
-    # Success metrics comparison
-    fig.add_trace(
-        go.Bar(
-            x=['Interventions', 'Quit Attempts', 'Success Rate (%)'],
-            y=[current_interventions_no_mecc, current_quit_attempts_no_mecc, success_rate_no_mecc],
-            name='No MECC',
-            marker_color='rgba(135, 206, 250, 0.8)'
-        ),
-        row=3, col=1
-    )
+    comparison_data = {
+        'Metric': ['Total Interventions', 'Quit Attempts', 'Success Rate (%)'],
+        'No MECC': [current_interventions_no_mecc, current_quit_attempts_no_mecc, success_rate_no_mecc],
+        'With MECC': [current_interventions_mecc, current_quit_attempts_mecc, success_rate_mecc]
+    }
     
-    fig.add_trace(
-        go.Bar(
-            x=['Interventions', 'Quit Attempts', 'Success Rate (%)'],
-            y=[current_interventions_mecc, current_quit_attempts_mecc, success_rate_mecc],
-            name='With MECC',
-            marker_color='rgba(0, 0, 139, 0.8)'
-        ),
-        row=3, col=2
-    )
+    for i, metric in enumerate(['Total Interventions', 'Quit Attempts', 'Success Rate (%)']):
+        fig.add_trace(
+            go.Bar(
+                name='No MECC',
+                x=[metric],
+                y=[comparison_data['No MECC'][i]],
+                marker_color='lightblue'
+            ),
+            row=2, col=1
+        )
+        fig.add_trace(
+            go.Bar(
+                name='With MECC',
+                x=[metric],
+                y=[comparison_data['With MECC'][i]],
+                marker_color='darkblue'
+            ),
+            row=2, col=1
+        )
     
     # Update layout
     fig.update_layout(
-        height=1000,  # Increased height to accommodate new row
+        height=800,
         showlegend=True,
         barmode='group'
     )
@@ -261,18 +224,7 @@ def create_comparison_figure(results_no_mecc, results_mecc, step):
     # Update axes labels
     fig.update_xaxes(title_text="Time Step", row=1, col=1)
     fig.update_xaxes(title_text="Time Step", row=1, col=2)
-    fig.update_xaxes(title_text="Time Step", row=2, col=1)
-    fig.update_xaxes(title_text="Time Step", row=2, col=2)
-    fig.update_xaxes(title_text="Metrics", row=3, col=1)
-    fig.update_xaxes(title_text="Metrics", row=3, col=2)
-    
-    # Update y-axes labels
-    fig.update_yaxes(title_text="Number of Agents", row=1, col=1)
-    fig.update_yaxes(title_text="Number of Agents", row=1, col=2)
-    fig.update_yaxes(title_text="Count", row=2, col=1)
-    fig.update_yaxes(title_text="Count", row=2, col=2)
-    fig.update_yaxes(title_text="Value", row=3, col=1)
-    fig.update_yaxes(title_text="Value", row=3, col=2)
+    fig.update_xaxes(title_text="Metrics", row=2, col=1)
     
     return fig
 

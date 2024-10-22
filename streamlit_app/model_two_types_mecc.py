@@ -10,7 +10,6 @@ class PersonAgent(Agent):
     def __init__(self, unique_id, model, initial_smoking_prob, quit_attempt_prob,visit_prob):
         super().__init__(unique_id, model)
         self.smoker = random.uniform(0, 1) < initial_smoking_prob
-        self.never_smoked = not self.smoker  # Track if they've never smoked
         self.quit_attempts = 0
         self.days_smoke_free = 0
         self.quit_attempt_prob = quit_attempt_prob
@@ -34,12 +33,10 @@ class PersonAgent(Agent):
             self.smoker = False
             self.quit_attempts += 1
             self.days_smoke_free = 0
-            self.never_smoked = False  # They've now smoked and quit
     
     def update_smoking_status(self):
-        if not self.smoker and not self.never_smoked:  # Only ex-smokers can relapse
+        if not self.smoker:
             self.days_smoke_free += 1
-            # Recidivism rate decreases as days smoke-free increases
             recidivism_prob = 0.1 * (0.95 ** self.days_smoke_free)
             if random.uniform(0, 1) < recidivism_prob:
                 self.smoker = True
