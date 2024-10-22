@@ -6,6 +6,8 @@ import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 import time
 
+st.logo("resources\MECC.jpg")
+
 def run_simulation_step(model):
     """Run one step of the simulation and return current data"""
     model.step()
