@@ -23,3 +23,9 @@ Services with MECC training increase over time with a training rate
 A Very Brief Intervention increases the probability that a patient will make a quit attempt
 
 Outputs will be MECC training numbers, number of quit attempts and number of successful quits over time
+
+---------
+
+### References
+
+[gov.uk MECC evaluation guide 2020](https://www.gov.uk/government/publications/making-every-contact-count-mecc-practical-resources/mecc-evaluation-guide-2020#step-2-identify-the-existing-evidence-base)
