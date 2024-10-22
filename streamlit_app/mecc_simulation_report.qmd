@@ -1,0 +1,24 @@
+---
+title: "MECC Simulation"
+format: html
+---
+
+![](resources\MECC.jpg){height=100}
+
+
+```{python}
+from model_two_types_mecc import MECC_Model
+
+
+
+# print(f'{self.num_people}')
+```
+## Parameters
+
+### Population Parameters
+
+### Primary Care Parameters
+
+### Simulation Parameters
+
+## Outputs
