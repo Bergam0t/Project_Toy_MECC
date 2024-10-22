@@ -51,11 +51,12 @@ class PersonAgent(Agent):
         self.update_smoking_status()
 
 class PrimaryCareAgent(Agent):
-    def __init__(self, unique_id, model, base_persuasiveness, intervention_radius, mecc_trained=False):
+    def __init__(self, unique_id, model, base_persuasiveness #, intervention_radius
+                 , mecc_trained=False):
         super().__init__(unique_id, model)
         self.base_persuasiveness = base_persuasiveness
         self.mecc_trained = mecc_trained
-        self.intervention_radius = intervention_radius
+        #self.intervention_radius = intervention_radius
         self.interventions_made = 0
         
     @property
@@ -90,7 +91,8 @@ class PrimaryCareAgent(Agent):
 
 class MECC_Model(Model):  # Renamed from Enhanced_Persuasion_Model
     def __init__(self, N_people, N_care, initial_smoking_prob, #width, height, 
-                 care_persuasiveness, intervention_radius, quit_attempt_prob,
+                 care_persuasiveness #, intervention_radius
+                 , quit_attempt_prob,
                  visit_prob,
                  seed_value = 42,
                  mecc_trained=False):
@@ -106,7 +108,7 @@ class MECC_Model(Model):  # Renamed from Enhanced_Persuasion_Model
         #self.width = width
         #self.height = height
         self.care_persuasiveness = care_persuasiveness['value'] if isinstance(care_persuasiveness, dict) else care_persuasiveness
-        self.intervention_radius = intervention_radius['value'] if isinstance(intervention_radius, dict) else intervention_radius
+        #self.intervention_radius = intervention_radius['value'] if isinstance(intervention_radius, dict) else intervention_radius
         self.quit_attempt_prob = quit_attempt_prob['value'] if isinstance(quit_attempt_prob, dict) else quit_attempt_prob
         self.visit_prob = visit_prob['value'] if isinstance(visit_prob, dict) else visit_prob
 
@@ -141,7 +143,7 @@ class MECC_Model(Model):  # Renamed from Enhanced_Persuasion_Model
         for i in range(self.num_care):
             a = PrimaryCareAgent(i + self.num_people, self, 
                                self.care_persuasiveness, 
-                               self.intervention_radius,
+                               #self.intervention_radius,
                                self.mecc_trained)
             self.schedule.add(a)
             #x = self.random.randrange(self.grid.width)

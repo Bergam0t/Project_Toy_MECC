@@ -291,7 +291,7 @@ with st.sidebar:
     st.markdown("#### Primary Care Parameters")
     num_care = st.slider("Number of Primary Care Providers", 1, 20, 5)
     care_persuasiveness = st.slider("Base Provider Persuasiveness", 0.0, 1.0, 0.3)
-    intervention_radius = st.slider("Intervention Radius", 1, 5, 2)
+    #intervention_radius = st.slider("Intervention Radius", 1, 5, 2)
     
     st.markdown("#### Simulation Parameters")
     num_steps = st.slider("Number of Steps to Simulate", 10, 200, 100)
@@ -313,7 +313,7 @@ if st.button("Run Simulation"):
             #width=10,
             #height=10,
             care_persuasiveness=care_persuasiveness,
-            intervention_radius=intervention_radius,
+            #intervention_radius=intervention_radius,
             quit_attempt_prob=quit_attempt_prob,
             visit_prob=visit_prob,
             mecc_trained=False
@@ -326,7 +326,7 @@ if st.button("Run Simulation"):
             #width=10,
             #height=10,
             care_persuasiveness=care_persuasiveness,
-            intervention_radius=intervention_radius,
+            #intervention_radius=intervention_radius,
             quit_attempt_prob=quit_attempt_prob,
             visit_prob=visit_prob,
             mecc_trained=True
@@ -403,7 +403,7 @@ if st.button("Run Simulation"):
             #width=10,
             #height=10,
             care_persuasiveness=care_persuasiveness,
-            intervention_radius=intervention_radius,
+            #intervention_radius=intervention_radius,
             quit_attempt_prob=quit_attempt_prob,
             visit_prob=visit_prob,
             mecc_trained=False
