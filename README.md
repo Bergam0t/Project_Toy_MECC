@@ -38,15 +38,26 @@ Outputs will be MECC training numbers, number of quit attempts and number of suc
 
 ### Smoking
 
+[Cochrane Review: Physician advice for smoking cessation](https://pmc.ncbi.nlm.nih.gov/articles/PMC7064045/)
+
+*If an unassisted quit rate of 2% at 12 months in a population of primary care attenders is assumed, we can use the confidence intervals for the minimal intervention subgroup, 1.42 to 1.94, to estimate a number needed to treat for an additional beneficial outcome (NNTB) of 50 ‐ 120. If the background rate of quitting was expected to be 3%, then the same effect size estimate would translate to an NNTB of 35‐80. Using the pooled estimate from combining both intensity subgroups in the primary comparison would raise the lower confidence interval and reduce the upper estimate of the NNTBs.*
+
+*Based on the results of a meta‐analysis incorporating 28 trials and over 20,000 participants, a brief advice intervention is **likely to increase the quit rate by 1 to 3 percentage** points. The quit rate in the control groups in the included studies was very variable, ranging from 1% to 14% across the trials in the primary comparison. However the relative effect of the intervention was much less variable, because trials with low control group quit rates generally had low rates with intervention, and vice versa.*
+
+[Prevalence and correlates of receipt by smokers of general practitioner advice on smoking cessation in England: a cross-sectional survey of adults](https://pmc.ncbi.nlm.nih.gov/articles/PMC8432152/pdf/ADD-116-358.pdf)
+
 [Brief opportunistic smoking cessation interventions:a systematic review and meta-analysis to compareadvice to quit and offer of assistance](https://onlinelibrary.wiley.com/doi/full/10.1111/j.1360-0443.2011.03770.x?casa_token=KzcJE3JQ0cwAAAAA%3A-AKlcnickLE7jbewMjqR7N8z-uKBlEhcVtQV5Md000R_x-dHakikMEqaQUSrP1SW0N9TGGxOhTTDdMkc_A)
 
 *Three trials show strong statistical evidence that offering support for cessation motivates an additional **40–60%** of people to attempt cessation compared to being advised to stop smoking on medical grounds. In all three trials, cessation support was offered without screening for willingness to quit.*
 
 
+[ONS - Adult smoking habits in the UK: 2023](https://www.ons.gov.uk/peoplepopulationandcommunity/healthandsocialcare/healthandlifeexpectancies/bulletins/adultsmokinghabitsingreatbritain/2023)
+
+*Around 6.0 million people aged 18 years and over **(11.9%) smoked cigarettes** in the UK in 2023; this is the lowest proportion of current smokers since records began in 2011, based on our estimates from the Annual Population Survey (APS).*
+
 ### Alcohol
 
-[Brief interventions for heavy alcohol users admitted to general hospital wards
-](https://www.cochranelibrary.com/cdsr/doi/10.1002/14651858.CD005191.pub3/full)
+[Cochrane - Brief interventions for heavy alcohol users admitted to general hospital wards](https://www.cochranelibrary.com/cdsr/doi/10.1002/14651858.CD005191.pub3/full)
 
 
 
