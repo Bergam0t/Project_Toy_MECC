@@ -16,4 +16,5 @@ dependencies:
     - ipython==8.27.0
     - openpyxl
     - nbformat>=4.2.0
+    - quarto==0.1.0
     - fiona==1.9.0
