@@ -1,10 +1,12 @@
 import streamlit as st
+from PIL import Image
 
 # st.logo("resources/MECC.jpg")
 
 st.title("Toy MECC - Making Every Contact Count")
 
-st.image("resources/MECC.jpg", width=500)
+# Display the logo
+st.image("streamlit_app/resources/MECC.jpg", use_column_width=True)
 
 st.write("""
 A (toy) model for showing the benefit of Making Every Contact Count (MECC) Training_
