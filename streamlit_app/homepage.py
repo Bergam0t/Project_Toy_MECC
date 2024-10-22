@@ -1,9 +1,13 @@
 import streamlit as st
 
+st.logo("resources\MECC.jpg")
+
 st.title("Toy MECC - Making Every Contact Count")
 
+st.image("resources\MECC.jpg", width=500)
+
 st.write("""
-_A (toy) model for showing the benefit of Making Every Contact Count (MECC) Training_
+A (toy) model for showing the benefit of Making Every Contact Count (MECC) Training_
 Build a Streamlit app for an Agent Based Simulation.
 The pop culture 80's references will all be in the form of toy robots.
 There is an initial group of people and an initial group of government services.

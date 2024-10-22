@@ -50,4 +50,10 @@ Outputs will be MECC training numbers, number of quit attempts and number of suc
 
 
 
+Progress: 
+simple mesa simulation
+simple streamlit app
 
+To Do: 
+integration of mesa and streamlit
+add MECC details
