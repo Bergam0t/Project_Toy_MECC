@@ -94,12 +94,12 @@ def create_figure(results, step):
     # Success Metrics
     current_quit_attempts = results['Total Quit Attempts'].iloc[step]
     current_interventions = results['Total Interventions'].iloc[step]
-    avg_days_smoke_free = results['Average Days Smoke Free'].iloc[step]
+    avg_months_smoke_free = results['Average Months Smoke Free'].iloc[step]
     
     fig.add_trace(
         go.Bar(
-            x=['Quit Attempts', 'Interventions', 'Avg Days Smoke Free'],
-            y=[current_quit_attempts, current_interventions, avg_days_smoke_free],
+            x=['Quit Attempts', 'Interventions', 'Avg Months Smoke Free'],
+            y=[current_quit_attempts, current_interventions, avg_months_smoke_free],
             marker_color=['purple', 'blue', 'orange']
         ),
         row=2, col=2
@@ -285,20 +285,26 @@ with st.sidebar:
     st.markdown("#### Population Parameters")
     num_people = st.slider("Number of People", 5, 100, 50)
     initial_smoking_prob = st.slider("Initial Smoking Probability", 0.0, 1.0, 0.5)
-    quit_attempt_prob = st.slider("Base Quit Attempt Probability", 0.0, 0.5, 0.1)
-    visit_prob = st.slider("Visit Primary Care Probability", 0.0, 1.0, 0.1)
+    visit_prob = st.slider("Visit Primary Care Probability per Month", 0.0, 1.0, 0.1)
+    quit_attempt_prob = st.slider("Base Quit Attempt Probability per Month", 0.00, 1.00, 0.01)
+    base_smoke_relapse_prob = st.slider("Base Smoking Relapse per Month", 0.00, 1.00, 0.01)
+    st.markdown("*Replase chance decreases over time of not smoking*")
 
-    st.markdown("#### Primary Care Parameters")
-    num_care = st.slider("Number of Primary Care Providers", 1, 20, 5)
-    care_persuasiveness = st.slider("Base Provider Persuasiveness", 0.0, 1.0, 0.3)
-    intervention_radius = st.slider("Intervention Radius", 1, 5, 2)
-    
+    st.markdown("#### Service Parameters")
+    #num_care = st.slider("Number of Services", 1, 20, 5) ##not used
+    base_make_intervention_prob = st.slider("Chance a Brief Intervention Made Without MECC", 0.0, 1.0, 0.1)
+    #intervention_radius = st.slider("Intervention Radius", 1, 5, 2)
+
+    st.markdown("#### MECC Parameters")
+    mecc_effect = st.slider("Chance Making a Brief Intervention After MECC Training", 0.0, 1.0, 1.0)
+    intervention_effect = st.slider("Effect of a Brief Intervention on Chance Making a Quit Attempt", 0.0, 10.0, 1.1)
+    st.markdown("*Numbers less than 1 will decrease the probability*")
+
     st.markdown("#### Simulation Parameters")
-    num_steps = st.slider("Number of Steps to Simulate", 10, 200, 100)
+    num_steps = st.slider("Number of Months to Simulate", 1, 120, 24)
     animation_speed = st.slider("Animation Speed (seconds)", 0.1, 2.0, 0.5)
 
    
-
 # Initialize placeholder for the chart
 chart_placeholder = st.empty()
 
@@ -308,27 +314,33 @@ if st.button("Run Simulation"):
         # Initialize both models
         model_no_mecc =  MECC_Model(  
             N_people=num_people,
-            N_care=num_care,
+            N_care=1,
             initial_smoking_prob=initial_smoking_prob,
             #width=10,
             #height=10,
-            care_persuasiveness=care_persuasiveness,
-            intervention_radius=intervention_radius,
+            base_make_intervention_prob=base_make_intervention_prob,
+            #intervention_radius=intervention_radius,
             quit_attempt_prob=quit_attempt_prob,
             visit_prob=visit_prob,
+            base_smoke_relapse_prob = base_smoke_relapse_prob,
+            intervention_effect=intervention_effect,
+            mecc_effect=mecc_effect,
             mecc_trained=False
         )
         
         model_mecc =  MECC_Model(  
             N_people=num_people,
-            N_care=num_care,
+            N_care=1,
             initial_smoking_prob=initial_smoking_prob,
             #width=10,
             #height=10,
-            care_persuasiveness=care_persuasiveness,
-            intervention_radius=intervention_radius,
+            base_make_intervention_prob=base_make_intervention_prob,
+            #intervention_radius=intervention_radius,
             quit_attempt_prob=quit_attempt_prob,
             visit_prob=visit_prob,
+            base_smoke_relapse_prob = base_smoke_relapse_prob,
+            intervention_effect=intervention_effect,
+            mecc_effect=mecc_effect,            
             mecc_trained=True
         )
 
@@ -398,14 +410,17 @@ if st.button("Run Simulation"):
         # Single model simulation (without comparison)
         model = MECC_Model(
             N_people=num_people,
-            N_care=num_care,
+            N_care=1,
             initial_smoking_prob=initial_smoking_prob,
             #width=10,
             #height=10,
-            care_persuasiveness=care_persuasiveness,
-            intervention_radius=intervention_radius,
+            base_make_intervention_prob=base_make_intervention_prob,
+            #intervention_radius=intervention_radius,
             quit_attempt_prob=quit_attempt_prob,
             visit_prob=visit_prob,
+            base_smoke_relapse_prob = base_smoke_relapse_prob,
+            intervention_effect=intervention_effect,
+            mecc_effect=mecc_effect,            
             mecc_trained=False
         )
         
