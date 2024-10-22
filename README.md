@@ -26,6 +26,28 @@ Outputs will be MECC training numbers, number of quit attempts and number of suc
 
 ---------
 
-### References
+## References
+
+### General
 
 [gov.uk MECC evaluation guide 2020](https://www.gov.uk/government/publications/making-every-contact-count-mecc-practical-resources/mecc-evaluation-guide-2020#step-2-identify-the-existing-evidence-base)
+
+
+[Comparison of brief interventions in primary care on smoking and excessive alcohol consumption: a population survey in England](https://bjgp.org/content/66/642/e1.short)
+
+
+### Smoking
+
+[Brief opportunistic smoking cessation interventions:a systematic review and meta-analysis to compareadvice to quit and offer of assistance](https://onlinelibrary.wiley.com/doi/full/10.1111/j.1360-0443.2011.03770.x?casa_token=KzcJE3JQ0cwAAAAA%3A-AKlcnickLE7jbewMjqR7N8z-uKBlEhcVtQV5Md000R_x-dHakikMEqaQUSrP1SW0N9TGGxOhTTDdMkc_A)
+
+*Three trials show strong statistical evidence that offering support for cessation motivates an additional **40–60%** of people to attempt cessation compared to being advised to stop smoking on medical grounds. In all three trials, cessation support was offered without screening for willingness to quit.*
+
+
+### Alcohol
+
+[Brief interventions for heavy alcohol users admitted to general hospital wards
+](https://www.cochranelibrary.com/cdsr/doi/10.1002/14651858.CD005191.pub3/full)
+
+
+
+
