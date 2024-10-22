@@ -24,9 +24,9 @@ class PersonAgent(Agent):
 
     def move(self):
         if random.uniform(0,1) < self.visit_prob:
-            PrimaryCareAgent_list = [agent for agent in self.model.schedule.agents if isinstance(agent, PrimaryCareAgent)]
-            if PrimaryCareAgent_list:
-                    visited_service = random.choice(PrimaryCareAgent_list)
+            ServiceAgent_list = [agent for agent in self.model.schedule.agents if isinstance(agent, ServiceAgent)]
+            if ServiceAgent_list:
+                    visited_service = random.choice(ServiceAgent_list)
                     visited_service.provide_intervention(self)
 
     def attempt_quit(self):
@@ -50,7 +50,7 @@ class PersonAgent(Agent):
         self.attempt_quit()
         self.update_smoking_status()
 
-class PrimaryCareAgent(Agent):
+class ServiceAgent(Agent):
     def __init__(self, unique_id, model, base_persuasiveness #, intervention_radius
                  , mecc_trained=False):
         super().__init__(unique_id, model)
@@ -141,7 +141,7 @@ class MECC_Model(Model):  # Renamed from Enhanced_Persuasion_Model
             
         # Create primary care agents
         for i in range(self.num_care):
-            a = PrimaryCareAgent(i + self.num_people, self, 
+            a = ServiceAgent(i + self.num_people, self, 
                                self.care_persuasiveness, 
                                #self.intervention_radius,
                                self.mecc_trained)
@@ -168,7 +168,7 @@ def calculate_total_quit_attempts(model):
 
 def calculate_total_interventions(model):
     return sum(agent.interventions_made for agent in model.schedule.agents 
-              if isinstance(agent, PrimaryCareAgent))
+              if isinstance(agent, ServiceAgent))
 
 def calculate_average_days_smoke_free(model):
     smoke_free_days = [agent.days_smoke_free for agent in model.schedule.agents 
