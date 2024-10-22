@@ -1,12 +1,11 @@
 import streamlit as st
-import mesa
 
 st.set_page_config(layout="wide")
 
 pg = st.navigation(
 
     [st.Page("homepage.py", 
-             title="Hackacthon Details", 
+             title="Hackathon Details", 
              icon=":material/add_circle:"),
     #  st.Page("abs.py", 
     #          title="Agent Based Simulation", 
@@ -18,7 +17,7 @@ pg = st.navigation(
     #          title="Primary Care smoking cessation", 
     #          icon=":material/people:"),
     st.Page("mesa_abs_two_types_mecc.py", 
-             title="Primary Care smoking cessation with MECC", 
+             title="Smoking cessation with MECC", 
              icon=":material/people:"),         
 
      ]
