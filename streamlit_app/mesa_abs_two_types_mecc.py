@@ -238,7 +238,8 @@ with st.sidebar:
     num_people = st.slider("Number of People", 5, 100, 50)
     initial_smoking_prob = st.slider("Initial Smoking Probability", 0.0, 1.0, 0.5)
     quit_attempt_prob = st.slider("Base Quit Attempt Probability", 0.0, 0.5, 0.1)
-    
+    visit_prob = st.slider("Visit Primary Care Probability", 0.0, 1.0, 0.1)
+
     st.markdown("#### Primary Care Parameters")
     num_care = st.slider("Number of Primary Care Providers", 1, 20, 5)
     care_persuasiveness = st.slider("Base Provider Persuasiveness", 0.0, 1.0, 0.3)
@@ -261,11 +262,12 @@ if st.button("Run Simulation"):
             N_people=num_people,
             N_care=num_care,
             initial_smoking_prob=initial_smoking_prob,
-            width=10,
-            height=10,
+            #width=10,
+            #height=10,
             care_persuasiveness=care_persuasiveness,
             intervention_radius=intervention_radius,
             quit_attempt_prob=quit_attempt_prob,
+            visit_prob=visit_prob,
             mecc_trained=False
         )
         
@@ -273,11 +275,12 @@ if st.button("Run Simulation"):
             N_people=num_people,
             N_care=num_care,
             initial_smoking_prob=initial_smoking_prob,
-            width=10,
-            height=10,
+            #width=10,
+            #height=10,
             care_persuasiveness=care_persuasiveness,
             intervention_radius=intervention_radius,
             quit_attempt_prob=quit_attempt_prob,
+            visit_prob=visit_prob,
             mecc_trained=True
         )
 
@@ -349,11 +352,12 @@ if st.button("Run Simulation"):
             N_people=num_people,
             N_care=num_care,
             initial_smoking_prob=initial_smoking_prob,
-            width=10,
-            height=10,
+            #width=10,
+            #height=10,
             care_persuasiveness=care_persuasiveness,
             intervention_radius=intervention_radius,
             quit_attempt_prob=quit_attempt_prob,
+            visit_prob=visit_prob,
             mecc_trained=False
         )
         
