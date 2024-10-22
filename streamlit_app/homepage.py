@@ -1,10 +1,10 @@
 import streamlit as st
 
-st.logo("resources\MECC.jpg")
+# st.logo("resources/MECC.jpg")
 
 st.title("Toy MECC - Making Every Contact Count")
 
-st.image("resources\MECC.jpg", width=500)
+st.image("resources/MECC.jpg", width=500)
 
 st.write("""
 A (toy) model for showing the benefit of Making Every Contact Count (MECC) Training_

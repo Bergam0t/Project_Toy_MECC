@@ -2,7 +2,7 @@
 import pandas as pd
 import numpy as np
 import streamlit as st
-from model_two_types import Enhanced_Persuasion_Model
+from model_two_types_mecc import MECC_Model 
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 import time
@@ -232,6 +232,8 @@ st.title("Enhanced Smoking Cessation Model with MECC Training")
 
 # Sidebar parameters
 with st.sidebar:
+    mecc_training = st.checkbox("Enable MECC Training Comparison", value=False)
+    
     st.markdown("#### Population Parameters")
     num_people = st.slider("Number of People", 5, 100, 50)
     initial_smoking_prob = st.slider("Initial Smoking Probability", 0.0, 1.0, 0.5)
@@ -246,7 +248,7 @@ with st.sidebar:
     num_steps = st.slider("Number of Steps to Simulate", 10, 200, 100)
     animation_speed = st.slider("Animation Speed (seconds)", 0.1, 2.0, 0.5)
 
-    mecc_training = st.checkbox("Enable MECC Training Comparison", value=False)
+   
 
 # Initialize placeholder for the chart
 chart_placeholder = st.empty()
@@ -255,7 +257,7 @@ chart_placeholder = st.empty()
 if st.button("Run Simulation"):
     if mecc_training:
         # Initialize both models
-        model_no_mecc =  Enhanced_Persuasion_Model(  
+        model_no_mecc =  MECC_Model(  
             N_people=num_people,
             N_care=num_care,
             initial_smoking_prob=initial_smoking_prob,
@@ -267,7 +269,7 @@ if st.button("Run Simulation"):
             mecc_trained=False
         )
         
-        model_mecc =  Enhanced_Persuasion_Model(  
+        model_mecc =  MECC_Model(  
             N_people=num_people,
             N_care=num_care,
             initial_smoking_prob=initial_smoking_prob,
@@ -343,7 +345,7 @@ if st.button("Run Simulation"):
     
     else:
         # Single model simulation (without comparison)
-        model = Enhanced_Persuasion_Model(
+        model = MECC_Model(
             N_people=num_people,
             N_care=num_care,
             initial_smoking_prob=initial_smoking_prob,

@@ -74,6 +74,7 @@ class PrimaryCareAgent(Agent):
 class MECC_Model(Model):  # Renamed from Enhanced_Persuasion_Model
     def __init__(self, N_people, N_care, initial_smoking_prob, width, height, 
                  care_persuasiveness, intervention_radius, quit_attempt_prob, mecc_trained=False):
+        super().__init__()  # Properly initialize the Model class
         # Convert dictionary values if they're dictionaries
         self.num_people = N_people['value'] if isinstance(N_people, dict) else N_people
         self.num_care = N_care['value'] if isinstance(N_care, dict) else N_care
