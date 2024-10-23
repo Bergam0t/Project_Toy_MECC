@@ -71,6 +71,7 @@ class PersonAgent(Agent):
                 self.smoker = True
                 self.months_smoke_free = 0
 
+    ## Defines actions at each step
     def step(self):
         self.move()
         self.attempt_quit()
@@ -142,7 +143,7 @@ class ServiceAgent(Agent):
             ## adds 1 to the intervention count
             self.interventions_made += 1
     
-    ## doesn't do anything
+    ## doesn't do anything at each step
     def step(self):
         pass
         #self.move()
