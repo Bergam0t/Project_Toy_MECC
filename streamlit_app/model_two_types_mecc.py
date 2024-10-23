@@ -5,6 +5,7 @@ from mesa.time import RandomActivation
 #from mesa.space import MultiGrid
 from mesa.datacollection import DataCollector
 import random
+import streamlit as st
 
 class PersonAgent(Agent):
     def __init__(self, unique_id, model
@@ -65,6 +66,7 @@ class ServiceAgent(Agent):
         self.base_make_intervention_prob = base_make_intervention_prob
         self.mecc_trained = mecc_trained
         #self.intervention_radius = intervention_radius
+        self.contacts_made = 0
         self.interventions_made = 0
         
     @property
@@ -91,7 +93,14 @@ class ServiceAgent(Agent):
 #                    self.interventions_made += 1
     
     def provide_intervention(self, PersonAgent):
-        if random.uniform(0, 1) > self.make_intervention_prob:
+        self.contacts_made += 1
+        intervention_rand = random.uniform(0, 1)
+        ## for checking outputs
+        #st.write(f'chance intervention {intervention_rand}\n\n' +
+        #         f' mecc_effect {self.mecc_effect}\n\n'
+        #         f' base_make_intervention_prob {self.base_make_intervention_prob}\n\n'
+        #         f' make_intervention_prob {self.make_intervention_prob}\n\n-----')
+        if intervention_rand < self.make_intervention_prob:
             PersonAgent.quit_attempt_prob *= self.intervention_effect
             self.interventions_made += 1
 
@@ -139,6 +148,7 @@ class MECC_Model(Model):  # Renamed from Enhanced_Persuasion_Model
                 "Total Smoking": calculate_number_smoking,
                 "Total Not Smoking": calculate_number_not_smoking,
                 "Total Quit Attempts": calculate_total_quit_attempts,
+                "Total Contacts": calculate_total_contacts,
                 "Total Interventions": calculate_total_interventions,
                 "Average Months Smoke Free": calculate_average_months_smoke_free
             },
@@ -147,7 +157,7 @@ class MECC_Model(Model):  # Renamed from Enhanced_Persuasion_Model
         
         # Create person agents
         for i in range(self.num_people):
-            a = PersonAgent(i, self
+            a = PersonAgent(unique_id = i, model = self
                             , initial_smoking_prob = self.initial_smoking_prob
                             , quit_attempt_prob  = self.quit_attempt_prob
                             , base_smoke_relapse_prob = self.base_smoke_relapse_prob
@@ -159,12 +169,13 @@ class MECC_Model(Model):  # Renamed from Enhanced_Persuasion_Model
             
         # Create primary care agents
         for i in range(self.num_care):
-            a = ServiceAgent(i + self.num_people, self, 
-                               self.base_make_intervention_prob, 
-                               self.mecc_effect,
-                               self.intervention_effect,
+            a = ServiceAgent(unique_id = i + self.num_people
+                             , model = self, 
+                               base_make_intervention_prob = self.base_make_intervention_prob, 
+                               mecc_effect = self.mecc_effect,
+                               intervention_effect = self.intervention_effect,
                                #self.intervention_radius,
-                               self.mecc_trained)
+                               mecc_trained = self.mecc_trained)
             self.schedule.add(a)
             #x = self.random.randrange(self.grid.width)
             #y = self.random.randrange(self.grid.height)
@@ -185,6 +196,10 @@ def calculate_number_not_smoking(model):
 def calculate_total_quit_attempts(model):
     return sum(agent.quit_attempts for agent in model.schedule.agents 
               if isinstance(agent, PersonAgent))
+
+def calculate_total_contacts(model):
+    return sum(agent.contacts_made for agent in model.schedule.agents 
+              if isinstance(agent, ServiceAgent))
 
 def calculate_total_interventions(model):
     return sum(agent.interventions_made for agent in model.schedule.agents 
