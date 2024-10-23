@@ -8,7 +8,7 @@ from mesa import Agent, Model
 from mesa.time import RandomActivation
 #from mesa.space import MultiGrid
 from mesa.datacollection import DataCollector
-import random
+#import random
 import streamlit as st
 
 ##################################
@@ -25,7 +25,7 @@ class PersonAgent(Agent):
                  , base_smoke_relapse_prob):
         super().__init__(unique_id, model)
         ## Smoking properties
-        self.smoker = random.uniform(0, 1) < initial_smoking_prob ## randomise whether a smoker
+        self.smoker = self.random.uniform(0, 1) < initial_smoking_prob ## randomise whether a smoker
         self.never_smoked = not self.smoker ## Track if they've never smoked
         self.base_smoke_relapse_prob = base_smoke_relapse_prob
         self.quit_attempt_prob = quit_attempt_prob
@@ -45,17 +45,17 @@ class PersonAgent(Agent):
 
     ## Action to make a visit to a service
     def move(self):
-        if random.uniform(0,1) < self.visit_prob:
+        if self.random.uniform(0,1) < self.visit_prob:
             ## randomly selects a service agent
             ServiceAgent_list = [agent for agent in self.model.schedule.agents if isinstance(agent, ServiceAgent)]
             if ServiceAgent_list:
-                    visited_service = random.choice(ServiceAgent_list)
+                    visited_service = self.random.choice(ServiceAgent_list)
                     ## runs the chosen service's have contact function
                     visited_service.have_contact(self)
 
     ## Action to have a change of quitting smoking
     def attempt_quit(self):
-        if self.smoker and random.uniform(0, 1) < self.quit_attempt_prob:
+        if self.smoker and self.random.uniform(0, 1) < self.quit_attempt_prob:
             self.smoker = False
             self.quit_attempts += 1
             self.months_smoke_free = 0
@@ -67,7 +67,7 @@ class PersonAgent(Agent):
             self.months_smoke_free += 1
             ## Recidivism rate decreases as months smoke-free increases
             recidivism_prob = self.base_smoke_relapse_prob * (0.95 ** self.months_smoke_free)
-            if random.uniform(0, 1) < recidivism_prob:
+            if self.random.uniform(0, 1) < recidivism_prob:
                 self.smoker = True
                 self.months_smoke_free = 0
 
@@ -132,7 +132,7 @@ class ServiceAgent(Agent):
     def have_contact(self, PersonAgent):
         ## adds one to the service contact count
         self.contacts_made += 1
-        intervention_rand = random.uniform(0, 1)
+        intervention_rand = self.random.uniform(0, 1)
         ## for checking outputs
         #st.write(f'chance intervention {intervention_rand}\n\n' +
         #         f' mecc_effect {self.mecc_effect}\n\n'
@@ -167,13 +167,13 @@ class MECC_Model(Model):
                 , quit_attempt_prob
                 , base_smoke_relapse_prob
                 , visit_prob
-                , seed_value = 42
+                , seed = None
                 , mecc_trained=False):
         super().__init__()  # Properly initialize the Model class
 
         ## Set the seed for reproducibility
-        if seed_value is not None:
-            random.seed(seed_value)  
+        #if seed_value is not None:
+        #    random.seed(seed_value)  
 
         ## numbers of agents
         ## Convert dictionary values if they're dictionaries

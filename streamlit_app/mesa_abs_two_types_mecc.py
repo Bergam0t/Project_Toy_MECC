@@ -7,6 +7,7 @@ import streamlit as st
 import time
 #from model_two_types_mecc import MECC_Model 
 from streamlit_model_functions import run_simulation_step, create_figure, create_comparison_figure, create_MECC_model
+import random
 
 st.title("Enhanced Smoking Cessation Model with MECC Training")
 
@@ -33,11 +34,13 @@ with st.sidebar:
     st.markdown("*Numbers less than 1 will decrease the probability*")
 
     st.markdown("#### Simulation Parameters")
+    model_seed = st.number_input("Random Seed",min_value=0,max_value=None,value=42,step=1) 
     num_steps = st.slider("Number of Months to Simulate", 1, 120, 24)
     animation_speed = st.slider("Animation Speed (seconds)", 0.1, 2.0, 0.5)
 
 ## Dictionary to store all parameter values
 model_parameters = {
+    "model_seed": model_seed,
     "N_people": N_people,
     "N_service": 1, ## set to 1 as currently not used
     "initial_smoking_prob": initial_smoking_prob,
