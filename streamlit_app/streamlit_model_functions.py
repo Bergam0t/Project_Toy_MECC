@@ -15,6 +15,7 @@ from plotly.subplots import make_subplots
 def create_MECC_model(model_parameters
                       ,mecc_trained = False):
         model = MECC_Model(
+            seed=model_parameters["model_seed"],
             N_people=model_parameters["N_people"],
             N_service=model_parameters["N_service"],
             initial_smoking_prob=model_parameters["initial_smoking_prob"],
