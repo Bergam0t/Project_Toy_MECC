@@ -65,6 +65,7 @@ class ServiceAgent(Agent):
         self.base_make_intervention_prob = base_make_intervention_prob
         self.mecc_trained = mecc_trained
         #self.intervention_radius = intervention_radius
+        self.contacts_made = 0
         self.interventions_made = 0
         
     @property
@@ -91,6 +92,7 @@ class ServiceAgent(Agent):
 #                    self.interventions_made += 1
     
     def provide_intervention(self, PersonAgent):
+        self.contacts_made += 1
         if random.uniform(0, 1) > self.make_intervention_prob:
             PersonAgent.quit_attempt_prob *= self.intervention_effect
             self.interventions_made += 1
@@ -139,6 +141,7 @@ class MECC_Model(Model):  # Renamed from Enhanced_Persuasion_Model
                 "Total Smoking": calculate_number_smoking,
                 "Total Not Smoking": calculate_number_not_smoking,
                 "Total Quit Attempts": calculate_total_quit_attempts,
+                "Total Contacts": calculate_total_contacts,
                 "Total Interventions": calculate_total_interventions,
                 "Average Months Smoke Free": calculate_average_months_smoke_free
             },
@@ -185,6 +188,10 @@ def calculate_number_not_smoking(model):
 def calculate_total_quit_attempts(model):
     return sum(agent.quit_attempts for agent in model.schedule.agents 
               if isinstance(agent, PersonAgent))
+
+def calculate_total_contacts(model):
+    return sum(agent.contacts_made for agent in model.schedule.agents 
+              if isinstance(agent, ServiceAgent))
 
 def calculate_total_interventions(model):
     return sum(agent.interventions_made for agent in model.schedule.agents 
