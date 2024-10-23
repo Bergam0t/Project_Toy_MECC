@@ -283,7 +283,7 @@ with st.sidebar:
     mecc_training = st.checkbox("Enable MECC Training Comparison", value=False)
     
     st.markdown("#### Population Parameters")
-    num_people = st.slider("Number of People", 5, 100, 50)
+    N_people = st.slider("Number of People", 5, 100, 50)
     initial_smoking_prob = st.slider("Initial Smoking Probability", 0.0, 1.0, 0.5)
     visit_prob = st.slider("Visit Primary Care Probability per Month", 0.0, 1.0, 0.1)
     quit_attempt_prob = st.slider("Base Quit Attempt Probability per Month", 0.00, 1.00, 0.01)
@@ -291,7 +291,7 @@ with st.sidebar:
     st.markdown("*Replase chance decreases over time of not smoking*")
 
     st.markdown("#### Service Parameters")
-    #num_care = st.slider("Number of Services", 1, 20, 5) ##not used
+    #N_service = st.slider("Number of Services", 1, 20, 5) ##not used
     base_make_intervention_prob = st.slider("Chance a Brief Intervention Made Without MECC", 0.0, 1.0, 0.1)
     #intervention_radius = st.slider("Intervention Radius", 1, 5, 2)
 
@@ -313,8 +313,8 @@ if st.button("Run Simulation"):
     if mecc_training:
         # Initialize both models
         model_no_mecc =  MECC_Model(  
-            N_people=num_people,
-            N_care=1,
+            N_people=N_people,
+            N_service=1,
             initial_smoking_prob=initial_smoking_prob,
             #width=10,
             #height=10,
@@ -329,8 +329,8 @@ if st.button("Run Simulation"):
         )
         
         model_mecc =  MECC_Model(  
-            N_people=num_people,
-            N_care=1,
+            N_people=N_people,
+            N_service=1,
             initial_smoking_prob=initial_smoking_prob,
             #width=10,
             #height=10,
@@ -376,14 +376,14 @@ if st.button("Run Simulation"):
         with col1:
             st.metric(
                 "Smoking Reduction (No MECC)", 
-                f"{(data_no_mecc['Total Not Smoking'].iloc[-1] / num_people * 100):.1f}%",
+                f"{(data_no_mecc['Total Not Smoking'].iloc[-1] / N_people * 100):.1f}%",
                 f"{(data_no_mecc['Total Not Smoking'].iloc[-1] - data_no_mecc['Total Not Smoking'].iloc[0]):.0f}"
             )
         
         with col2:
             st.metric(
                 "Smoking Reduction (With MECC)", 
-                f"{(data_mecc['Total Not Smoking'].iloc[-1] / num_people * 100):.1f}%",
+                f"{(data_mecc['Total Not Smoking'].iloc[-1] / N_people * 100):.1f}%",
                 f"{(data_mecc['Total Not Smoking'].iloc[-1] - data_mecc['Total Not Smoking'].iloc[0]):.0f}"
             )
         
@@ -395,7 +395,7 @@ if st.button("Run Simulation"):
             st.metric(
                 "MECC Impact",
                 f"{mecc_improvement:.0f} additional quits",
-                f"{(mecc_improvement / num_people * 100):.1f}%"
+                f"{(mecc_improvement / N_people * 100):.1f}%"
             )
 
         # Display detailed data
@@ -409,8 +409,8 @@ if st.button("Run Simulation"):
     else:
         # Single model simulation (without comparison)
         model = MECC_Model(
-            N_people=num_people,
-            N_care=1,
+            N_people=N_people,
+            N_service=1,
             initial_smoking_prob=initial_smoking_prob,
             #width=10,
             #height=10,
@@ -449,7 +449,7 @@ if st.button("Run Simulation"):
         with col1:
             st.metric(
                 "Final Smoking Rate", 
-                f"{(data['Total Smoking'].iloc[-1] / num_people * 100):.1f}%",
+                f"{(data['Total Smoking'].iloc[-1] / N_people * 100):.1f}%",
                 f"{(data['Total Smoking'].iloc[-1] - data['Total Smoking'].iloc[0]):.0f}"
             )
         

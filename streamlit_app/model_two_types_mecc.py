@@ -1,4 +1,8 @@
 # model_two_types_mecc.py
+
+##################################
+### Packages
+##################################
 import mesa
 from mesa import Agent, Model
 from mesa.time import RandomActivation
@@ -7,18 +11,31 @@ from mesa.datacollection import DataCollector
 import random
 import streamlit as st
 
+##################################
+### Person Agent Class
+##################################
+
+## creates a class of person agent
 class PersonAgent(Agent):
-    def __init__(self, unique_id, model
-                 , initial_smoking_prob, quit_attempt_prob,visit_prob
-                 ,base_smoke_relapse_prob):
+    def __init__(self
+                 , unique_id
+                 , model
+                 , initial_smoking_prob
+                 , quit_attempt_prob,visit_prob
+                 , base_smoke_relapse_prob):
         super().__init__(unique_id, model)
-        self.smoker = random.uniform(0, 1) < initial_smoking_prob
-        self.never_smoked = not self.smoker  # Track if they've never smoked
+        ## Smoking properties
+        self.smoker = random.uniform(0, 1) < initial_smoking_prob ## randomise whether a smoker
+        self.never_smoked = not self.smoker ## Track if they've never smoked
         self.base_smoke_relapse_prob = base_smoke_relapse_prob
+        self.quit_attempt_prob = quit_attempt_prob
+        
+        ## Visit properties
+        self.visit_prob = visit_prob
+
+        ## Reporting variables
         self.quit_attempts = 0
         self.months_smoke_free = 0
-        self.quit_attempt_prob = quit_attempt_prob
-        self.visit_prob = visit_prob
 
 #    def move(self):
 #        possible_steps = self.model.grid.get_neighborhood(
@@ -26,24 +43,29 @@ class PersonAgent(Agent):
 #        new_position = random.choice(possible_steps)
 #        self.model.grid.move_agent(self, new_position)
 
+    ## Action to make a visit to a service
     def move(self):
         if random.uniform(0,1) < self.visit_prob:
+            ## randomly selects a service agent
             ServiceAgent_list = [agent for agent in self.model.schedule.agents if isinstance(agent, ServiceAgent)]
             if ServiceAgent_list:
                     visited_service = random.choice(ServiceAgent_list)
-                    visited_service.provide_intervention(self)
+                    ## runs the chosen service's have contact function
+                    visited_service.have_contact(self)
 
+    ## Action to have a change of quitting smoking
     def attempt_quit(self):
         if self.smoker and random.uniform(0, 1) < self.quit_attempt_prob:
             self.smoker = False
             self.quit_attempts += 1
             self.months_smoke_free = 0
-            self.never_smoked = False  # They've now smoked and quit
-    
+            self.never_smoked = False  ## They've now smoked and quit
+
+    ## Action to upfate smoking status
     def update_smoking_status(self):
-        if not self.smoker and not self.never_smoked:  # Only ex-smokers can relapse
+        if not self.smoker and not self.never_smoked:  ## Only ex-smokers can relapse
             self.months_smoke_free += 1
-            # Recidivism rate decreases as months smoke-free increases
+            ## Recidivism rate decreases as months smoke-free increases
             recidivism_prob = self.base_smoke_relapse_prob * (0.95 ** self.months_smoke_free)
             if random.uniform(0, 1) < recidivism_prob:
                 self.smoker = True
@@ -54,21 +76,34 @@ class PersonAgent(Agent):
         self.attempt_quit()
         self.update_smoking_status()
 
+##################################
+### Service Agent Class
+##################################
+
+## creates a class of service agent
 class ServiceAgent(Agent):
-    def __init__(self, unique_id, model
+    def __init__(self
+                 , unique_id
+                 , model
                  , mecc_effect
                  , intervention_effect
-                 , base_make_intervention_prob #, intervention_radius
+                 , base_make_intervention_prob
+                 #, intervention_radius
                  , mecc_trained=False):
         super().__init__(unique_id, model)
+
+        ## Intervention 
         self.intervention_effect = intervention_effect
         self.mecc_effect = mecc_effect
         self.base_make_intervention_prob = base_make_intervention_prob
-        self.mecc_trained = mecc_trained
+        self.mecc_trained = mecc_trained ## If service is MECC trained
         #self.intervention_radius = intervention_radius
+
+        ## Reporting variables
         self.contacts_made = 0
         self.interventions_made = 0
-        
+    
+    ## Property for probability of making an intervention
     @property
     def make_intervention_prob(self):
         if self.mecc_trained:
@@ -92,7 +127,9 @@ class ServiceAgent(Agent):
 #                    neighbor.quit_attempt_prob *= 1.5
 #                    self.interventions_made += 1
     
-    def provide_intervention(self, PersonAgent):
+    ## Function that is called by a person when making a visit to this service
+    def have_contact(self, PersonAgent):
+        ## adds one to the service contact count
         self.contacts_made += 1
         intervention_rand = random.uniform(0, 1)
         ## for checking outputs
@@ -102,47 +139,75 @@ class ServiceAgent(Agent):
         #         f' make_intervention_prob {self.make_intervention_prob}\n\n-----')
         if intervention_rand < self.make_intervention_prob:
             PersonAgent.quit_attempt_prob *= self.intervention_effect
+            ## adds 1 to the intervention count
             self.interventions_made += 1
-
+    
+    ## doesn't do anything
     def step(self):
         pass
         #self.move()
         #self.provide_intervention()
 
-class MECC_Model(Model):  # Renamed from Enhanced_Persuasion_Model
-    def __init__(self, N_people, N_care, initial_smoking_prob #width, height, 
+##################################
+### Model Class
+##################################
+
+## creates a class of model
+class MECC_Model(Model): 
+    def __init__(self
+                , N_people
+                , N_service
+                , initial_smoking_prob 
+                #, width, height, 
                 , mecc_effect
                 , intervention_effect
-                , base_make_intervention_prob #, intervention_radius
-                 , quit_attempt_prob
-                 , base_smoke_relapse_prob,
-                 visit_prob,
-                 seed_value = 42,
-                 mecc_trained=False):
+                , base_make_intervention_prob 
+                #, intervention_radius
+                , quit_attempt_prob
+                , base_smoke_relapse_prob
+                , visit_prob
+                , seed_value = 42
+                , mecc_trained=False):
         super().__init__()  # Properly initialize the Model class
-        # Convert dictionary values if they're dictionaries
 
+        ## Set the seed for reproducibility
         if seed_value is not None:
-            random.seed(seed_value)  # Set the seed for reproducibility
+            random.seed(seed_value)  
 
-        self.num_people = N_people['value'] if isinstance(N_people, dict) else N_people
-        self.num_care = N_care['value'] if isinstance(N_care, dict) else N_care
+        ## numbers of agents
+        ## Convert dictionary values if they're dictionaries
+        self.N_people = N_people['value'] if isinstance(N_people, dict) else N_people
+        self.N_service = N_service['value'] if isinstance(N_service, dict) else N_service
+
+        ## smoking features for person agents
+        ## Convert dictionary values if they're dictionaries
         self.initial_smoking_prob = initial_smoking_prob['value'] if isinstance(initial_smoking_prob, dict) else initial_smoking_prob
-        #self.width = width
-        #self.height = height
-        self.base_make_intervention_prob = base_make_intervention_prob['value'] if isinstance(base_make_intervention_prob, dict) else base_make_intervention_prob
-        self.mecc_effect = mecc_effect['value'] if isinstance(mecc_effect, dict) else mecc_effect
-        self.intervention_effect = intervention_effect['value'] if isinstance(intervention_effect, dict) else intervention_effect
-        #self.intervention_radius = intervention_radius['value'] if isinstance(intervention_radius, dict) else intervention_radius
         self.quit_attempt_prob = quit_attempt_prob['value'] if isinstance(quit_attempt_prob, dict) else quit_attempt_prob
         self.base_smoke_relapse_prob = base_smoke_relapse_prob['value'] if isinstance(base_smoke_relapse_prob, dict) else base_smoke_relapse_prob
-        self.visit_prob = visit_prob['value'] if isinstance(visit_prob, dict) else visit_prob
+        self.intervention_effect = intervention_effect['value'] if isinstance(intervention_effect, dict) else intervention_effect
 
+        ## other features for person agents
+        ## Convert dictionary values if they're dictionaries
+        self.visit_prob = visit_prob['value'] if isinstance(visit_prob, dict) else visit_prob
+        
+        ## intervention features for service agents
+        ## Convert dictionary values if they're dictionaries
+        self.base_make_intervention_prob = base_make_intervention_prob['value'] if isinstance(base_make_intervention_prob, dict) else base_make_intervention_prob
+        self.mecc_effect = mecc_effect['value'] if isinstance(mecc_effect, dict) else mecc_effect
+        
+        ## Flag for whether model uncludes MECC training
         self.mecc_trained = mecc_trained
         
+        ## unused grid functions
+        #self.intervention_radius = intervention_radius['value'] if isinstance(intervention_radius, dict) else intervention_radius
+        #self.width = width
+        #self.height = height
+       
+        ## Schedule
         self.schedule = RandomActivation(self)
         #self.grid = MultiGrid(self.width, self.height, True)
         
+        ## Data collector for metrics
         self.datacollector = DataCollector(
             model_reporters={
                 "Total Smoking": calculate_number_smoking,
@@ -155,9 +220,10 @@ class MECC_Model(Model):  # Renamed from Enhanced_Persuasion_Model
             agent_reporters={}
         )
         
-        # Create person agents
-        for i in range(self.num_people):
-            a = PersonAgent(unique_id = i, model = self
+        ## Create person agents
+        for i in range(self.N_people):
+            a = PersonAgent(unique_id = i
+                            , model = self
                             , initial_smoking_prob = self.initial_smoking_prob
                             , quit_attempt_prob  = self.quit_attempt_prob
                             , base_smoke_relapse_prob = self.base_smoke_relapse_prob
@@ -167,24 +233,30 @@ class MECC_Model(Model):  # Renamed from Enhanced_Persuasion_Model
             #y = self.random.randrange(self.grid.height)
             #self.grid.place_agent(a, (x, y))
             
-        # Create primary care agents
-        for i in range(self.num_care):
-            a = ServiceAgent(unique_id = i + self.num_people
-                             , model = self, 
-                               base_make_intervention_prob = self.base_make_intervention_prob, 
-                               mecc_effect = self.mecc_effect,
-                               intervention_effect = self.intervention_effect,
-                               #self.intervention_radius,
-                               mecc_trained = self.mecc_trained)
+        ## Create service agents
+        for i in range(self.N_service):
+            a = ServiceAgent(unique_id = i + self.N_people
+                             , model = self
+                             , base_make_intervention_prob = self.base_make_intervention_prob
+                             ,  mecc_effect = self.mecc_effect
+                             , intervention_effect = self.intervention_effect
+                            #, self.intervention_radius
+                             , mecc_trained = self.mecc_trained)
             self.schedule.add(a)
             #x = self.random.randrange(self.grid.width)
             #y = self.random.randrange(self.grid.height)
             #self.grid.place_agent(a, (x, y))
 
+    ## Define actions at each step
     def step(self):
         self.datacollector.collect(self)
         self.schedule.step()
 
+##################################
+### Metric Outputs
+##################################
+
+## creates metrics used by model to report stats
 def calculate_number_smoking(model):
     return sum(1 for agent in model.schedule.agents 
               if isinstance(agent, PersonAgent) and agent.smoker)
