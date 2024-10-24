@@ -214,6 +214,7 @@ class MECC_Model(Model):
                 "Total Smoking": calculate_number_smoking,
                 "Total Not Smoking": calculate_number_not_smoking,
                 "Total Quit Attempts": calculate_total_quit_attempts,
+                "Total Quit Smoking": calculate_total_quit_smoking,
                 "Total Contacts": calculate_total_contacts,
                 "Total Interventions": calculate_total_interventions,
                 "Average Months Smoke Free": calculate_average_months_smoke_free
@@ -269,6 +270,12 @@ def calculate_number_not_smoking(model):
 def calculate_total_quit_attempts(model):
     return sum(agent.quit_attempts for agent in model.schedule.agents 
               if isinstance(agent, PersonAgent))
+
+def calculate_total_quit_smoking(model):
+    return sum(agent.quit_attempts for agent in model.schedule.agents 
+              if isinstance(agent, PersonAgent)
+                and not agent.never_smoked
+                and not agent.smoker )
 
 def calculate_total_contacts(model):
     return sum(agent.contacts_made for agent in model.schedule.agents 
