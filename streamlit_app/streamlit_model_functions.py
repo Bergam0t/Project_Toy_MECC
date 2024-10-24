@@ -122,13 +122,14 @@ def create_figure(results, step):
     # Success Metrics
     current_quit_attempts = results['Total Quit Attempts'].iloc[step]
     current_interventions = results['Total Interventions'].iloc[step]
+    current_quits = results['Total Quit Smoking'].iloc[step]
     avg_months_smoke_free = results['Average Months Smoke Free'].iloc[step]
     
     fig.add_trace(
         go.Bar(
-            x=['Quit Attempts', 'Interventions', 'Avg Months Smoke Free'],
-            y=[current_quit_attempts, current_interventions, avg_months_smoke_free],
-            marker_color=['purple', 'blue', 'orange']
+            x=[ 'Interventions','Quit Attempts','Current Quits', 'Avg Months Smoke Free'],
+            y=[current_interventions, current_quit_attempts, current_quits ,avg_months_smoke_free],
+            marker_color=['purple', 'blue', 'orange' ,'black']
         ),
         row=2, col=2
     )
@@ -251,19 +252,25 @@ def create_comparison_figure(results_no_mecc, results_mecc, step):
     # Comparative metrics
     current_interventions_no_mecc = results_no_mecc['Total Interventions'].iloc[step]
     current_interventions_mecc = results_mecc['Total Interventions'].iloc[step]
+ 
     current_quit_attempts_no_mecc = results_no_mecc['Total Quit Attempts'].iloc[step]
     current_quit_attempts_mecc = results_mecc['Total Quit Attempts'].iloc[step]
-    
-    success_rate_no_mecc = (results_no_mecc['Total Not Smoking'].iloc[step] / 
-                           current_quit_attempts_no_mecc * 100 if current_quit_attempts_no_mecc > 0 else 0)
-    success_rate_mecc = (results_mecc['Total Not Smoking'].iloc[step] / 
-                        current_quit_attempts_mecc * 100 if current_quit_attempts_mecc > 0 else 0)
+
+    current_quits_no_mecc = results_no_mecc['Total Quit Smoking'].iloc[step]
+    current_quits_mecc = results_mecc['Total Quit Smoking'].iloc[step]
+     
+    #success_rate_no_mecc = (results_no_mecc['Total Quit Smoking'].iloc[step] / 
+    #                       results_no_mecc['Total Quit Attempts'].iloc[step] * 100 
+    #                                if results_no_mecc['Total Quit Attempts'].iloc[step] > 0 else 0)
+    #success_rate_mecc = (results_mecc['Total Quit Smoking'].iloc[step] / 
+    #                    results_mecc['Total Quit Attempts'].iloc[step] * 100
+    #                             if results_mecc['Total Quit Attempts'].iloc[step] > 0 else 0)
     
     # Success metrics comparison
     fig.add_trace(
         go.Bar(
-            x=['Interventions', 'Quit Attempts', 'Success Rate (%)'],
-            y=[current_interventions_no_mecc, current_quit_attempts_no_mecc, success_rate_no_mecc],
+            x=['Interventions', 'Quit Attempts','Current Quits'],# 'Success Rate (%)'],
+            y=[current_interventions_no_mecc, current_quit_attempts_no_mecc,current_quits_no_mecc],#, success_rate_no_mecc],
             name='No MECC',
             marker_color='rgba(135, 206, 250, 0.8)'
         ),
@@ -272,8 +279,8 @@ def create_comparison_figure(results_no_mecc, results_mecc, step):
     
     fig.add_trace(
         go.Bar(
-            x=['Interventions', 'Quit Attempts', 'Success Rate (%)'],
-            y=[current_interventions_mecc, current_quit_attempts_mecc, success_rate_mecc],
+            x=['Interventions', 'Quit Attempts','Current Quits'],# 'Success Rate (%)'],
+            y=[current_interventions_mecc, current_quit_attempts_mecc,current_quits_mecc],#, success_rate_mecc],
             name='With MECC',
             marker_color='rgba(0, 0, 139, 0.8)'
         ),
