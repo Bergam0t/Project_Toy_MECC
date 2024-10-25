@@ -18,7 +18,7 @@ with st.sidebar:
     st.markdown("#### Population Parameters")
     N_people = st.slider("Number of People", 5, 100, 50)
     initial_smoking_prob = st.slider("Initial Smoking Probability", 0.0, 1.0, 0.5)
-    visit_prob = st.slider("Visit Primary Care Probability per Month", 0.0, 1.0, 0.1)
+    visit_prob = st.slider("Chance of Visiting a Service per Month", 0.0, 1.0, 0.1)
     quit_attempt_prob = st.slider("Base Quit Attempt Probability per Month", 0.00, 1.00, 0.01)
     base_smoke_relapse_prob = st.slider("Base Smoking Relapse per Month", 0.00, 1.00, 0.01)
     st.markdown("*Replase chance decreases over time of not smoking*")
