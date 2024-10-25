@@ -36,6 +36,7 @@ class PersonAgent(Agent):
         ## Reporting variables
         self.quit_attempts = 0
         self.months_smoke_free = 0
+        self.interventions_received = 0
 
 #    def move(self):
 #        possible_steps = self.model.grid.get_neighborhood(
@@ -140,6 +141,7 @@ class ServiceAgent(Agent):
         #         f' make_intervention_prob {self.make_intervention_prob}\n\n-----')
         if intervention_rand < self.make_intervention_prob:
             PersonAgent.quit_attempt_prob *= self.intervention_effect
+            PersonAgent.interventions_received += 1
             ## adds 1 to the intervention count
             self.interventions_made += 1
     
@@ -217,6 +219,7 @@ class MECC_Model(Model):
                 "Total Quit Smoking": calculate_total_quit_smoking,
                 "Total Contacts": calculate_total_contacts,
                 "Total Interventions": calculate_total_interventions,
+                "Smokers With an Intervention": calculate_smoker_with_interventions,
                 "Average Months Smoke Free": calculate_average_months_smoke_free
             },
             agent_reporters={}
@@ -284,6 +287,12 @@ def calculate_total_contacts(model):
 def calculate_total_interventions(model):
     return sum(agent.interventions_made for agent in model.schedule.agents 
               if isinstance(agent, ServiceAgent))
+
+def calculate_smoker_with_interventions(model):
+    return sum(1 for agent in model.schedule.agents 
+              if isinstance(agent, PersonAgent)
+                and not agent.never_smoked
+                and agent.interventions_received > 0)
 
 def calculate_average_months_smoke_free(model):
     smoke_free_months = [agent.months_smoke_free for agent in model.schedule.agents 
