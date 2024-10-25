@@ -41,115 +41,115 @@ def run_simulation_step(model):
 ### Output Functions
 ##################################
 
-def create_figure(results, step):
-    """Create the figure for single model visualization"""
-    fig = make_subplots(
-        rows=2, 
-        cols=2,
-        subplot_titles=(
-            'Population Changes Over Time',
-            'Interventions and Quit Attempts',
-            'Current Population Distribution',
-            'Success Metrics'
-        ),
-        specs=[[{}, {}], [{}, {}]],
-        row_heights=[0.6, 0.4]
-    )
+# def create_figure(results, step):
+#     """Create the figure for single model visualization"""
+#     fig = make_subplots(
+#         rows=2, 
+#         cols=2,
+#         subplot_titles=(
+#             'Population Changes Over Time',
+#             'Interventions and Quit Attempts',
+#             'Current Population Distribution',
+#             'Success Metrics'
+#         ),
+#         specs=[[{}, {}], [{}, {}]],
+#         row_heights=[0.6, 0.4]
+#     )
     
-    # Population changes over time
-    fig.add_trace(
-        go.Scatter(
-            x=results.index[:step+1], 
-            y=results['Total Smoking'][:step+1], 
-            name="Smoking", 
-            line=dict(color="red")
-        ),
-        row=1, col=1
-    )
-    fig.add_trace(
-        go.Scatter(
-            x=results.index[:step+1], 
-            y=results['Total Not Smoking'][:step+1], 
-            name="Not Smoking", 
-            line=dict(color="green")
-        ),
-        row=1, col=1
-    )
+#     # Population changes over time
+#     fig.add_trace(
+#         go.Scatter(
+#             x=results.index[:step+1], 
+#             y=results['Total Smoking'][:step+1], 
+#             name="Smoking", 
+#             line=dict(color="red")
+#         ),
+#         row=1, col=1
+#     )
+#     fig.add_trace(
+#         go.Scatter(
+#             x=results.index[:step+1], 
+#             y=results['Total Not Smoking'][:step+1], 
+#             name="Not Smoking", 
+#             line=dict(color="green")
+#         ),
+#         row=1, col=1
+#     )
     
-    # Interventions and Quit Attempts over time
-    fig.add_trace(
-        go.Scatter(
-            x=results.index[:step+1], 
-            y=results['Total Interventions'][:step+1], 
-            name="Interventions", 
-            line=dict(color="blue")
-        ),
-        row=1, col=2
-    )
-    fig.add_trace(
-        go.Scatter(
-            x=results.index[:step+1], 
-            y=results['Total Quit Attempts'][:step+1], 
-            name="Quit Attempts", 
-            line=dict(color="purple")
-        ),
-        row=1, col=2
-    )
+#     # Interventions and Quit Attempts over time
+#     fig.add_trace(
+#         go.Scatter(
+#             x=results.index[:step+1], 
+#             y=results['Total Interventions'][:step+1], 
+#             name="Interventions", 
+#             line=dict(color="blue")
+#         ),
+#         row=1, col=2
+#     )
+#     fig.add_trace(
+#         go.Scatter(
+#             x=results.index[:step+1], 
+#             y=results['Total Quit Attempts'][:step+1], 
+#             name="Quit Attempts", 
+#             line=dict(color="purple")
+#         ),
+#         row=1, col=2
+#     )
     
-    # Current Population Distribution (Bar Chart)
-    current_smoking = results['Total Smoking'].iloc[step]
-    current_not_smoking = results['Total Not Smoking'].iloc[step]
+#     # Current Population Distribution (Bar Chart)
+#     current_smoking = results['Total Smoking'].iloc[step]
+#     current_not_smoking = results['Total Not Smoking'].iloc[step]
     
-    fig.add_trace(
-        go.Bar(
-            x=['Current Distribution'],
-            y=[current_smoking],
-            name='Smoking',
-            marker_color='red'
-        ),
-        row=2, col=1
-    )
-    fig.add_trace(
-        go.Bar(
-            x=['Current Distribution'],
-            y=[current_not_smoking],
-            name='Not Smoking',
-            marker_color='green'
-        ),
-        row=2, col=1
-    )
+#     fig.add_trace(
+#         go.Bar(
+#             x=['Current Distribution'],
+#             y=[current_smoking],
+#             name='Smoking',
+#             marker_color='red'
+#         ),
+#         row=2, col=1
+#     )
+#     fig.add_trace(
+#         go.Bar(
+#             x=['Current Distribution'],
+#             y=[current_not_smoking],
+#             name='Not Smoking',
+#             marker_color='green'
+#         ),
+#         row=2, col=1
+#     )
     
-    # Success Metrics
-    current_quit_attempts = results['Total Quit Attempts'].iloc[step]
-    current_interventions = results['Total Interventions'].iloc[step]
-    current_quits = results['Total Quit Smoking'].iloc[step]
-    avg_months_smoke_free = results['Average Months Smoke Free'].iloc[step]
+#     # Success Metrics
+#     current_quit_attempts = results['Total Quit Attempts'].iloc[step]
+#     current_interventions = results['Total Interventions'].iloc[step]
+#     current_quits = results['Total Quit Smoking'].iloc[step]
+#     avg_months_smoke_free = results['Average Months Smoke Free'].iloc[step]
     
-    fig.add_trace(
-        go.Bar(
-            x=[ 'Interventions','Quit Attempts','Current Quits', 'Avg Months Smoke Free'],
-            y=[current_interventions, current_quit_attempts, current_quits ,avg_months_smoke_free],
-            marker_color=['purple', 'blue', 'orange' ,'black']
-        ),
-        row=2, col=2
-    )
+#     fig.add_trace(
+#         go.Bar(
+#             x=[ 'Interventions','Quit Attempts','Current Quits', 'Avg Months Smoke Free'],
+#             y=[current_interventions, current_quit_attempts, current_quits ,avg_months_smoke_free],
+#             marker_color=['purple', 'blue', 'orange' ,'black']
+#         ),
+#         row=2, col=2
+#     )
     
-    # Update layout
-    fig.update_layout(
-        height=800,
-        showlegend=True,
-        barmode='group'
-    )
+#     # Update layout
+#     fig.update_layout(
+#         height=800,
+#         showlegend=True,
+#         barmode='group'
+#     )
     
-    # Update axes labels
-    fig.update_xaxes(title_text="Time Step", row=1, col=1)
-    fig.update_xaxes(title_text="Time Step", row=1, col=2)
-    fig.update_yaxes(title_text="Number of Agents", row=1, col=1)
-    fig.update_yaxes(title_text="Number of Events", row=1, col=2)
-    fig.update_yaxes(title_text="Number of Agents", row=2, col=1)
-    fig.update_yaxes(title_text="Count", row=2, col=2)
+#     # Update axes labels
+#     fig.update_xaxes(title_text="Time Step", row=1, col=1)
+#     fig.update_xaxes(title_text="Time Step", row=1, col=2)
+#     fig.update_yaxes(title_text="Number of Agents", row=1, col=1)
+#     fig.update_yaxes(title_text="Number of Events", row=1, col=2)
+#     fig.update_yaxes(title_text="Number of Agents", row=2, col=1)
+#     fig.update_yaxes(title_text="Count", row=2, col=2)
     
-    return fig
+#     return fig
 
 
 def create_comparison_figure(results_no_mecc, results_mecc, step):
@@ -295,19 +295,24 @@ def create_comparison_figure(results_no_mecc, results_mecc, step):
     )
     
     # Update axes labels
-    fig.update_xaxes(title_text="Time Step", row=1, col=1)
-    fig.update_xaxes(title_text="Time Step", row=1, col=2)
-    fig.update_xaxes(title_text="Time Step", row=2, col=1)
-    fig.update_xaxes(title_text="Time Step", row=2, col=2)
+    fig.update_xaxes(title_text="Month", row=1, col=1)
+    fig.update_xaxes(title_text="Month", row=1, col=2)
+    fig.update_xaxes(title_text="Month", row=2, col=1)
+    fig.update_xaxes(title_text="Month", row=2, col=2)
     fig.update_xaxes(title_text="Metrics", row=3, col=1)
     fig.update_xaxes(title_text="Metrics", row=3, col=2)
     
     # Update y-axes labels
-    fig.update_yaxes(title_text="Number of Agents", row=1, col=1)
-    fig.update_yaxes(title_text="Number of Agents", row=1, col=2)
+    fig.update_yaxes(title_text="Number of People", row=1, col=1)
+    fig.update_yaxes(title_text="Number of People", row=1, col=2)
     fig.update_yaxes(title_text="Count", row=2, col=1)
     fig.update_yaxes(title_text="Count", row=2, col=2)
     fig.update_yaxes(title_text="Value", row=3, col=1)
     fig.update_yaxes(title_text="Value", row=3, col=2)
     
+    # Link the y-axes for each pair of charts in the same row
+    fig.update_yaxes(matches='y2', row=1)  # Matches y-axis for row 1 charts
+    fig.update_yaxes(matches='y3', row=2)  # Matches y-axis for row 2 charts
+    fig.update_yaxes(matches='y4', row=3)  # Matches y-axis for row 3 charts
+
     return fig
