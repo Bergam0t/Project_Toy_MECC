@@ -8,52 +8,84 @@ import time
 #from model_two_types_mecc import MECC_Model 
 from streamlit_model_functions import run_simulation_step, create_comparison_figure, create_MECC_model #, create_figure
 #import random
+import parameters
 
-st.title("Enhanced Smoking Cessation Model with MECC Training")
 
-## Sidebar parameters
-with st.sidebar:
-    #mecc_training = st.checkbox("Enable MECC Training Comparison", value=False)
-    
+st.title("Simulate - Enhanced Smoking Cessation Model with MECC Training")
+
+col1, col2 = st.columns(2)
+
+with col1:
     st.markdown("#### Population Parameters")
-    N_people = st.slider("Number of People", 5, 100, 50)
-    initial_smoking_prob = st.slider("Initial Smoking Probability", 0.0, 1.0, 0.5)
-    visit_prob = st.slider("Chance of Visiting a Service per Month", 0.0, 1.0, 0.1)
-    quit_attempt_prob = st.slider("Base Quit Attempt Probability per Month", 0.00, 1.00, 0.01)
-    base_smoke_relapse_prob = st.slider("Base Smoking Relapse per Month", 0.00, 1.00, 0.01)
-    st.markdown("*Replase chance decreases over time of not smoking*")
+    
+    st.write(f"Number of People: {st.session_state.N_people}")
+    st.write(f"Initial Smoking Probability: {st.session_state.initial_smoking_prob}")
+    st.write(f"Chance of Visiting a Service per Month: {st.session_state.visit_prob}")
+    st.write(f"Base Quit Attempt Probability per Month: {st.session_state.quit_attempt_prob}")
+    st.write(f"Base Smoking Relapse per Month: {st.session_state.base_smoke_relapse_prob}")
+    st.markdown("*Relapse chance decreases over time of not smoking*")
 
+with col2: 
     st.markdown("#### Service Parameters")
-    #N_service = st.slider("Number of Services", 1, 20, 5) ##not used
-    base_make_intervention_prob = st.slider("Chance a Brief Intervention Made Without MECC", 0.0, 1.0, 0.1)
-    #intervention_radius = st.slider("Intervention Radius", 1, 5, 2)
+    st.write(f"Chance a Brief Intervention Made Without MECC: {st.session_state.base_make_intervention_prob}")
 
+col3, col4 = st.columns(2)
+
+with col3:
     st.markdown("#### MECC Parameters")
-    mecc_effect = st.slider("Chance Making a Brief Intervention After MECC Training", 0.0, 1.0, 1.0)
-    intervention_effect = st.slider("Effect of a Brief Intervention on Chance Making a Quit Attempt", 0.0, 10.0, 1.1)
+    st.write(f"Chance Making a Brief Intervention After MECC Training: {st.session_state.mecc_effect}")
+    st.write(f"Effect of a Brief Intervention on Chance Making a Quit Attempt: {st.session_state.intervention_effect}")
     st.markdown("*Numbers less than 1 will decrease the probability*")
 
+with col4:
     st.markdown("#### Simulation Parameters")
-    model_seed = st.number_input("Random Seed",min_value=0,max_value=None,value=42,step=1) 
-    num_steps = st.slider("Number of Months to Simulate", 1, 120, 24)
-    animation_speed = st.slider("Animation Speed (seconds)", 0.1, 2.0, 0.1)
+    st.write(f"Random Seed: {st.session_state.model_seed}")
+    st.write(f"Number of Months to Simulate: {st.session_state.num_steps}")
+    st.write(f"Animation Speed (seconds): {st.session_state.animation_speed}")
+
+## Sidebar parameters
+# with st.sidebar:
+#     #mecc_training = st.checkbox("Enable MECC Training Comparison", value=False)
+    
+#     st.markdown("#### Population Parameters")
+#     st.session_state.N_people = st.slider("Number of People", 5, 100, 50)
+#     st.session_state.initial_smoking_prob = st.slider("Initial Smoking Probability", 0.0, 1.0, 0.5)
+#     st.session_state.visit_prob = st.slider("Chance of Visiting a Service per Month", 0.0, 1.0, 0.1)
+#     st.session_state.quit_attempt_prob = st.slider("Base Quit Attempt Probability per Month", 0.00, 1.00, 0.01)
+#     st.session_state.base_smoke_relapse_prob = st.slider("Base Smoking Relapse per Month", 0.00, 1.00, 0.01)
+#     st.markdown("*Replase chance decreases over time of not smoking*")
+
+#     st.markdown("#### Service Parameters")
+#     #N_service = st.slider("Number of Services", 1, 20, 5) ##not used
+#     st.session_state.base_make_intervention_prob = st.slider("Chance a Brief Intervention Made Without MECC", 0.0, 1.0, 0.1)
+#     #intervention_radius = st.slider("Intervention Radius", 1, 5, 2)
+
+#     st.markdown("#### MECC Parameters")
+#     st.session_state.mecc_effect = st.slider("Chance Making a Brief Intervention After MECC Training", 0.0, 1.0, 1.0)
+#     st.session_state.intervention_effect = st.slider("Effect of a Brief Intervention on Chance Making a Quit Attempt", 0.0, 10.0, 1.1)
+#     st.markdown("*Numbers less than 1 will decrease the probability*")
+
+#     st.markdown("#### Simulation Parameters")
+#     st.session_state.model_seed = st.number_input("Random Seed",min_value=0,max_value=None,value=42,step=1) 
+#     st.session_state.num_steps = st.slider("Number of Months to Simulate", 1, 120, 24)
+#     st.session_state.animation_speed = st.slider("Animation Speed (seconds)", 0.1, 2.0, 0.1)
 
 ## Dictionary to store all parameter values
 model_parameters = {
-    "model_seed": model_seed,
-    "N_people": N_people,
+    "model_seed": st.session_state.model_seed,
+    "N_people": st.session_state.N_people,
     "N_service": 1, ## set to 1 as currently not used
-    "initial_smoking_prob": initial_smoking_prob,
-    "visit_prob": visit_prob,
-    "quit_attempt_prob": quit_attempt_prob,
-    "base_smoke_relapse_prob": base_smoke_relapse_prob,
+    "initial_smoking_prob": st.session_state.initial_smoking_prob,
+    "visit_prob": st.session_state.visit_prob,
+    "quit_attempt_prob": st.session_state.quit_attempt_prob,
+    "base_smoke_relapse_prob": st.session_state.base_smoke_relapse_prob,
     #"N_service": 1,
-    "base_make_intervention_prob": base_make_intervention_prob,
-    "mecc_effect": mecc_effect,
-    "intervention_effect": intervention_effect,
+    "base_make_intervention_prob": st.session_state.base_make_intervention_prob,
+    "mecc_effect": st.session_state.mecc_effect,
+    "intervention_effect": st.session_state.intervention_effect,
     }
 
-   
+st.write("----") #divider
 
 
 ## Run simulation button
@@ -87,12 +119,12 @@ if st.button("Run Simulation"):
     data_mecc = pd.DataFrame()
     
     ## Run simulation step by step
-    for step in range(num_steps):
-        if step == num_steps-1:
+    for step in range(st.session_state.num_steps):
+        if step == st.session_state.num_steps-1:
             model_message.success("Simulation completed!")
             progress_bar.empty()
         else:
-            progress = (step + 1) / num_steps
+            progress = (step + 1) / st.session_state.num_steps
             progress_bar.progress(progress)
         
         ## Run both models
@@ -105,7 +137,7 @@ if st.button("Run Simulation"):
         with chart_placeholder:
             st.plotly_chart(fig, use_container_width=True)
         
-        time.sleep(animation_speed)
+        time.sleep(st.session_state.animation_speed)
     
     ## Display final statistics
     st.markdown("### Final Statistics")
@@ -114,14 +146,14 @@ if st.button("Run Simulation"):
     with col1:
         st.metric(
             "Smoking Reduction (No MECC)", 
-            f"{(data_no_mecc['Total Not Smoking'].iloc[-1] / N_people * 100):.1f}%",
+            f"{(data_no_mecc['Total Not Smoking'].iloc[-1] / st.session_state.N_people * 100):.1f}%",
             f"{(data_no_mecc['Total Not Smoking'].iloc[-1] - data_no_mecc['Total Not Smoking'].iloc[0]):.0f}"
         )
     
     with col2:
         st.metric(
             "Smoking Reduction (With MECC)", 
-            f"{(data_mecc['Total Not Smoking'].iloc[-1] / N_people * 100):.1f}%",
+            f"{(data_mecc['Total Not Smoking'].iloc[-1] / st.session_state.N_people * 100):.1f}%",
             f"{(data_mecc['Total Not Smoking'].iloc[-1] - data_mecc['Total Not Smoking'].iloc[0]):.0f}"
         )
     
@@ -133,7 +165,7 @@ if st.button("Run Simulation"):
         st.metric(
             "MECC Impact",
             f"{mecc_improvement:.0f} additional quits",
-            f"{(mecc_improvement / N_people * 100):.1f}%"
+            f"{(mecc_improvement / st.session_state.N_people * 100):.1f}%"
         )
 
     ## Display detailed data
