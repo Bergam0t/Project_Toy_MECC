@@ -1,15 +1,41 @@
 ---
 title: "MECC Simulation"
-format: html
+execute:
+  echo: false
+format:
+    html:
+        # toc: true
+        embed-resources: true
+        # URL options
+        # link-external-icon: true
+        # link-external-newwindow: true
+        # Reference options
+        # citations-hover: true
+        # footnotes-hover: true
+        #####################
+        # NHS Theme options #
+        #####################
+        css: "NHS_report_theme.css"
+        callout-appearance: simple
+        callout-collapse: true
+        # Caption options
+        cap-location: bottom
+        # Title options
+        title-block-banner: '#005EB8'
+        backgroundcolor: '#f0f4f5'
+        # Set font
+        mainfont: 'Open Sans'
 ---
 
 ![](resources\MECC.jpg){height=100}
 
 
 ```{python}
-from model_two_types_mecc import MECC_Model
+# from model_two_types_mecc import MECC_Model as mc
+from streamlit_model_functions import run_simulation_step as rst
 
 
+# print(rst.data)
 
 # print(f'{self.num_people}')
 ```
@@ -22,3 +48,43 @@ from model_two_types_mecc import MECC_Model
 ### Simulation Parameters
 
 ## Outputs
+<!-- `{python}  -->
+<!-- Dictionary to store all parameter values
+model_parameters = {
+    "model_seed": model_seed,
+    "N_people": N_people,
+    "N_service": 1, ## set to 1 as currently not used
+    "initial_smoking_prob": initial_smoking_prob,
+    "visit_prob": visit_prob,
+    "quit_attempt_prob": quit_attempt_prob,
+    "base_smoke_relapse_prob": base_smoke_relapse_prob,
+    #"N_service": 1,
+    "base_make_intervention_prob": base_make_intervention_prob,
+    "mecc_effect": mecc_effect,
+    "intervention_effect": intervention_effect,
+    }
+ -->
+    <!-- st.markdown("#### Population Parameters")
+    N_people = st.slider("Number of People", 5, 100, 50)
+    initial_smoking_prob = st.slider("Initial Smoking Probability", 0.0, 1.0, 0.5)
+    visit_prob = st.slider("Chance of Visiting a Service per Month", 0.0, 1.0, 0.1)
+    quit_attempt_prob = st.slider("Base Quit Attempt Probability per Month", 0.00, 1.00, 0.01)
+    base_smoke_relapse_prob = st.slider("Base Smoking Relapse per Month", 0.00, 1.00, 0.01)
+    st.markdown("*Replase chance decreases over time of not smoking*")
+
+    st.markdown("#### Service Parameters")
+    #N_service = st.slider("Number of Services", 1, 20, 5) ##not used
+    base_make_intervention_prob = st.slider("Chance a Brief Intervention Made Without MECC", 0.0, 1.0, 0.1)
+    #intervention_radius = st.slider("Intervention Radius", 1, 5, 2)
+
+    st.markdown("#### MECC Parameters")
+    mecc_effect = st.slider("Chance Making a Brief Intervention After MECC Training", 0.0, 1.0, 1.0)
+    intervention_effect = st.slider("Effect of a Brief Intervention on Chance Making a Quit Attempt", 0.0, 10.0, 1.1)
+    st.markdown("*Numbers less than 1 will decrease the probability*")
+
+    st.markdown("#### Simulation Parameters")
+    model_seed = st.number_input("Random Seed",min_value=0,max_value=None,value=42,step=1) 
+    num_steps = st.slider("Number of Months to Simulate", 1, 120, 24)
+    animation_speed =
+
+     -->
