@@ -1,5 +1,6 @@
 import streamlit as st
-from PIL import Image
+from logic_diagram import create_logic_diagram
+#from PIL import Image
 
 # st.logo("resources/MECC.jpg")
 
@@ -33,3 +34,10 @@ A Very Brief Intervention increases the probability that a patient will make a q
 
 Outputs will be MECC training numbers, number of quit attempts, and number of successful quits over time.
 """)
+
+st.write("## Diagram of Agent Model Logic")
+st.write("This diagram shows how a a person agent moves through the system")
+
+st.image(create_logic_diagram()
+         , caption="Diagram of Agent Model Logic"
+         , use_column_width=False)
