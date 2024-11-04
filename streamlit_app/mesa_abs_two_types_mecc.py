@@ -144,22 +144,25 @@ if st.button("Run Simulation"):
         with tab2:
             st.dataframe(data_mecc)
 
+## filepaths for outputs
 qmd_path = './streamlit_app/mecc_simulation_report.qmd'
-output_dir = './streamlit_app/downloads'
-
+output_dir = './downloads'
+output_dest = './streamlit_app/downloads'
 
 if st.session_state.simulation_completed:
     
     report_message = st.info("Generating Report for Download")
 
-    result = subprocess.run(["quarto", "render", qmd_path], capture_output=True, text=True)
+    ## forces result to be html
+    result = subprocess.run(["quarto", "render"
+                             , qmd_path, "--to"
+                             , "html", "--output-dir", output_dir]
+                            , capture_output=True, text=True)
 
     html_filename = os.path.basename(qmd_path).replace('.qmd', '.html')
-    default_html_path = os.path.join(os.path.dirname(qmd_path), html_filename)
-
-    if os.path.exists(default_html_path):
-        dest_html_path = os.path.join(output_dir, html_filename)
-        shutil.move(default_html_path, dest_html_path)
+    dest_html_path = os.path.join(output_dest, html_filename)
+ 
+    if os.path.exists(dest_html_path):
 
         with open(dest_html_path, "r") as f:
             html_data = f.read()
