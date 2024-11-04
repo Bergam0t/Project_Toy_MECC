@@ -17,3 +17,4 @@ dependencies:
     - openpyxl
     - nbformat>=4.2.0
     - quarto==0.1.0
+    - schemdraw==0.19

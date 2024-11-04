@@ -4,3 +4,4 @@ __pycache__/
 session_data.json
 streamlit_app/downloads/
 streamlit_app/outputs/
+logic_diagram.png
