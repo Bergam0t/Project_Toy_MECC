@@ -36,11 +36,11 @@ import pandas as pd
 import json
 
 # Load session data from JSON
-with open("outputs/session_data.json", "r") as f:
+with open("./streamlit_app/outputs/session_data.json", "r") as f:
     session_data = json.load(f)
 
-data_no_mecc = pd.read_csv("outputs/data_no_mecc.csv")
-data_mecc = pd.read_csv("outputs/data_mecc.csv")
+data_no_mecc = pd.read_csv("./streamlit_app/outputs/data_no_mecc.csv")
+data_mecc = pd.read_csv("./streamlit_app/outputs/data_mecc.csv")
 
 ```
 

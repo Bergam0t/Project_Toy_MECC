@@ -60,7 +60,7 @@ model_parameters = {
 }
 
 # save to json file to be used later for the quarto report
-with open("outputs/session_data.json", "w") as f:
+with open("./streamlit_app/outputs/session_data.json", "w") as f:
     json.dump(model_parameters, f)
 
 st.write("----")  # divider
@@ -106,8 +106,8 @@ if st.button("Run Simulation"):
 
     st.session_state.simulation_completed = True  # set to True after completion
 
-    data_no_mecc.to_csv("outputs/data_no_mecc.csv", index=False)
-    data_mecc.to_csv("outputs/data_mecc.csv", index=False)
+    data_no_mecc.to_csv("./streamlit_app/outputs/data_no_mecc.csv", index=False)
+    data_mecc.to_csv("./streamlit_app/outputs/data_mecc.csv", index=False)
     
     st.markdown("### Final Statistics")
     col1, col2, col3 = st.columns(3)
@@ -144,8 +144,8 @@ if st.button("Run Simulation"):
         with tab2:
             st.dataframe(data_mecc)
 
-qmd_path = 'mecc_simulation_report.qmd'
-output_dir = 'downloads'
+qmd_path = './streamlit_app/mecc_simulation_report.qmd'
+output_dir = './streamlit_app/downloads'
 
 
 if st.session_state.simulation_completed:
