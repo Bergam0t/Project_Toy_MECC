@@ -60,7 +60,7 @@ model_parameters = {
 }
 
 # save to json file to be used later for the quarto report
-with open("session_data.json", "w") as f:
+with open("outputs/session_data.json", "w") as f:
     json.dump(model_parameters, f)
 
 st.write("----")  # divider
@@ -164,7 +164,7 @@ if st.session_state.simulation_completed:
         with open(dest_html_path, "r") as f:
             html_data = f.read()
 
-        report_message.success("Report Avaible for Download")
+        report_message.success("Report Available for Download")
 
         if st.download_button(
             label="Download MECC Simulation Report",

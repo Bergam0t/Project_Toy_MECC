@@ -36,7 +36,7 @@ import pandas as pd
 import json
 
 # Load session data from JSON
-with open("session_data.json", "r") as f:
+with open("outputs/session_data.json", "r") as f:
     session_data = json.load(f)
 
 data_no_mecc = pd.read_csv("outputs/data_no_mecc.csv")

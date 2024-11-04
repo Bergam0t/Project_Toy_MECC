@@ -2,6 +2,8 @@ streamlit_app/__pycache__/
 __pycache__/
 *.pyc
 session_data.json
-streamlit_app/downloads/
-streamlit_app/outputs/
+streamlit_app/downloads/*
+!streamlit_app/downloads/
+streamlit_app/outputs/*
+!streamlit_app/outputs/
 logic_diagram.png
