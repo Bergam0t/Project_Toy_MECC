@@ -6,12 +6,9 @@ os.system("wget https://github.com/quarto-dev/quarto-cli/releases/download/v1.5.
 os.system("mkdir -p ~/opt")
 os.system("tar -C ~/opt -xvzf quarto-1.5.57-linux-amd64.tar.gz")
 
-os.system("mkdir -p ~/.local/bin")
-os.system("ln -s ~/opt/quarto-1.5.57/bin/quarto ~/.local/bin/quarto")
-
-os.system("""
-export PATH="$PATH:~/.local/bin"
-""")
+os.system("cd quarto-1.5.57")
+os.system("cp -r ./bin/* $HOME/.local/bin/")
+os.system("cp -r ./share/* $HOME/.local/share/")
 
 os.system("quarto check")
 
