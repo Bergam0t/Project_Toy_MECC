@@ -3,20 +3,14 @@ import os
 
 os.system("wget https://github.com/quarto-dev/quarto-cli/releases/download/v1.5.57/quarto-1.5.57-linux-amd64.tar.gz")
 
-os.system("tar -xvzf quarto-1.5.57-linux-amd64.tar.gz")
+os.system("mkdir -P ~/opt")
+os.system("tar -C ~/opt -xvzf quarto-15.45-linux-amd64.tar.gz")
 
 os.system("ls")
 
 os.system("echo $PATH")
 
-os.system("echo 'moving here'")
-
-os.system("cd quarto-1.5.57")
-
-os.system("ls")
-
-os.system("cp -r ./bin/* $HOME/.local/bin/")
-os.system("cp -r ./share/* $HOME/.local/share/")
+os.system("ln -s ~/opt/quarto-15.45/bin/quarto usr/local/bin/quarto")
 
 os.system("quarto check")
 
