@@ -10,7 +10,7 @@ os.system("mkdir -p ~/.local/bin")
 os.system("ln -s ~/opt/quarto-1.5.57/bin/quarto ~/.local/bin/quarto")
 
 os.system("""
-export PATH="$PATH:/home/appuser/.local/bin"
+export PATH="$PATH:~/.local/bin"
 """)
 
 os.system("quarto check")
