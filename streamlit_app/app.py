@@ -9,6 +9,11 @@ os.system("tar -C ~/opt -xvzf quarto-1.5.57-linux-amd64.tar.gz")
 os.system("mkdir -p ~/.local/bin")
 os.system("ln -s ~/opt/quarto-1.5.57/bin/quarto ~/.local/bin/quarto")
 
+os.system("""
+echo 'export PATH="$PATH:/home/appuser/.local/bin"' >> ~/.bashrc
+""")
+os.system("source ~/.bashrc")
+
 os.system("quarto check")
 
 st.set_page_config(layout="wide")
