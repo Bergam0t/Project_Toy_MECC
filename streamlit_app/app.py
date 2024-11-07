@@ -1,19 +1,31 @@
 import streamlit as st
 import os
+import subprocess
 
+# Download Quarto
 os.system("wget https://github.com/quarto-dev/quarto-cli/releases/download/v1.5.57/quarto-1.5.57-linux-amd64.tar.gz")
 
+# Create directory and extract Quarto
 os.system("mkdir -p ~/opt")
-os.system("tar -C ~/opt -xvzf quarto-15.45-linux-amd64.tar.gz")
+os.system("tar -C ~/opt -xvzf quarto-1.5.57-linux-amd64.tar.gz")
 
-os.system("ls")
+# Create symlink in a directory that's typically in PATH
+os.system("mkdir -p ~/.local/bin")
+os.system("ln -s ~/opt/quarto-1.5.57/bin/quarto ~/.local/bin/quarto")
 
-os.system("echo $PATH")
+# Add ~/.local/bin to PATH if it's not already there
+home = os.path.expanduser("~")
 
-os.system("mkdir -p ~/usr/local/bin/quarto")
-os.system("ln -s ~/opt/quarto-15.45/bin/quarto ~/usr/local/bin/quarto")
+with open(f"{home}/.bashrc", "a") as bashrc:
+    bashrc.write('\nexport PATH="$HOME/.local/bin:$PATH"\n')
 
-os.system("quarto check")
+# Reload .bashrc
+os.system("source ~/.bashrc")
+
+# Print PATH and check Quarto
+print(os.environ['PATH'])
+subprocess.run(["quarto", "check"], check=True)
+
 
 st.set_page_config(layout="wide")
 
