@@ -1,4 +1,10 @@
 import streamlit as st
+import os
+
+os.system("""
+wget https://github.com/quarto-dev/quarto-cli/releases/download/v15.45/quarto-15.45-linux-amd64.tar.gz
+""")
+
 
 st.set_page_config(layout="wide")
 
