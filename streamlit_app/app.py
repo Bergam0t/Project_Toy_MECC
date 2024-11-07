@@ -9,23 +9,13 @@ os.system("wget https://github.com/quarto-dev/quarto-cli/releases/download/v1.5.
 os.system("mkdir -p ~/opt")
 os.system("tar -C ~/opt -xvzf quarto-1.5.57-linux-amd64.tar.gz")
 
+os.system("echo $PATH")
+
 # Create symlink in a directory that's typically in PATH
-os.system("mkdir -p ~/.local/bin")
-os.system("ln -s ~/opt/quarto-1.5.57/bin/quarto ~/.local/bin/quarto")
+os.system("mkdir -p /local/bin/quarto")
+os.system("ln -s ~/opt/quarto-1.5.57/bin/quarto /local/bin/quarto")
 
-# Add ~/.local/bin to PATH if it's not already there
-home = os.path.expanduser("~")
-
-with open(f"{home}/.bashrc", "a") as bashrc:
-    bashrc.write('\nexport PATH="$HOME/.local/bin:$PATH"\n')
-
-# Reload .bashrc
-os.system("source ~/.bashrc")
-
-# Print PATH and check Quarto
-print(os.environ['PATH'])
 os.system("quarto check")
-
 
 st.set_page_config(layout="wide")
 
