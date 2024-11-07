@@ -9,11 +9,22 @@ os.system("wget https://github.com/quarto-dev/quarto-cli/releases/download/v1.5.
 os.system("mkdir -p ~/opt")
 os.system("tar -C ~/opt -xvzf quarto-1.5.57-linux-amd64.tar.gz")
 
+os.system("echo 'Original PATH'")
 os.system("echo $PATH")
 
 # Create symlink in a directory that's typically in PATH
-os.system("mkdir -p /usr/local/bin/quarto")
-os.system("ln -s ~/opt/quarto-1.5.57/bin/quarto /usr/local/bin/quarto")
+os.system("mkdir -p ~/.local/bin/quarto")
+os.system("ln -s ~/opt/quarto-1.5.57/bin/quarto ~/.local/bin/quarto")
+# Update PATH to include our new directory
+# unable to write to folders already in path - permission denied
+os.system("""
+export PATH="$HOME/.local/bin:$PATH"
+""")
+# re-source bashrc to ensure new path pulled in
+os.system(". ~/.bashrc")
+# check path updated
+os.system("echo 'New PATH'")
+os.system("echo $PATH")
 
 os.system("quarto check")
 
