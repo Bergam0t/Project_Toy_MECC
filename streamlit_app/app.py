@@ -1,9 +1,13 @@
 import streamlit as st
 import os
 
-os.system("wget https://github.com/quarto-dev/quarto-cli/releases/download/v1.6.33/quarto-1.6.33-linux-amd64.deb")
+os.system("wget https://github.com/quarto-dev/quarto-cli/releases/download/v1.5.57/quarto-1.5.57-linux-amd64.tar.gz")
 
-os.system("dpkg -i quarto-1.6.33-linux-amd64.deb")
+os.system("mkdir ~/opt")
+os.system("tar -C ~/opt -xvzf quarto-1.5.57-linux-amd64.tar.gz")
+
+os.system("mkdir ~/.local/bin")
+os.system("ln -s ~/opt/quarto-1.5.57/bin/quarto ~/.local/bin/quarto")
 
 os.system("quarto check")
 
