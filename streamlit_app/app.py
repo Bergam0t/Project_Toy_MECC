@@ -10,6 +10,7 @@ os.system("ls")
 
 os.system("echo $PATH")
 
+os.system("mkdir -p usr/local/bin/quarto")
 os.system("ln -s ~/opt/quarto-15.45/bin/quarto usr/local/bin/quarto")
 
 os.system("quarto check")
