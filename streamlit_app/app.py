@@ -24,7 +24,7 @@ os.system("source ~/.bashrc")
 
 # Print PATH and check Quarto
 print(os.environ['PATH'])
-subprocess.run(["quarto", "check"], check=True)
+os.system("quarto check")
 
 
 st.set_page_config(layout="wide")
