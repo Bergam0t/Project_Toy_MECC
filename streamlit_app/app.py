@@ -2,7 +2,7 @@ import streamlit as st
 import os
 
 os.system("""
-wget https://github.com/quarto-dev/quarto-cli/releases/download/v15.45/quarto-15.45-linux-amd64.tar.gz
+wget https://github.com/quarto-dev/quarto-cli/releases/download/v1.6.33/quarto-1.6.33-linux-amd64.deb
 """)
 
 
