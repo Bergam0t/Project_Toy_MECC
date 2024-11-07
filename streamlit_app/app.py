@@ -38,9 +38,9 @@ def get_quarto():
     
     subprocess.run(['quarto', 'check'], capture_output=True, text=True)
 
-get_quarto()
-
 st.set_page_config(layout="wide")
+
+get_quarto()
 
 pg = st.navigation(
 
