@@ -15,18 +15,26 @@ os.system("echo $PATH")
 # Create symlink in a directory that's typically in PATH
 os.system("mkdir -p ~/.local/bin/quarto")
 os.system("ln -s ~/opt/quarto-1.5.57/bin/quarto ~/.local/bin/quarto")
-# Update PATH to include our new directory
-# unable to write to folders already in path - permission denied
-os.system("""
-export PATH="$HOME/.local/bin:$PATH"
-""")
-# re-source bashrc to ensure new path pulled in
-os.system(". ~/.bashrc")
+
+# Try alternative approach to path updating
+bashrc_path = os.path.expanduser("~/.bashrc")
+export_statement = '\nexport PATH="$HOME/.local/bin:$PATH"\n'
+
+# Check if the export statement already exists in .bashrc
+with open(bashrc_path, 'r') as file:
+    if export_statement.strip() not in file.read():
+        # Append the export statement to .bashrc
+        with open(bashrc_path, 'a') as file:
+            file.write(export_statement)
+
+# Update PATH in the current Python process
+os.environ['PATH'] = f"{os.path.expanduser('~/.local/bin')}:{os.environ['PATH']}"
+
 # check path updated
 os.system("echo 'New PATH'")
 os.system("echo $PATH")
 
-os.system("quarto check")
+subprocess.run(['quarto', 'check'], capture_output=True, text=True)
 
 st.set_page_config(layout="wide")
 
