@@ -7,6 +7,10 @@ os.system("tar -xvzf quarto-1.5.57-linux-amd64.tar.gz")
 
 os.system("ls")
 
+os.system("echo $PATH")
+
+os.system("echo 'moving here'")
+
 os.system("cd quarto-1.5.57")
 
 os.system("ls")
