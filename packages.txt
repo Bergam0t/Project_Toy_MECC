@@ -1,5 +1,1 @@
-wget https://github.com/quarto-dev/quarto-cli/releases/download/v15.45/quarto-15.45-linux-amd64.tar.gz
-mkdir ~/opt
-tar -C ~/opt -xvzf quarto-15.45-linux-amd64.tar.gz
-mkdir ~/.local/bin
-ln -s ~/opt/quarto-15.45/bin/quarto ~/.local/bin/quarto
+wget
