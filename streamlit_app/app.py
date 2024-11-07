@@ -3,7 +3,7 @@ import os
 
 os.system("wget https://github.com/quarto-dev/quarto-cli/releases/download/v1.6.33/quarto-1.6.33-linux-amd64.deb")
 
-os.system("sudo dpkg -i quarto-1.6.33-linux-amd64.deb")
+os.system("dpkg -i quarto-1.6.33-linux-amd64.deb")
 
 os.system("quarto check")
 
