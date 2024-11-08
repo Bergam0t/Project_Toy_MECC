@@ -172,7 +172,7 @@ if st.session_state.simulation_completed:
 
         render_result = render_quarto(
             input=f"/mount/src/{repo_name}/{qmd_path}",
-            output_dir=f"/mount/src/{repo_name}/{dest_html_path}",
+            output_dir=f"/mount/src/{repo_name}/streamlit_app/{dest_html_path}",
             output_format="html",
             find_quarto_path=True,
             print_command=True,
