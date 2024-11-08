@@ -26,7 +26,7 @@ with col1:
     st.write(f"Base Smoking Relapse per Month: {st.session_state.base_smoke_relapse_prob}")
     st.markdown("*Relapse chance decreases over time of not smoking*")
 
-with col2: 
+with col2:
     st.markdown("#### Service Parameters")
     st.write(f"Chance a Brief Intervention Made Without MECC: {st.session_state.base_make_intervention_prob}")
 
@@ -70,7 +70,7 @@ if "simulation_completed" not in st.session_state:
 if st.button("Run Simulation"):
     # set simulation_completed to False before starting - to control the download report button
     st.session_state.simulation_completed = False
-    
+
     model_no_mecc = create_MECC_model(
         model_parameters=model_parameters,
         mecc_trained=False
@@ -108,27 +108,27 @@ if st.button("Run Simulation"):
 
     data_no_mecc.to_csv("./streamlit_app/outputs/data_no_mecc.csv", index=False)
     data_mecc.to_csv("./streamlit_app/outputs/data_mecc.csv", index=False)
-    
+
     st.markdown("### Final Statistics")
     col1, col2, col3 = st.columns(3)
-    
+
     with col1:
         st.metric(
-            "Smoking Reduction (No MECC)", 
+            "Smoking Reduction (No MECC)",
             f"{(data_no_mecc['Total Not Smoking'].iloc[-1] / st.session_state.N_people * 100):.1f}%",
             f"{(data_no_mecc['Total Not Smoking'].iloc[-1] - data_no_mecc['Total Not Smoking'].iloc[0]):.0f}"
         )
-    
+
     with col2:
         st.metric(
             "Smoking Reduction (With MECC)",
             f"{(data_mecc['Total Not Smoking'].iloc[-1] / st.session_state.N_people * 100):.1f}%",
             f"{(data_mecc['Total Not Smoking'].iloc[-1] - data_mecc['Total Not Smoking'].iloc[0]):.0f}"
         )
-    
+
     with col3:
         mecc_improvement = (
-            data_mecc['Total Not Smoking'].iloc[-1] - 
+            data_mecc['Total Not Smoking'].iloc[-1] -
             data_no_mecc['Total Not Smoking'].iloc[-1]
         )
         st.metric(
@@ -150,22 +150,22 @@ output_dir = './downloads'
 output_dest = './streamlit_app/downloads'
 
 if st.session_state.simulation_completed:
-    
+
     report_message = st.info("Generating Report for Download")
 
     print("Starting quarto subprocess")
-    
+
     ## forces result to be html
     result = subprocess.run(["quarto", "render"
                              , qmd_path, "--to"
                              , "html", "--output-dir", output_dir]
-                            , capture_output=True, text=True)
+                            , capture_output=True, text=True, shell=True)
 
     print("Render complete")
-    
+
     html_filename = os.path.basename(qmd_path).replace('.qmd', '.html')
     dest_html_path = os.path.join(output_dest, html_filename)
- 
+
     if os.path.exists(dest_html_path):
 
         with open(dest_html_path, "r") as f:
