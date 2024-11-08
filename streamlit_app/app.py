@@ -21,14 +21,19 @@ def get_quarto(quarto_version="1.5.57"):
     # quarto_dir = f'/mount/src/project_toy_mecc/quarto-{quarto_version}/bin/quarto'
     # os.environ['PATH'] = f"{quarto_dir}:{os.environ['PATH']}"
 
-    # print("Trying to run 'quarto check' command")
-    # try:
-    #     result = subprocess.run(['quarto', 'check'], capture_output=True, text=True, shell=True)
-    #     print(result.stdout)
-    #     print(result.stderr)
-    #     print("Quarto check run")
-    # except PermissionError:
-    #     print("Permission error encountered when running 'quarto check'")
+    os.system("echo $PATH")
+
+    os.system("mkdir -p ~/.local/bin")
+    os.system(f"ln -s quarto-{quarto_version}/bin/quarto ~/.local/bin/quarto")
+
+    print("Trying to run 'quarto check' command")
+    try:
+        result = subprocess.run(['quarto', 'check'], capture_output=True, text=True, shell=True)
+        print(result.stdout)
+        print(result.stderr)
+        print("Quarto check run")
+    except PermissionError:
+        print("Permission error encountered when running 'quarto check'")
 
 st.set_page_config(layout="wide")
 

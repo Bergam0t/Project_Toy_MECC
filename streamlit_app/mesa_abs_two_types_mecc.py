@@ -166,12 +166,6 @@ if st.session_state.simulation_completed:
 
     print("Starting quarto render subprocess")
     quarto_version = "1.5.57"
-    # Ensure PATH is updated in the current Python process
-    # os.environ['QUARTO_PATH'] = f"{f'/mount/src/project_toy_mecc/quarto-{quarto_version}/bin/quarto'}"
-    quarto_dir = f'/mount/src/project_toy_mecc/quarto-{quarto_version}/bin/quarto'
-    os.environ['PATH'] = f"{quarto_dir}:{os.environ['PATH']}"
-    quarto_dir_alt = f'/quarto-{quarto_version}/bin/quarto'
-    os.environ['PATH'] = f"{quarto_dir_alt}:{os.environ['PATH']}"
 
     render_result = render_quarto(input=qmd_path,
                   output_dir=dest_html_path,
