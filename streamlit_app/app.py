@@ -11,17 +11,15 @@ def get_quarto():
     # Create directory and extract Quarto
     os.system("mkdir -p ~/opt")
     os.system("tar -C ~/opt -xvzf quarto-1.5.57-linux-amd64.tar.gz")
+    os.system("cd ~/opt")
+    os.system("ls")
 
     os.system("echo 'Original PATH'")
     os.system("echo $PATH")
 
-    # Create symlink in a directory that's typically in PATH
-    os.system("mkdir -p ~/.local/bin/quarto")
-    os.system("ln -s ~/opt/quarto-1.5.57/bin/quarto ~/.local/bin/quarto")
-
     # Ensure PATH is updated in the current Python process
-    os.environ['PATH'] = f"{os.path.expanduser('~/.local/bin')}:{os.environ['PATH']}"
-    os.environ['QUARTO_PATH'] = f"{os.path.expanduser('~/.local/bin/quarto/quarto/bin/quarto')}"
+    os.environ['PATH'] = f"{os.path.expanduser('~/opt')}:{os.environ['PATH']}"
+    os.environ['QUARTO_PATH'] = f"{os.path.expanduser('~/.opt/quarto/bin/quarto')}"
 
     # subprocess.run(['cd', '~/.local/bin/quarto/'])
 
