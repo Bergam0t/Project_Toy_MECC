@@ -10,32 +10,28 @@ def get_quarto():
 
     # Create directory and extract Quarto
     os.system("tar -xvzf quarto-1.5.57-linux-amd64.tar.gz")
+    # Check the contents of the folder we are in
+    os.system("ls")
+    os.system('find . | sed -e "s/[^-][^\/]*\// |/g" -e "s/|\([^ ]\)/|-\1/"')
+
+    os.system("cd ..")
     os.system("ls")
 
-    # os.system("echo 'Original PATH'")
-    # os.system("echo $PATH")
+    os.system("cd ..")
+    os.system("ls")
 
     # Ensure PATH is updated in the current Python process
-    # os.environ['PATH'] = f"{os.path.expanduser('~/opt')}:{os.environ['PATH']}"
     os.environ['QUARTO_PATH'] = f"{'quarto-1.5.57/bin/quarto'}"
 
-    # subprocess.run(['cd', '~/.local/bin/quarto/'])
-
-    # subprocess.run(['ls'])
-
-    # subprocess.run(['chmod', '+x', '~/.local/bin/quarto/bin/quarto'])
-
-    # check path updated
-    # os.system("echo 'New PATH'")
-    # os.system("echo $PATH")
+    print("Trying to run 'quarto check' command")
     try:
-        print("Trying to run 'quarto check' command")
         result = subprocess.run(['quarto', 'check'], capture_output=True, text=True, shell=True)
         print(result.stdout)
         print(result.stderr)
         print("Quarto check run")
     except PermissionError:
         print("Permission error encountered when running 'quarto check'")
+
 
 
 st.set_page_config(layout="wide")
