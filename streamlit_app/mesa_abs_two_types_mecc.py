@@ -165,6 +165,7 @@ if st.session_state.simulation_completed:
     render_quarto(input=qmd_path,
                   output_dir=output_dir,
                   output_format="html",
+                  find_quarto_path=True,
                   print_command=True,
                   verbose=True,
                   shell=True)

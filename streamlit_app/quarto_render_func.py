@@ -40,7 +40,7 @@ def render_quarto(
     pandoc_args = None,
     print_command=False,
     verbose=True,
-    find_quarto=False,
+    find_quarto_path=False,
     **kwargs
     ):
 
@@ -113,9 +113,10 @@ def render_quarto(
 
   # run process
   try:
-    if find_quarto:
+    if find_quarto_path:
       print("Looking for Quarto")
-      final_command = [find_quarto()] + args
+      find_quarto_output = find_quarto()
+      final_command = [find_quarto_output] + args
       if print_command:
         print(f"Final command: {' '.join(final_command)}")
       process = subprocess.Popen(final_command, **kwargs)
