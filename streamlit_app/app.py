@@ -11,14 +11,7 @@ def get_quarto():
     # Create directory and extract Quarto
     os.system("tar -xvzf quarto-1.5.57-linux-amd64.tar.gz")
     # Check the contents of the folder we are in
-    os.system("ls")
-    os.system('find . | sed -e "s/[^-][^\/]*\// |/g" -e "s/|\([^ ]\)/|-\1/"')
-
-    os.system("cd ..")
-    os.system("ls")
-
-    os.system("cd ..")
-    os.system("ls")
+    os.system("pwd")
 
     # Ensure PATH is updated in the current Python process
     os.environ['QUARTO_PATH'] = f"{'quarto-1.5.57/bin/quarto'}"
