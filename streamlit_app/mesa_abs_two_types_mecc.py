@@ -165,7 +165,7 @@ if st.session_state.simulation_completed:
     html_filename = os.path.basename(qmd_path).replace('.qmd', '.html')
 
     render_quarto(input=qmd_path,
-                  output=html_filename,
+                  output_file=html_filename,
                   output_format="html",
                   find_quarto_path=True,
                   print_command=True,
