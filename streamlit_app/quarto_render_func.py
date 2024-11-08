@@ -11,15 +11,21 @@ import tempfile
 def path():
   path_env = os.getenv("QUARTO_PATH")
   if path_env is None:
-    return shutil.which("quarto")
+    print("QUARTO_PATH variable not set")
+    result = shutil.which("quarto")
+    print(f'shutil.which("quarto") returned {result}')
+    return result
   else:
+    print(f"QUARTO_PATH env variable is {path_env}")
     return path_env
 
 def find_quarto():
   quarto = path()
   if quarto is None:
     raise FileNotFoundError('Unable to find quarto command line tools.')
-  return quarto
+  else:
+    print(f"Quarto successfully found at {quarto}")
+    return quarto
 
 def render_quarto(
     input,
