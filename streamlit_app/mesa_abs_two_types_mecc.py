@@ -220,6 +220,9 @@ if st.session_state.simulation_completed:
         ls_out = subprocess.run(['ls'], capture_output=True, text=True, shell=True)
         print(ls_out.stdout)
 
+        # Revert back to original location
+        os.chdir(f"/mount/src/{repo_name}")
+
     print("Render complete")
 
     # if os.path.exists(dest_html_path):
@@ -232,6 +235,8 @@ if st.session_state.simulation_completed:
             html_data = f.read()
 
     report_message.success("Report Available for Download")
+
+
 
     if st.download_button(
         label="Download MECC Simulation Report",
