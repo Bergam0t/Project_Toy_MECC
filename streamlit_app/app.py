@@ -36,8 +36,11 @@ def get_quarto():
     # check path updated
     os.system("echo 'New PATH'")
     os.system("echo $PATH")
-
-    subprocess.run(['quarto', 'check'], capture_output=True, text=True)
+    try:
+        result = subprocess.run(['quarto', 'check'], capture_output=True, text=True)
+    except PermissionError:
+        print("Permission error encountered when running 'quarto check'")
+        print(result)
 
 st.set_page_config(layout="wide")
 
@@ -47,6 +50,7 @@ print(f"type:  {type(platform.processor())}")
 # If running on community cloud, output of this is an empty string
 # If this is the case, we'll try to install quarto
 if platform.processor() == '':
+    print("Attempting to download Quarto")
     get_quarto()
 
 pg = st.navigation(
