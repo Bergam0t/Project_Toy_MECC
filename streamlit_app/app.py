@@ -9,17 +9,15 @@ def get_quarto():
     os.system("wget https://github.com/quarto-dev/quarto-cli/releases/download/v1.5.57/quarto-1.5.57-linux-amd64.tar.gz")
 
     # Create directory and extract Quarto
-    os.system("mkdir -p ~/opt")
-    os.system("tar -C ~/opt -xvzf quarto-1.5.57-linux-amd64.tar.gz")
-    os.system("cd ~/opt")
+    os.system("tar -C -xvzf quarto-1.5.57-linux-amd64.tar.gz")
     os.system("ls")
 
     os.system("echo 'Original PATH'")
     os.system("echo $PATH")
 
     # Ensure PATH is updated in the current Python process
-    os.environ['PATH'] = f"{os.path.expanduser('~/opt')}:{os.environ['PATH']}"
-    os.environ['QUARTO_PATH'] = f"{os.path.expanduser('~/opt/quarto/bin/quarto')}"
+    # os.environ['PATH'] = f"{os.path.expanduser('~/opt')}:{os.environ['PATH']}"
+    os.environ['QUARTO_PATH'] = f"{os.path.expanduser('~/quarto/bin/quarto')}"
 
     # subprocess.run(['cd', '~/.local/bin/quarto/'])
 
@@ -28,8 +26,8 @@ def get_quarto():
     # subprocess.run(['chmod', '+x', '~/.local/bin/quarto/bin/quarto'])
 
     # check path updated
-    os.system("echo 'New PATH'")
-    os.system("echo $PATH")
+    # os.system("echo 'New PATH'")
+    # os.system("echo $PATH")
     try:
         result = subprocess.run(['quarto', 'check'], capture_output=True, text=True, shell=True)
         print(result)
