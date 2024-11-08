@@ -162,8 +162,10 @@ if st.session_state.simulation_completed:
     #                          , "html", "--output-dir", output_dir]
     #                         , capture_output=True, text=True, shell=True, )
 
+    html_filename = os.path.basename(qmd_path).replace('.qmd', '.html')
+
     render_quarto(input=qmd_path,
-                  output_dir=output_dir,
+                  output=html_filename,
                   output_format="html",
                   find_quarto_path=True,
                   print_command=True,
@@ -172,22 +174,22 @@ if st.session_state.simulation_completed:
 
     print("Render complete")
 
-    html_filename = os.path.basename(qmd_path).replace('.qmd', '.html')
+
     dest_html_path = os.path.join(output_dest, html_filename)
 
-    if os.path.exists(dest_html_path):
+    # if os.path.exists(dest_html_path):
 
-        with open(dest_html_path, "r") as f:
-            html_data = f.read()
+    with open(html_filename, "r") as f:
+        html_data = f.read()
 
-        report_message.success("Report Available for Download")
+    report_message.success("Report Available for Download")
 
-        if st.download_button(
-            label="Download MECC Simulation Report",
-            data=html_data,
-            file_name=html_filename,
-            mime="text/html",
-            disabled=not st.session_state.simulation_completed
-        ):
-            # set simulation_completed to False after download to reset the button
-            st.session_state.simulation_completed = False
+    if st.download_button(
+        label="Download MECC Simulation Report",
+        data=html_data,
+        file_name=html_filename,
+        mime="text/html",
+        disabled=not st.session_state.simulation_completed
+    ):
+        # set simulation_completed to False after download to reset the button
+        st.session_state.simulation_completed = False
