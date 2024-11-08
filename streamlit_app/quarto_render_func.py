@@ -60,6 +60,7 @@ def render_quarto(
     find_quarto_path=False,
     run_quarto_check=True,
     force_use_quarto_which=False,
+    subprocess=True,
     **kwargs
     ):
 
@@ -140,14 +141,20 @@ def render_quarto(
         print(f"Final command: {' '.join(final_command)}")
       if run_quarto_check:
         quarto_check_run()
-      subprocess.run(final_command, **kwargs)
+      if subprocess:
+        subprocess.run(final_command, **kwargs)
+      else:
+        os.system(' '.join(final_command))
     else:
       final_command = ["quarto"] + args
       if print_command:
         print(f"Final command: {' '.join(final_command)}")
       if run_quarto_check:
         quarto_check_run()
-      subprocess.run(' '.join(final_command), **kwargs)
+      if subprocess:
+        subprocess.run(' '.join(final_command), **kwargs)
+      else:
+        os.system(' '.join(final_command))
   finally:
     if params_file is not None and remove_params_file:
       os.remove(params_file.name)

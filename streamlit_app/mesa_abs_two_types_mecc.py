@@ -177,9 +177,7 @@ if st.session_state.simulation_completed:
             find_quarto_path=False,
             print_command=True,
             verbose=True,
-            shell=True,
-            capture_output=True,
-            text=True,
+            subprocess=False,
             debug=True,
             run_quarto_check=True
             )
