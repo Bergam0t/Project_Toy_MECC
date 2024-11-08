@@ -19,19 +19,14 @@ def get_quarto():
     os.system("mkdir -p ~/.local/bin/quarto")
     os.system("ln -s ~/opt/quarto-1.5.57/bin/quarto ~/.local/bin/quarto")
 
-    # Try alternative approach to path updating
-    bashrc_path = os.path.expanduser("~/.bashrc")
-    export_statement = '\nexport PATH="$HOME/.local/bin:$PATH"\n'
-
-    # Check if the export statement already exists in .bashrc
-    with open(bashrc_path, 'r') as file:
-        if export_statement.strip() not in file.read():
-            # Append the export statement to .bashrc
-            with open(bashrc_path, 'a') as file:
-                file.write(export_statement)
-
-    # Update PATH in the current Python process
+    # Ensure PATH is updated in the current Python process
     os.environ['PATH'] = f"{os.path.expanduser('~/.local/bin')}:{os.environ['PATH']}"
+
+    subprocess.run(['cd', '~/.local/bin/quarto/'])
+
+    subprocess.run(['ls'])
+
+    subprocess.run(['chmod', '+x', '~/.local/bin/quarto/bin/quarto'])
 
     # check path updated
     os.system("echo 'New PATH'")
