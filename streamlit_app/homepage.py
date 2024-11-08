@@ -32,3 +32,40 @@ st.write("This diagram shows how a a person agent moves through the system")
 st.image(create_logic_diagram()
          , caption="Diagram of Agent Model Logic"
          , use_column_width=False)
+
+# initailise parameter variables for simulation - defaults
+if 'N_people' not in st.session_state:
+    st.session_state.N_people = 50
+
+if 'initial_smoking_prob' not in st.session_state:
+    st.session_state.initial_smoking_prob = 0.5
+
+if 'visit_prob' not in st.session_state:
+    st.session_state.visit_prob = 0.1
+
+if 'quit_attempt_prob' not in st.session_state:
+    st.session_state.quit_attempt_prob = 0.01
+
+if 'base_smoke_relapse_prob' not in st.session_state:
+    st.session_state.base_smoke_relapse_prob = 0.01
+
+if 'base_make_intervention_prob' not in st.session_state:
+    st.session_state.base_make_intervention_prob = 0.1
+
+if 'mecc_effect' not in st.session_state:
+    st.session_state.mecc_effect = 1.0
+
+if 'intervention_effect' not in st.session_state:
+    st.session_state.intervention_effect = 1.1
+
+if 'model_seed' not in st.session_state:
+    st.session_state.model_seed = 42
+
+if 'num_steps' not in st.session_state:
+    st.session_state.num_steps = 24
+
+if 'animation_speed' not in st.session_state:
+    st.session_state.animation_speed = 0.1
+
+
+
