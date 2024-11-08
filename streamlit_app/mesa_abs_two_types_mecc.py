@@ -174,7 +174,8 @@ if st.session_state.simulation_completed:
                   verbose=True,
                   shell=True,
                   capture_output=True,
-                  text=True)
+                  text=True,
+                  run_quarto_check=True)
 
     if render_result is not None:
         print(render_result.stdout)
@@ -183,17 +184,18 @@ if st.session_state.simulation_completed:
     # If this is the case, we'll print extra debugging messages
     if platform.processor() == '':
 
+        print("=======Checking root folder========")
         pwd_out = subprocess.run(['pwd'], capture_output=True, text=True, shell=True)
         ls_out = subprocess.run(['ls'], capture_output=True, text=True, shell=True)
         print(pwd_out.stdout)
         print(ls_out.stdout)
 
-        print("Checking streamlit_app folder")
+        print("=======Checking streamlit_app folder========")
         os.chdir("streamlit_app")
         ls_out = subprocess.run(['ls'], capture_output=True, text=True, shell=True)
         print(ls_out.stdout)
 
-        print("Checking downloads folder")
+        print("=========Checking downloads folder=========")
         os.chdir("downloads")
         ls_out = subprocess.run(['ls'], capture_output=True, text=True, shell=True)
         print(ls_out.stdout)

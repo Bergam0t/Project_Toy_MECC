@@ -8,8 +8,19 @@ import subprocess
 import yaml
 import tempfile
 
-def path():
+def quarto_check_run():
+  result = subprocess.run(['quarto', 'check'], capture_output=True, text=True, shell=True)
+  print(result.stdout)
+  print(result.stderr)
+
+def path(force_use_shutil=False):
+  if force_use_shutil:
+    result = shutil.which("quarto")
+    print(f'shutil.which("quarto") returned {result}')
+    return result
+
   path_env = os.getenv("QUARTO_PATH")
+
   if path_env is None:
     print("QUARTO_PATH variable not set")
     result = shutil.which("quarto")
@@ -19,12 +30,12 @@ def path():
     print(f"QUARTO_PATH env variable is {path_env}")
     return path_env
 
-def find_quarto():
-  quarto = path()
+def find_quarto(force_use_shutil=False):
+  quarto = path(force_use_shutil=False)
   if quarto is None:
     raise FileNotFoundError('Unable to find quarto command line tools.')
   else:
-    print(f"Quarto successfully found at {quarto}")
+    print(f"Quarto path set to {quarto}")
     return quarto
 
 def render_quarto(
@@ -47,6 +58,8 @@ def render_quarto(
     print_command=False,
     verbose=True,
     find_quarto_path=False,
+    run_quarto_check=True,
+    force_use_shutil=False,
     **kwargs
     ):
 
@@ -121,15 +134,19 @@ def render_quarto(
   try:
     if find_quarto_path:
       print("Looking for Quarto")
-      find_quarto_output = find_quarto()
+      find_quarto_output = find_quarto(force_use_shutil=force_use_shutil)
       final_command = [find_quarto_output] + args
       if print_command:
         print(f"Final command: {' '.join(final_command)}")
+      if run_quarto_check:
+        quarto_check_run()
       subprocess.run(final_command, **kwargs)
     else:
       final_command = ["quarto"] + args
       if print_command:
         print(f"Final command: {' '.join(final_command)}")
+      if run_quarto_check:
+        quarto_check_run()
       subprocess.run(' '.join(final_command), **kwargs)
   finally:
     if params_file is not None and remove_params_file:
