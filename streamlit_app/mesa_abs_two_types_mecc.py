@@ -189,12 +189,12 @@ if st.session_state.simulation_completed:
         print(ls_out.stdout)
 
         print("Checking streamlit_app folder")
-        cd_out = subprocess.run(['cd', 'streamlit_app'], capture_output=True, text=True, shell=True)
+        os.chdir("streamlit_app")
         ls_out = subprocess.run(['ls'], capture_output=True, text=True, shell=True)
         print(ls_out.stdout)
 
         print("Checking downloads folder")
-        cd_out = subprocess.run(['cd', 'downloads'], capture_output=True, text=True, shell=True)
+        os.chdir("downloads")
         ls_out = subprocess.run(['ls'], capture_output=True, text=True, shell=True)
         print(ls_out.stdout)
 
