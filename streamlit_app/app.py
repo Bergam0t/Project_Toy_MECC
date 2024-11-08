@@ -9,7 +9,7 @@ def get_quarto():
     os.system("wget https://github.com/quarto-dev/quarto-cli/releases/download/v1.5.57/quarto-1.5.57-linux-amd64.tar.gz")
 
     # Create directory and extract Quarto
-    os.system("tar -C -xvzf quarto-1.5.57-linux-amd64.tar.gz")
+    os.system("tar -xvzf quarto-1.5.57-linux-amd64.tar.gz")
     os.system("ls")
 
     os.system("echo 'Original PATH'")
