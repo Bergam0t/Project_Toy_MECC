@@ -8,6 +8,7 @@ from streamlit_model_functions import run_simulation_step, create_comparison_fig
 import os
 import shutil
 import json
+from quarto_render_func import render_quarto
 
 st.title("Simulate - Enhanced Smoking Cessation Model with MECC Training")
 
@@ -156,10 +157,17 @@ if st.session_state.simulation_completed:
     print("Starting quarto subprocess")
 
     ## forces result to be html
-    result = subprocess.run(["quarto", "render"
-                             , qmd_path, "--to"
-                             , "html", "--output-dir", output_dir]
-                            , capture_output=True, text=True, shell=True)
+    # result = subprocess.run(["quarto", "render"
+    #                          , qmd_path, "--to"
+    #                          , "html", "--output-dir", output_dir]
+    #                         , capture_output=True, text=True, shell=True, )
+
+    render_quarto(input=qmd_path,
+                  output_dir=output_dir,
+                  output_format="html",
+                  print_command=True,
+                  verbose=True,
+                  shell=True)
 
     print("Render complete")
 
