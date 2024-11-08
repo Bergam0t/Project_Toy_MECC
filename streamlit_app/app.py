@@ -16,19 +16,19 @@ def get_quarto(quarto_version="1.5.57"):
     # Check the contents of the folder we are in
     os.system("pwd")
 
-    # Ensure PATH is updated in the current Python process
-    # os.environ['QUARTO_PATH'] = f"{f'/mount/src/project_toy_mecc/quarto-{quarto_version}/bin/quarto'}"
-    quarto_dir = f'/mount/src/project_toy_mecc/quarto-{quarto_version}/bin/quarto'
-    os.environ['PATH'] = f"{quarto_dir}:{os.environ['PATH']}"
+    # # Ensure PATH is updated in the current Python process
+    # # os.environ['QUARTO_PATH'] = f"{f'/mount/src/project_toy_mecc/quarto-{quarto_version}/bin/quarto'}"
+    # quarto_dir = f'/mount/src/project_toy_mecc/quarto-{quarto_version}/bin/quarto'
+    # os.environ['PATH'] = f"{quarto_dir}:{os.environ['PATH']}"
 
-    print("Trying to run 'quarto check' command")
-    try:
-        result = subprocess.run(['quarto', 'check'], capture_output=True, text=True, shell=True)
-        print(result.stdout)
-        print(result.stderr)
-        print("Quarto check run")
-    except PermissionError:
-        print("Permission error encountered when running 'quarto check'")
+    # print("Trying to run 'quarto check' command")
+    # try:
+    #     result = subprocess.run(['quarto', 'check'], capture_output=True, text=True, shell=True)
+    #     print(result.stdout)
+    #     print(result.stderr)
+    #     print("Quarto check run")
+    # except PermissionError:
+    #     print("Permission error encountered when running 'quarto check'")
 
 st.set_page_config(layout="wide")
 
