@@ -154,8 +154,6 @@ if st.session_state.simulation_completed:
 
     report_message = st.info("Generating Report for Download")
 
-    print("Starting quarto subprocess")
-
     ## forces result to be html
     # result = subprocess.run(["quarto", "render"
     #                          , qmd_path, "--to"
@@ -165,6 +163,8 @@ if st.session_state.simulation_completed:
     html_filename = "mecc_simulation_report.html"
     dest_html_path = "downloads"
 
+    print("Starting quarto render subprocess")
+
     render_quarto(input=qmd_path,
                   output_dir=dest_html_path,
                   output_format="html",
@@ -172,8 +172,11 @@ if st.session_state.simulation_completed:
                   print_command=True,
                   verbose=True,
                   shell=True)
-    os.system("pwd")
-    os.system("ls")
+
+    pwd_out = subprocess.run(['pwd'], capture_output=True, text=True, shell=True)
+    ls_out = subprocess.run(['ls'], capture_output=True, text=True, shell=True)
+    print(pwd_out.stdout)
+    print(ls_out.stdout)
 
     print("Render complete")
 
