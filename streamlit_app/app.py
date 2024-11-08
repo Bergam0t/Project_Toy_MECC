@@ -23,8 +23,16 @@ def get_quarto(repo_name, quarto_version="1.5.57"):
 
     os.system("echo $PATH")
 
-    os.system("mkdir -p /opt/mssql-tools/bin/quarto")
-    os.system(f"ln -s /mount/src/{repo_name}/quarto-{quarto_version}/bin/quarto /opt/mssql-tools/bin/quarto")
+    os.system(f"mkdir -p /mount/src/{repo_name}/local/bin")
+    os.system(f"ln -s /mount/src/{repo_name}/quarto-{quarto_version}/bin/quarto /mount/src/{repo_name}/local/bin")
+
+    os.system(f"echo 'export PATH=$PATH:/mount/src/{repo_name}/local/bin' >> ~/.bashrc")
+    os.system('source /etc/bash.bashrc')
+    # alternative method for good measure
+    os.environ['PATH'] = f"/mount/src/{repo_name}/local/bin:{os.environ['PATH']}"
+
+    # ensure path updates have propagated through
+    print(os.environ['PATH'])
 
     print("Trying to run 'quarto check' command")
     try:
