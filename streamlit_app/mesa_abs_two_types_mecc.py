@@ -146,9 +146,9 @@ if st.button("Run Simulation"):
             st.dataframe(data_mecc)
 
 ## filepaths for outputs
-qmd_path = './streamlit_app/mecc_simulation_report.qmd'
-output_dir = './downloads'
-output_dest = './streamlit_app/downloads'
+qmd_path = 'streamlit_app/mecc_simulation_report.qmd'
+# output_dir = 'downloads'
+# output_dest = 'streamlit_app/downloads'
 
 if st.session_state.simulation_completed:
 
@@ -162,10 +162,11 @@ if st.session_state.simulation_completed:
     #                          , "html", "--output-dir", output_dir]
     #                         , capture_output=True, text=True, shell=True, )
 
-    html_filename = os.path.basename(qmd_path).replace('.qmd', '.html')
+    html_filename = "mecc_simulation_report.html"
+    dest_html_path = "downloads"
 
     render_quarto(input=qmd_path,
-                  output_file=html_filename,
+                  output_dir=dest_html_path,
                   output_format="html",
                   find_quarto_path=True,
                   print_command=True,
@@ -176,12 +177,9 @@ if st.session_state.simulation_completed:
 
     print("Render complete")
 
-
-    # dest_html_path = os.path.join(output_dest, html_filename)
-
     # if os.path.exists(dest_html_path):
 
-    with open(html_filename, "r") as f:
+    with open(f"streamlit_app/{dest_html_path}/{html_filename}", "r") as f:
         html_data = f.read()
 
     report_message.success("Report Available for Download")
