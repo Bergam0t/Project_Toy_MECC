@@ -17,7 +17,9 @@ def get_quarto(quarto_version="1.5.57"):
     os.system("pwd")
 
     # Ensure PATH is updated in the current Python process
-    os.environ['QUARTO_PATH'] = f"{f'/mount/src/project_toy_mecc/quarto-{quarto_version}/bin/quarto'}"
+    # os.environ['QUARTO_PATH'] = f"{f'/mount/src/project_toy_mecc/quarto-{quarto_version}/bin/quarto'}"
+    quarto_dir = f'/mount/src/project_toy_mecc/quarto-{quarto_version}/bin/quarto'
+    os.environ['PATH'] = f"{quarto_dir}:{os.environ['PATH']}"
 
     print("Trying to run 'quarto check' command")
     try:
