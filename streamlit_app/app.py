@@ -5,6 +5,9 @@ import platform
 
 @st.cache_data
 def get_quarto():
+    print(f"Output of platform.processor(): {platform.processor()}")
+    print(f"type:  {type(platform.processor())}")
+    print("Attempting to download Quarto")
     # Download Quarto
     os.system("wget https://github.com/quarto-dev/quarto-cli/releases/download/v1.5.57/quarto-1.5.57-linux-amd64.tar.gz")
 
@@ -25,17 +28,11 @@ def get_quarto():
     except PermissionError:
         print("Permission error encountered when running 'quarto check'")
 
-
-
 st.set_page_config(layout="wide")
-
-print(f"Output of platform.processor(): {platform.processor()}")
-print(f"type:  {type(platform.processor())}")
 
 # If running on community cloud, output of this is an empty string
 # If this is the case, we'll try to install quarto
 if platform.processor() == '':
-    print("Attempting to download Quarto")
     get_quarto()
 
 pg = st.navigation(
