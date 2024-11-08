@@ -13,8 +13,8 @@ def quarto_check_run():
   print(result.stdout)
   print(result.stderr)
 
-def path(force_use_shutil=False):
-  if force_use_shutil:
+def path(force_use_quarto_which=False):
+  if force_use_quarto_which:
     result = shutil.which("quarto")
     print(f'shutil.which("quarto") returned {result}')
     return result
@@ -30,8 +30,8 @@ def path(force_use_shutil=False):
     print(f"QUARTO_PATH env variable is {path_env}")
     return path_env
 
-def find_quarto(force_use_shutil=False):
-  quarto = path(force_use_shutil=False)
+def find_quarto(force_use_quarto_which=False):
+  quarto = path(force_use_quarto_which=force_use_quarto_which)
   if quarto is None:
     raise FileNotFoundError('Unable to find quarto command line tools.')
   else:
@@ -59,7 +59,7 @@ def render_quarto(
     verbose=True,
     find_quarto_path=False,
     run_quarto_check=True,
-    force_use_shutil=False,
+    force_use_quarto_which=False,
     **kwargs
     ):
 
@@ -134,7 +134,7 @@ def render_quarto(
   try:
     if find_quarto_path:
       print("Looking for Quarto")
-      find_quarto_output = find_quarto(force_use_shutil=force_use_shutil)
+      find_quarto_output = find_quarto(force_use_quarto_which=force_use_quarto_which)
       final_command = [find_quarto_output] + args
       if print_command:
         print(f"Final command: {' '.join(final_command)}")

@@ -42,6 +42,8 @@ def get_quarto(repo_name, quarto_version="1.5.57"):
         print("Quarto check run")
     except PermissionError:
         print("Permission error encountered when running 'quarto check'")
+    except:
+        print("Other unspecified error when running quarto check")
 
 st.set_page_config(layout="wide")
 

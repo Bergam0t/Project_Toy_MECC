@@ -176,6 +176,7 @@ if st.session_state.simulation_completed:
                   shell=True,
                   capture_output=True,
                   text=True,
+                  debug=True,
                   run_quarto_check=True)
 
     if render_result is not None:
