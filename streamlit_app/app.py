@@ -23,8 +23,8 @@ def get_quarto(repo_name, quarto_version="1.5.57"):
 
     os.system("echo $PATH")
 
-    os.system("mkdir -p /home/adminuser/.local/bin/quarto")
-    os.system(f"ln -s /mount/src/{repo_name}/quarto-{quarto_version}/bin/quarto /home/adminuser/.local/bin/quarto")
+    os.system("mkdir -p /opt/mssql-tools/bin/quarto")
+    os.system(f"ln -s /mount/src/{repo_name}/quarto-{quarto_version}/bin/quarto /opt/mssql-tools/bin/quarto")
 
     print("Trying to run 'quarto check' command")
     try:
