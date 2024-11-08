@@ -167,17 +167,37 @@ if st.session_state.simulation_completed:
     print("Starting quarto render subprocess")
     quarto_version = "1.5.57"
 
-    render_result = render_quarto(input=qmd_path,
-                  output_dir=dest_html_path,
-                  output_format="html",
-                  find_quarto_path=True,
-                  print_command=True,
-                  verbose=True,
-                  shell=True,
-                  capture_output=True,
-                  text=True,
-                  debug=True,
-                  run_quarto_check=True)
+    if platform.processor() == '':
+        repo_name = "project_toy_mecc"
+
+        render_result = render_quarto(
+            input=f"/mount/src/{repo_name}/{qmd_path}",
+            output_dir=f"/mount/src/{repo_name}/{dest_html_path}",
+            output_format="html",
+            find_quarto_path=True,
+            print_command=True,
+            verbose=True,
+            shell=True,
+            capture_output=True,
+            text=True,
+            debug=True,
+            run_quarto_check=True
+            )
+
+    else:
+        render_result = render_quarto(
+            input=qmd_path,
+            output_dir=dest_html_path,
+            output_format="html",
+            find_quarto_path=True,
+            print_command=True,
+            verbose=True,
+            shell=True,
+            capture_output=True,
+            text=True,
+            debug=True,
+            run_quarto_check=True
+            )
 
     if render_result is not None:
         print(render_result.stdout)
