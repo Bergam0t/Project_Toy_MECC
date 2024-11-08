@@ -5,7 +5,7 @@ st.set_page_config(layout="wide")
 pg = st.navigation(
 
     [st.Page("homepage.py", 
-             title="Hackathon Details", 
+             title="Toy MECC Details", 
              icon=":material/cottage:"),
     st.Page("parameters.py", 
              title="Parameters for Simulation", 

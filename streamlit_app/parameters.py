@@ -12,7 +12,7 @@ from streamlit_model_functions import run_simulation_step, create_comparison_fig
 st.title("Parameters - Enhanced Smoking Cessation Model with MECC Training")
 
 
-col1, col2 = st.columns(2)
+col1, col2, col3 = st.columns(3)
 
 with col1:
     st.markdown("#### Population Parameters")
@@ -46,11 +46,9 @@ with col2:
     st.session_state.base_make_intervention_prob = st.slider("Chance a Brief Intervention Made Without MECC", 0.0, 1.0, st.session_state.base_make_intervention_prob)
 
 
-st.write("-----") #divider
+    st.write("-----") #divider
 
-col3, col4 = st.columns(2)
 
-with col3:
     st.markdown("#### MECC Parameters")
 
     if 'mecc_effect' not in st.session_state:
@@ -62,7 +60,7 @@ with col3:
     st.session_state.intervention_effect = st.slider("Effect of a Brief Intervention on Chance Making a Quit Attempt", 0.0, 10.0, st.session_state.intervention_effect)
     st.markdown("*Numbers less than 1 will decrease the probability*")
     
-with col4:
+with col3:
     st.markdown("#### Simulation Parameters")
 
     if 'model_seed' not in st.session_state:

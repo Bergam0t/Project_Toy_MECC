@@ -15,34 +15,40 @@ st.title("Simulate - Enhanced Smoking Cessation Model with MECC Training")
 if 'simulation_completed' not in st.session_state:
     st.session_state.simulation_completed = False
 
-col1, col2 = st.columns(2)
+if "download_clicked" not in st.session_state:
+    st.session_state.download_clicked = False
+
+def disable_download():
+    st.session_state.download_clicked = True
+    st.session_state.simulation_completed = False
+    report_message.empty()
+
+col1, col2, col3 = st.columns(3)
 
 with col1:
     st.markdown("#### Population Parameters")
-    st.write(f"Number of People: {st.session_state.N_people}")
-    st.write(f"Initial Smoking Probability: {st.session_state.initial_smoking_prob}")
-    st.write(f"Chance of Visiting a Service per Month: {st.session_state.visit_prob}")
-    st.write(f"Base Quit Attempt Probability per Month: {st.session_state.quit_attempt_prob}")
-    st.write(f"Base Smoking Relapse per Month: {st.session_state.base_smoke_relapse_prob}")
-    st.markdown("*Relapse chance decreases over time of not smoking*")
+    st.write(f" - Number of People: :blue-background[{st.session_state.N_people}]") 
+    st.write(f" - Initial Smoking Probability: :blue-background[{st.session_state.initial_smoking_prob}]")
+    st.write(f" - Chance of Visiting a Service per Month: :blue-background[{st.session_state.visit_prob}]")
+    st.write(f" - Base Quit Attempt Probability per Month: :blue-background[{st.session_state.quit_attempt_prob}]")
+    st.write(f" - Base Smoking Relapse per Month: :blue-background[{st.session_state.base_smoke_relapse_prob}]  \n  *(Relapse chance decreases over time of not smoking)*")
 
 with col2: 
     st.markdown("#### Service Parameters")
-    st.write(f"Chance a Brief Intervention Made Without MECC: {st.session_state.base_make_intervention_prob}")
+    st.write(f" - Chance a Brief Intervention Made Without MECC: :blue-background[{st.session_state.base_make_intervention_prob}]")
 
-col3, col4 = st.columns(2)
+    st.write("-----") #divider
+
+    st.markdown("#### MECC Parameters")
+    st.write(f" - Chance Making a Brief Intervention After MECC Training: :blue-background[{st.session_state.mecc_effect}]")
+    st.write(f" - Effect of a Brief Intervention on Chance Making a Quit Attempt: :blue-background[{st.session_state.intervention_effect}]  \n  *(Numbers less than 1 will decrease the probability)*")
+
 
 with col3:
-    st.markdown("#### MECC Parameters")
-    st.write(f"Chance Making a Brief Intervention After MECC Training: {st.session_state.mecc_effect}")
-    st.write(f"Effect of a Brief Intervention on Chance Making a Quit Attempt: {st.session_state.intervention_effect}")
-    st.markdown("*Numbers less than 1 will decrease the probability*")
-
-with col4:
     st.markdown("#### Simulation Parameters")
-    st.write(f"Random Seed: {st.session_state.model_seed}")
-    st.write(f"Number of Months to Simulate: {st.session_state.num_steps}")
-    st.write(f"Animation Speed (seconds): {st.session_state.animation_speed}")
+    st.write(f" - Random Seed: :blue-background[{st.session_state.model_seed}]")
+    st.write(f" - Number of Months to Simulate: :blue-background[{st.session_state.num_steps}]")
+    st.write(f" - Animation Speed (seconds): :blue-background[{st.session_state.animation_speed}]")
 
 model_parameters = {
     "model_seed": st.session_state.model_seed,
@@ -70,6 +76,7 @@ if "simulation_completed" not in st.session_state:
 if st.button("Run Simulation"):
     # set simulation_completed to False before starting - to control the download report button
     st.session_state.simulation_completed = False
+    st.session_state.download_clicked = False
     
     model_no_mecc = create_MECC_model(
         model_parameters=model_parameters,
@@ -89,7 +96,7 @@ if st.button("Run Simulation"):
 
     for step in range(st.session_state.num_steps):
         if step == st.session_state.num_steps - 1:
-            model_message.success("Simulation completed!")
+            model_message.success("Simulation Completed!")
             progress_bar.empty()
         else:
             progress = (step + 1) / st.session_state.num_steps
@@ -150,7 +157,7 @@ output_dir = 'downloads'
 
 if st.session_state.simulation_completed:
     
-    report_message = st.info("Generating Report for Download")
+    report_message = st.info("Generating Report...")
 
     result = subprocess.run(["quarto", "render", qmd_path], capture_output=True, text=True)
 
@@ -166,12 +173,12 @@ if st.session_state.simulation_completed:
 
         report_message.success("Report Available for Download")
 
-        if st.download_button(
-            label="Download MECC Simulation Report",
-            data=html_data,
-            file_name=html_filename,
-            mime="text/html",
-            disabled=not st.session_state.simulation_completed
-        ):
-            # set simulation_completed to False after download to reset the button
-            st.session_state.simulation_completed = False
+        if not st.session_state.download_clicked:
+            st.download_button(
+                label="Download MECC Simulation Report and Clear Simulation Results",
+                data=html_data,
+                file_name=html_filename,
+                mime="text/html",
+                # disabled=not st.session_state.simulation_completed,
+                on_click=disable_download
+            )
