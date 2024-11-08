@@ -21,6 +21,7 @@ def get_quarto():
 
     # Ensure PATH is updated in the current Python process
     os.environ['PATH'] = f"{os.path.expanduser('~/.local/bin')}:{os.environ['PATH']}"
+    os.environ['QUARTO_PATH'] = f"{os.path.expanduser('~/.local/bin')}:{os.environ['QUARTO_PATH']}"
 
     # subprocess.run(['cd', '~/.local/bin/quarto/'])
 
