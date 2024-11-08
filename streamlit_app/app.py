@@ -4,20 +4,20 @@ import subprocess
 import platform
 
 @st.cache_data
-def get_quarto():
+def get_quarto(quarto_version="1.5.57"):
     print(f"Output of platform.processor(): {platform.processor()}")
     print(f"type:  {type(platform.processor())}")
     print("Attempting to download Quarto")
     # Download Quarto
-    os.system("wget https://github.com/quarto-dev/quarto-cli/releases/download/v1.5.57/quarto-1.5.57-linux-amd64.tar.gz")
+    os.system(f"wget https://github.com/quarto-dev/quarto-cli/releases/download/v{quarto_version}/quarto-{quarto_version}-linux-amd64.tar.gz")
 
     # Create directory and extract Quarto
-    os.system("tar -xvzf quarto-1.5.57-linux-amd64.tar.gz")
+    os.system(f"tar -xvzf quarto-{quarto_version}-linux-amd64.tar.gz")
     # Check the contents of the folder we are in
     os.system("pwd")
 
     # Ensure PATH is updated in the current Python process
-    os.environ['QUARTO_PATH'] = f"{'quarto-1.5.57/bin/quarto'}"
+    os.environ['QUARTO_PATH'] = f"{f'mount/src/project_toy_mecc/quarto-{quarto_version}/bin/quarto'}"
 
     print("Trying to run 'quarto check' command")
     try:
