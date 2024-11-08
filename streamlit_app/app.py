@@ -44,7 +44,9 @@ st.set_page_config(layout="wide")
 print(f"Output of platform.processor(): {platform.processor()}")
 print(f"type:  {type(platform.processor())}")
 
-if platform.processor() is None:
+# If running on community cloud, output of this is an empty string
+# If this is the case, we'll try to install quarto
+if platform.processor() == '':
     get_quarto()
 
 pg = st.navigation(
