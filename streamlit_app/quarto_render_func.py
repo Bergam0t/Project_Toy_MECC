@@ -125,13 +125,12 @@ def render_quarto(
       final_command = [find_quarto_output] + args
       if print_command:
         print(f"Final command: {' '.join(final_command)}")
-      process = subprocess.Popen(final_command, **kwargs)
+      subprocess.run(final_command, **kwargs)
     else:
       final_command = ["quarto"] + args
       if print_command:
         print(f"Final command: {' '.join(final_command)}")
-      process = subprocess.Popen(' '.join(final_command), **kwargs)
-    process.wait()
+      subprocess.run(' '.join(final_command), **kwargs)
   finally:
     if params_file is not None and remove_params_file:
       os.remove(params_file.name)

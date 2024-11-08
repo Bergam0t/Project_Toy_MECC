@@ -9,6 +9,7 @@ import os
 import shutil
 import json
 from quarto_render_func import render_quarto
+import platform
 
 st.title("Simulate - Enhanced Smoking Cessation Model with MECC Training")
 
@@ -165,18 +166,37 @@ if st.session_state.simulation_completed:
 
     print("Starting quarto render subprocess")
 
-    render_quarto(input=qmd_path,
+    render_result = render_quarto(input=qmd_path,
                   output_dir=dest_html_path,
                   output_format="html",
                   find_quarto_path=True,
                   print_command=True,
                   verbose=True,
-                  shell=True)
+                  shell=True,
+                  capture_output=True,
+                  text=True)
 
-    pwd_out = subprocess.run(['pwd'], capture_output=True, text=True, shell=True)
-    ls_out = subprocess.run(['ls'], capture_output=True, text=True, shell=True)
-    print(pwd_out.stdout)
-    print(ls_out.stdout)
+    if render_result is not None:
+        print(render_result.stdout)
+
+    # If running on community cloud, output of this is an empty string
+    # If this is the case, we'll print extra debugging messages
+    if platform.processor() == '':
+
+        pwd_out = subprocess.run(['pwd'], capture_output=True, text=True, shell=True)
+        ls_out = subprocess.run(['ls'], capture_output=True, text=True, shell=True)
+        print(pwd_out.stdout)
+        print(ls_out.stdout)
+
+        print("Checking streamlit_app folder")
+        cd_out = subprocess.run(['cd', 'streamlit_app'], capture_output=True, text=True, shell=True)
+        ls_out = subprocess.run(['ls'], capture_output=True, text=True, shell=True)
+        print(ls_out.stdout)
+
+        print("Checking downloads folder")
+        cd_out = subprocess.run(['cd', 'downloads'], capture_output=True, text=True, shell=True)
+        ls_out = subprocess.run(['ls'], capture_output=True, text=True, shell=True)
+        print(ls_out.stdout)
 
     print("Render complete")
 
