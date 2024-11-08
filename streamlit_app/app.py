@@ -41,6 +41,9 @@ def get_quarto():
 
 st.set_page_config(layout="wide")
 
+print(f"Output of platform.processor(): {platform.processor()}")
+print(f"type:  {type(platform.processor())}")
+
 if platform.processor() is None:
     get_quarto()
 
