@@ -35,6 +35,7 @@ def get_quarto(repo_name, quarto_version="1.5.57"):
     print(os.environ['PATH'])
 
     os.system("python3 -m pip install jupyter")
+    os.system(f"python3 -m pip install -r /mount/src/{repo_name}/requirements.txt)")
 
     print("Trying to run 'quarto check' command")
     try:
