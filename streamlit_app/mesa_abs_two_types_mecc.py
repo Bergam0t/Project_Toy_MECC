@@ -171,7 +171,7 @@ if st.session_state.simulation_completed:
                   print_command=True,
                   verbose=True,
                   shell=True)
-
+    os.system("pwd")
     os.system("ls")
 
     print("Render complete")
