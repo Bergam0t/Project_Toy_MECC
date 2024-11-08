@@ -4,7 +4,7 @@ import subprocess
 import platform
 
 @st.cache_data
-def get_quarto(quarto_version="1.5.57"):
+def get_quarto(repo_name, quarto_version="1.5.57"):
     print(f"Output of platform.processor(): {platform.processor()}")
     print(f"type:  {type(platform.processor())}")
     print("Attempting to download Quarto")
@@ -23,8 +23,8 @@ def get_quarto(quarto_version="1.5.57"):
 
     os.system("echo $PATH")
 
-    os.system("mkdir -p ~/.local/bin")
-    os.system(f"ln -s quarto-{quarto_version}/bin/quarto ~/.local/bin/quarto")
+    os.system("mkdir -p /usr/local/bin/quarto")
+    os.system(f"ln -s /mount/src/{repo_name}/quarto-{quarto_version}/bin/quarto /usr/local/bin/quarto")
 
     print("Trying to run 'quarto check' command")
     try:
@@ -40,7 +40,7 @@ st.set_page_config(layout="wide")
 # If running on community cloud, output of this is an empty string
 # If this is the case, we'll try to install quarto
 if platform.processor() == '':
-    get_quarto()
+    get_quarto("project_toy_mecc")
 
 pg = st.navigation(
 
