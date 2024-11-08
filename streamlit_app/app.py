@@ -12,12 +12,12 @@ def get_quarto():
     os.system("tar -xvzf quarto-1.5.57-linux-amd64.tar.gz")
     os.system("ls")
 
-    os.system("echo 'Original PATH'")
-    os.system("echo $PATH")
+    # os.system("echo 'Original PATH'")
+    # os.system("echo $PATH")
 
     # Ensure PATH is updated in the current Python process
     # os.environ['PATH'] = f"{os.path.expanduser('~/opt')}:{os.environ['PATH']}"
-    os.environ['QUARTO_PATH'] = f"{os.path.expanduser('~/quarto/bin/quarto')}"
+    os.environ['QUARTO_PATH'] = f"{os.path.expanduser('~/quarto-1.5.57/bin/quarto')}"
 
     # subprocess.run(['cd', '~/.local/bin/quarto/'])
 
