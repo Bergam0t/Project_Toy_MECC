@@ -29,8 +29,11 @@ def get_quarto():
     # os.system("echo 'New PATH'")
     # os.system("echo $PATH")
     try:
+        print("Trying to run 'quarto check' command")
         result = subprocess.run(['quarto', 'check'], capture_output=True, text=True, shell=True)
-        print(result)
+        print(result.stdout)
+        print(result.stderr)
+        print("Quarto check run")
     except PermissionError:
         print("Permission error encountered when running 'quarto check'")
 
