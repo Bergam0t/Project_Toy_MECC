@@ -224,8 +224,12 @@ if st.session_state.simulation_completed:
 
     # if os.path.exists(dest_html_path):
 
-    with open(f"streamlit_app/{dest_html_path}/{html_filename}", "r") as f:
-        html_data = f.read()
+    if platform.processor() == '':
+        with open(f"/mount/src/{repo_name}/streamlit_app/{dest_html_path}/{html_filename}", "r") as f:
+            html_data = f.read()
+    else:
+        with open(f"streamlit_app/{dest_html_path}/{html_filename}", "r") as f:
+            html_data = f.read()
 
     report_message.success("Report Available for Download")
 
