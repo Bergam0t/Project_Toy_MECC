@@ -174,7 +174,7 @@ if st.session_state.simulation_completed:
             input=f"/mount/src/{repo_name}/{qmd_path}",
             output_dir=f"/mount/src/{repo_name}/streamlit_app/{dest_html_path}",
             output_format="html",
-            find_quarto_path=True,
+            find_quarto_path=False,
             print_command=True,
             verbose=True,
             shell=True,
