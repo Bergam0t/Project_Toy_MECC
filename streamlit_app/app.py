@@ -22,17 +22,17 @@ def get_quarto():
     # Ensure PATH is updated in the current Python process
     os.environ['PATH'] = f"{os.path.expanduser('~/.local/bin')}:{os.environ['PATH']}"
 
-    subprocess.run(['cd', '~/.local/bin/quarto/'])
+    # subprocess.run(['cd', '~/.local/bin/quarto/'])
 
-    subprocess.run(['ls'])
+    # subprocess.run(['ls'])
 
-    subprocess.run(['chmod', '+x', '~/.local/bin/quarto/bin/quarto'])
+    # subprocess.run(['chmod', '+x', '~/.local/bin/quarto/bin/quarto'])
 
     # check path updated
     os.system("echo 'New PATH'")
     os.system("echo $PATH")
     try:
-        result = subprocess.run(['quarto', 'check'], capture_output=True, text=True)
+        result = subprocess.run(['quarto', 'check'], capture_output=True, text=True, shell=True)
         print(result)
     except PermissionError:
         print("Permission error encountered when running 'quarto check'")
