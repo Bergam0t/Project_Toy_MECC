@@ -36,6 +36,7 @@ def get_quarto(repo_name, quarto_version="1.5.57"):
 
     print("Trying to run 'quarto check' command")
     try:
+        os.system("quarto check")
         result = subprocess.run(['quarto', 'check'], capture_output=True, text=True, shell=True)
         print(result.stdout)
         print(result.stderr)
