@@ -34,6 +34,8 @@ def get_quarto(repo_name, quarto_version="1.5.57"):
     # ensure path updates have propagated through
     print(os.environ['PATH'])
 
+    os.system("python3 -m pip install jupyter")
+
     print("Trying to run 'quarto check' command")
     try:
         os.system("quarto check")
