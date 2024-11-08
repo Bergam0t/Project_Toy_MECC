@@ -172,10 +172,12 @@ if st.session_state.simulation_completed:
                   verbose=True,
                   shell=True)
 
+    os.system("ls")
+
     print("Render complete")
 
 
-    dest_html_path = os.path.join(output_dest, html_filename)
+    # dest_html_path = os.path.join(output_dest, html_filename)
 
     # if os.path.exists(dest_html_path):
 
