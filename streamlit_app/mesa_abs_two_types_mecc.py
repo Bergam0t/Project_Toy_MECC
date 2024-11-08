@@ -153,12 +153,16 @@ if st.session_state.simulation_completed:
     
     report_message = st.info("Generating Report for Download")
 
+    print("Starting quarto subprocess")
+    
     ## forces result to be html
     result = subprocess.run(["quarto", "render"
                              , qmd_path, "--to"
                              , "html", "--output-dir", output_dir]
                             , capture_output=True, text=True)
 
+    print("Render complete")
+    
     html_filename = os.path.basename(qmd_path).replace('.qmd', '.html')
     dest_html_path = os.path.join(output_dest, html_filename)
  
