@@ -1,7 +1,6 @@
 streamlit_app/__pycache__/
 __pycache__/
 *.pyc
-session_data.json
 streamlit_app/downloads/*
 !streamlit_app/downloads/.gitkeep
 streamlit_app/outputs/*
