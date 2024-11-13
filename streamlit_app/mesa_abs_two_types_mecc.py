@@ -113,8 +113,8 @@ if st.button("Run Simulation"):
 
     st.session_state.simulation_completed = True  # set to True after completion
 
-    data_no_mecc.to_csv("./streamlit_app/outputs/data_no_mecc.csv", index=False)
-    data_mecc.to_csv("./streamlit_app/outputs/data_mecc.csv", index=False)
+    data_no_mecc.to_csv("./outputs/data_no_mecc.csv", index=False)
+    data_mecc.to_csv("./outputs/data_mecc.csv", index=False)
     
     st.markdown("### Final Statistics")
     col1, col2, col3 = st.columns(3)
@@ -152,9 +152,9 @@ if st.button("Run Simulation"):
             st.dataframe(data_mecc)
 
 ## filepaths for outputs
-qmd_path = './streamlit_app/mecc_simulation_report.qmd'
+qmd_path = './mecc_simulation_report.qmd'
 output_dir = './downloads'
-output_dest = './streamlit_app/downloads'
+output_dest = './downloads'
 
 if st.session_state.simulation_completed:
     
