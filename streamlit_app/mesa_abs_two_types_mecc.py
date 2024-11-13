@@ -66,8 +66,8 @@ model_parameters = {
 }
 
 # save to json file to be used later for the quarto report
-with open("./streamlit_app/outputs/session_data.json", "w") as f:
-    json.dump(model_parameters, f)
+with open("./outputs/session_data.json", "w") as f:
+    json.dump(model_parameters, f, indent=4)
 
 st.write("----")  # divider
 if "simulation_completed" not in st.session_state:

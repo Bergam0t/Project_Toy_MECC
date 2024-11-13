@@ -1,13 +1,12 @@
 import streamlit as st
 from logic_diagram import create_logic_diagram
-#from PIL import Image
+import json
 
 # st.logo("resources/MECC.jpg")
 
 st.title("Toy MECC - Making Every Contact Count")
 
-# Display the logo
-# st.image("streamlit_app/resources/MECC.jpg", use_column_width=True)
+# st.image("./resources/MECC.jpg", width=250)
 
 st.write("https://github.com/DomRowney/Project_Toy_MECC.git")
 
@@ -67,5 +66,21 @@ if 'num_steps' not in st.session_state:
 if 'animation_speed' not in st.session_state:
     st.session_state.animation_speed = 0.1
 
+model_parameters = {
+    "model_seed": st.session_state.model_seed,
+    "N_people": st.session_state.N_people,
+    "N_service": 1,
+    "initial_smoking_prob": st.session_state.initial_smoking_prob,
+    "visit_prob": st.session_state.visit_prob,
+    "quit_attempt_prob": st.session_state.quit_attempt_prob,
+    "base_smoke_relapse_prob": st.session_state.base_smoke_relapse_prob,
+    "base_make_intervention_prob": st.session_state.base_make_intervention_prob,
+    "mecc_effect": st.session_state.mecc_effect,
+    "intervention_effect": st.session_state.intervention_effect,
+    "num_steps" : st.session_state.num_steps,
+    "animation_speed" : st.session_state.animation_speed
+}
 
-
+# save to json file to be used later for the quarto report
+with open("./outputs/session_data.json", "w") as f:
+    json.dump(model_parameters, f, indent=4)

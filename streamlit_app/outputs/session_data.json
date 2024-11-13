@@ -1,1 +1,0 @@
-{"model_seed": 42, "N_people": 50, "N_service": 1, "initial_smoking_prob": 0.5, "visit_prob": 0.1, "quit_attempt_prob": 0.01, "base_smoke_relapse_prob": 0.01, "base_make_intervention_prob": 0.1, "mecc_effect": 1.0, "intervention_effect": 1.1, "num_steps": 24, "animation_speed": 0} 
