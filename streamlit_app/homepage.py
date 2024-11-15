@@ -1,6 +1,7 @@
 import streamlit as st
 from logic_diagram import create_logic_diagram
 import json
+import os
 
 # st.logo("resources/MECC.jpg")
 
@@ -82,5 +83,8 @@ model_parameters = {
 }
 
 # save to json file to be used later for the quarto report
-with open("./outputs/session_data.json", "w") as f:
+output_path = os.path.join(os.getcwd(),'streamlit_app','outputs')
+json_path = os.path.join(output_path,'session_data.json')
+
+with open(json_path, "w") as f:
     json.dump(model_parameters, f, indent=4)
