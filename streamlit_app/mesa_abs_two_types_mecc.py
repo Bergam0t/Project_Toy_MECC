@@ -178,16 +178,20 @@ if st.session_state.simulation_completed:
     html_filename = os.path.basename(qmd_filename).replace('.qmd', '.html')
     dest_html_path = os.path.join(output_dir,html_filename)
 
-    ## forces result to be html
-    result = subprocess.run(["quarto"
-                             , "render"
-                             , qmd_path
-                             , "--to"
-                             , "html"
-                             , "--output-dir"
-                             , output_dir]
-                             , capture_output=True
-                             , text=True)
+    try:
+        ## forces result to be html
+        result = subprocess.run(["quarto"
+                                , "render"
+                                , qmd_path
+                                , "--to"
+                                , "html"
+                                , "--output-dir"
+                                , output_dir]
+                                , capture_output=True
+                                , text=True)
+    except:
+        ## error message
+        report_message.error(f"Report cannot be generated")
     
     if os.path.exists(dest_html_path):
         with open(dest_html_path, "r") as f:
