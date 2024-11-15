@@ -5,33 +5,46 @@ import os
 
 # st.logo("resources/MECC.jpg")
 
-st.title("Toy MECC - Making Every Contact Count")
-
+st.title("Toy MECC :material/smart_toy:")
+st.write("## _Making Every Contact Count_")
 # st.image("./resources/MECC.jpg", width=250)
-
-st.write("https://github.com/DomRowney/Project_Toy_MECC.git")
 
 st.write("""
 A (toy) model for showing the benefit of Making Every Contact Count (MECC) Training.
-         
-Build a Streamlit app for an Agent Based Simulation.
-The pop culture 80's references will all be in the form of toy robots.
-There is an initial group of people and an initial group of government services.
-People can have lifestyle factors: smoking/drinking/no exercise.
-People may have a probability of making a quit attempt (smoking/drinking/no exercise) with a probability of success.
-People have contact with government services at random.
-Services can have MECC training, and therefore a probability that any contact will lead to a Very Brief Intervention.
-Services with MECC training increase over time with a training rate.
-A Very Brief Intervention increases the probability that a patient will make a quit attempt.
-Outputs will be MECC training numbers, number of quit attempts, and number of successful quits over time.
+        
+This app was built as part of the [HSMA](https://hsma-programme.github.io/hsma_site/) 6 Hackday 2024 and 
+the source code is available on [GitHub](https://github.com/DomRowney/Project_Toy_MECC.git)
 """)
 
-st.write("## Diagram of Agent Model Logic")
+st.write("#### Explanation")
+st.write("""
+The model is an Agent based simulation:
+
++ There is an initial group of people (agents) and an initial group of services.
++ A certain proportion of people have lifestyle factors: smoking.
+        People cannot start smoking if they never had to start with.
++ People may have a probability of making a smoking quit attempt each month
++ People have a chance of restarting smoking,
+          this chance decreases the longer a person is smoke free.
++ People have contact with government services at random with a certain probability
++ People in contact with services have a chance of having a Very Brief Intervention.        
++ A Very Brief Intervention increases the probability that a person will make a quit attempt.
+         It does not effect the chance that a person will stay smoke free.
++ Services can have MECC training, which increases the a probability that
+          any contact will lead to a Very Brief Intervention.
++ The model compares results for the same simultion with and without MECC training.
+                           
+You can change all these probabilites on the:""") 
+st.page_link('./parameters.py',label='Parameters for Simulation')
+
+st.write("#### Diagram of Agent Model Logic")
 st.write("This diagram shows how a a person agent moves through the system")
 
 st.image(create_logic_diagram()
          , caption="Diagram of Agent Model Logic"
          , use_column_width=False)
+
+################################################################################
 
 # initailise parameter variables for simulation - defaults
 if 'N_people' not in st.session_state:
