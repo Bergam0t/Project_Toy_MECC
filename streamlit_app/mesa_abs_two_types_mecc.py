@@ -4,7 +4,7 @@ import pandas as pd
 import numpy as np
 import streamlit as st
 import time
-from streamlit_model_functions import run_simulation_step, create_comparison_figure, create_MECC_model,create_population_figure,create_intervention_figure,create_metrics_figure
+from streamlit_model_functions import run_simulation_step, create_MECC_model,create_population_figure,create_intervention_figure,create_metrics_figure
 import os
 import shutil
 import json
@@ -96,7 +96,6 @@ if st.button("Run Simulation"):
     chart_placeholder1 = st.empty()
     chart_placeholder2 = st.empty()
     chart_placeholder3 = st.empty()
-    chart_placeholder = st.empty()
 
     data_no_mecc = pd.DataFrame()
     data_mecc = pd.DataFrame()
@@ -123,12 +122,6 @@ if st.button("Run Simulation"):
         fig3 = create_metrics_figure(data_no_mecc, data_mecc, step)
         with chart_placeholder3:
             st.plotly_chart(fig3, use_container_width=True)
-
-
-
-        fig = create_comparison_figure(data_no_mecc, data_mecc, step)
-        with chart_placeholder:
-            st.plotly_chart(fig, use_container_width=True)
 
         time.sleep(st.session_state.animation_speed)
 
