@@ -152,21 +152,187 @@ def run_simulation_step(model):
 #     return fig
 
 
-def create_comparison_figure(results_no_mecc, results_mecc, step):
+#def create_comparison_figure(results_no_mecc, results_mecc, step):
+#    """Create side-by-side comparison figures"""
+#    fig = make_subplots(
+#        rows=3, 
+#        cols=2,
+#        subplot_titles=(
+#            'Without MECC Training',
+#            'With MECC Training',
+#            'Interventions & Quit Attempts (No MECC)',
+#            'Interventions & Quit Attempts (With MECC)',
+#            'Success Metrics Comparison',
+#            'Performance Improvement'
+#        ),
+#        specs=[[{}, {}], [{}, {}], [{}, {}]],
+#        row_heights=[0.4, 0.4, 0.2]
+#    )
+#    
+#    # Population changes over time - Without MECC
+#    fig.add_trace(
+#        go.Scatter(
+#            x=results_no_mecc.index[:step+1], 
+#            y=results_no_mecc['Total Smoking'][:step+1], 
+#            name="Smoking (No MECC)", 
+#            line=dict(color="red", dash='solid')
+#        ),
+#        row=1, col=1
+#    )
+#    fig.add_trace(
+#        go.Scatter(
+#            x=results_no_mecc.index[:step+1], 
+#            y=results_no_mecc['Total Not Smoking'][:step+1], 
+#            name="Not Smoking (No MECC)", 
+#            line=dict(color="green", dash='solid')
+#        ),
+#        row=1, col=1
+#    )
+#    
+#    # Population changes over time - With MECC
+#    fig.add_trace(
+#        go.Scatter(
+#            x=results_mecc.index[:step+1], 
+#            y=results_mecc['Total Smoking'][:step+1], 
+#            name="Smoking (MECC)", 
+#            line=dict(color="red", dash='dot')
+#        ),
+#        row=1, col=2
+#    )
+#    fig.add_trace(
+#        go.Scatter(
+#            x=results_mecc.index[:step+1], 
+#            y=results_mecc['Total Not Smoking'][:step+1], 
+#            name="Not Smoking (MECC)", 
+#            line=dict(color="green", dash='dot')
+#        ),
+#        row=1, col=2
+#    )
+#    
+#    # Interventions and Quit Attempts - Without MECC
+#    fig.add_trace(
+#        go.Scatter(
+#            x=results_no_mecc.index[:step+1],
+#            y=results_no_mecc['Total Interventions'][:step+1],
+#            name="Interventions (No MECC)",
+#            line=dict(color="blue", dash='solid')
+#        ),
+#        row=2, col=1
+#    )
+#    fig.add_trace(
+#        go.Scatter(
+#            x=results_no_mecc.index[:step+1],
+#            y=results_no_mecc['Total Quit Attempts'][:step+1],
+#            name="Quit Attempts (No MECC)",
+#            line=dict(color="purple", dash='solid')
+#        ),
+#        row=2, col=1
+#    )
+#    
+#    # Interventions and Quit Attempts - With MECC
+#    fig.add_trace(
+#        go.Scatter(
+#            x=results_mecc.index[:step+1],
+#            y=results_mecc['Total Interventions'][:step+1],
+#            name="Interventions (MECC)",
+#            line=dict(color="blue", dash='dot')
+#        ),
+#        row=2, col=2
+#    )
+#    fig.add_trace(
+#        go.Scatter(
+#            x=results_mecc.index[:step+1],
+#            y=results_mecc['Total Quit Attempts'][:step+1],
+#            name="Quit Attempts (MECC)",
+#            line=dict(color="purple", dash='dot')
+#        ),
+#        row=2, col=2
+#    )
+#    
+#    # Comparative metrics
+#    current_interventions_no_mecc = results_no_mecc['Total Interventions'].iloc[step]
+#    current_interventions_mecc = results_mecc['Total Interventions'].iloc[step]
+# 
+#    current_quit_attempts_no_mecc = results_no_mecc['Total Quit Attempts'].iloc[step]
+#    current_quit_attempts_mecc = results_mecc['Total Quit Attempts'].iloc[step]
+#
+#    current_quits_no_mecc = results_no_mecc['Total Quit Smoking'].iloc[step]
+#    current_quits_mecc = results_mecc['Total Quit Smoking'].iloc[step]
+#     
+#    #success_rate_no_mecc = (results_no_mecc['Total Quit Smoking'].iloc[step] / 
+#    #                       results_no_mecc['Total Quit Attempts'].iloc[step] * 100 
+#    #                                if results_no_mecc['Total Quit Attempts'].iloc[step] > 0 else 0)
+#    #success_rate_mecc = (results_mecc['Total Quit Smoking'].iloc[step] / 
+#    #                    results_mecc['Total Quit Attempts'].iloc[step] * 100
+#    #                             if results_mecc['Total Quit Attempts'].iloc[step] > 0 else 0)
+#    
+#    # Success metrics comparison
+#    fig.add_trace(
+#        go.Bar(
+#            x=['Interventions', 'Quit Attempts','Current Quits'],# 'Success Rate (%)'],
+#            y=[current_interventions_no_mecc, current_quit_attempts_no_mecc,current_quits_no_mecc],#, success_rate_no_mecc],
+#            name='No MECC',
+#            marker_color='rgba(135, 206, 250, 0.8)'
+#        ),
+#        row=3, col=1
+#    )
+#    
+#    fig.add_trace(
+#        go.Bar(
+#            x=['Interventions', 'Quit Attempts','Current Quits'],# 'Success Rate (%)'],
+#            y=[current_interventions_mecc, current_quit_attempts_mecc,current_quits_mecc],#, success_rate_mecc],
+#            name='With MECC',
+#            marker_color='rgba(0, 0, 139, 0.8)'
+#        ),
+#        row=3, col=2
+#    )
+#    
+#    # Update layout
+#    fig.update_layout(
+#        height=1000,  # Increased height to accommodate new row
+#        showlegend=True,
+#        barmode='group'
+#    )
+#    
+#    # Update axes labels
+#    fig.update_xaxes(title_text="Month", row=1, col=1)
+#    fig.update_xaxes(title_text="Month", row=1, col=2)
+#    fig.update_xaxes(title_text="Month", row=2, col=1)
+#    fig.update_xaxes(title_text="Month", row=2, col=2)
+#    fig.update_xaxes(title_text="Metrics", row=3, col=1)
+#    fig.update_xaxes(title_text="Metrics", row=3, col=2)
+#    
+#    # Update y-axes labels
+#    fig.update_yaxes(title_text="Number of People", row=1, col=1)
+#    fig.update_yaxes(title_text="Number of People", row=1, col=2)
+#    fig.update_yaxes(title_text="Count", row=2, col=1)
+#    fig.update_yaxes(title_text="Count", row=2, col=2)
+#    fig.update_yaxes(title_text="Value", row=3, col=1)
+#    fig.update_yaxes(title_text="Value", row=3, col=2)
+#    
+#    # Link the y-axes for each pair of charts in the same row
+#    fig.update_yaxes(matches='y2', row=1)  # Matches y-axis for row 1 charts
+#    fig.update_yaxes(matches='y3', row=2)  # Matches y-axis for row 2 charts
+#    fig.update_yaxes(matches='y4', row=3)  # Matches y-axis for row 3 charts
+#
+#    return fig
+
+##########################################
+## Population Figure
+##########################################
+
+
+def create_population_figure(results_no_mecc, results_mecc, step):
     """Create side-by-side comparison figures"""
     fig = make_subplots(
-        rows=3, 
+        rows=1, 
         cols=2,
         subplot_titles=(
             'Without MECC Training',
             'With MECC Training',
-            'Interventions & Quit Attempts (No MECC)',
-            'Interventions & Quit Attempts (With MECC)',
-            'Success Metrics Comparison',
-            'Performance Improvement'
         ),
-        specs=[[{}, {}], [{}, {}], [{}, {}]],
-        row_heights=[0.4, 0.4, 0.2]
+        specs=[[{}, {}]],
+        row_heights=[1]
     )
     
     # Population changes over time - Without MECC
@@ -209,6 +375,45 @@ def create_comparison_figure(results_no_mecc, results_mecc, step):
         row=1, col=2
     )
     
+    # Update layout
+    fig.update_layout(
+        height=400, 
+        showlegend=True,
+        barmode='group'
+    )
+
+    # Update axes labels
+    fig.update_xaxes(title_text="Month", row=1, col=1)
+    fig.update_xaxes(title_text="Month", row=1, col=2)
+
+    
+    # Update y-axes labels
+    fig.update_yaxes(title_text="Number of People", row=1, col=1)
+    fig.update_yaxes(title_text="Number of People", row=1, col=2)
+    
+    # Link the axes for each pair of charts in the same row
+    fig.update_yaxes(matches='y', row=1)
+    fig.update_xaxes(matches='x', row=1)
+
+    return fig
+
+##########################################
+## Intervention Figure
+##########################################
+
+def create_intervention_figure(results_no_mecc, results_mecc, step):
+    """Create side-by-side comparison figures"""
+    fig = make_subplots(
+        rows=1, 
+        cols=2,
+        subplot_titles=(
+            'Interventions & Quit Attempts (No MECC)',
+            'Interventions & Quit Attempts (With MECC)',
+        ),
+        specs=[[{}, {}]],
+        row_heights=[1]
+    )
+        
     # Interventions and Quit Attempts - Without MECC
     fig.add_trace(
         go.Scatter(
@@ -217,7 +422,7 @@ def create_comparison_figure(results_no_mecc, results_mecc, step):
             name="Interventions (No MECC)",
             line=dict(color="blue", dash='solid')
         ),
-        row=2, col=1
+        row=1, col=1
     )
     fig.add_trace(
         go.Scatter(
@@ -226,7 +431,7 @@ def create_comparison_figure(results_no_mecc, results_mecc, step):
             name="Quit Attempts (No MECC)",
             line=dict(color="purple", dash='solid')
         ),
-        row=2, col=1
+        row=1, col=1
     )
     
     # Interventions and Quit Attempts - With MECC
@@ -237,7 +442,7 @@ def create_comparison_figure(results_no_mecc, results_mecc, step):
             name="Interventions (MECC)",
             line=dict(color="blue", dash='dot')
         ),
-        row=2, col=2
+        row=1, col=2
     )
     fig.add_trace(
         go.Scatter(
@@ -246,9 +451,48 @@ def create_comparison_figure(results_no_mecc, results_mecc, step):
             name="Quit Attempts (MECC)",
             line=dict(color="purple", dash='dot')
         ),
-        row=2, col=2
+        row=1, col=2
     )
     
+    # Update layout
+    fig.update_layout(
+        height=400,  
+        showlegend=True,
+        barmode='group'
+    )
+    
+    # Update axes labels
+    fig.update_xaxes(title_text="Month", row=1, col=1)
+    fig.update_xaxes(title_text="Month", row=1, col=2)
+    
+    # Update y-axes labels
+    fig.update_yaxes(title_text="Count", row=1, col=1)
+    fig.update_yaxes(title_text="Count", row=1, col=2)
+    
+    # Link the axes for each pair of charts in the same row
+    fig.update_yaxes(matches='y', row=1)
+    fig.update_xaxes(matches='x', row=1)
+
+    return fig
+
+
+##########################################
+## Success Metrics Figure
+##########################################
+
+def create_metrics_figure(results_no_mecc, results_mecc, step):
+    """Create side-by-side comparison figures"""
+    fig = make_subplots(
+        rows=1, 
+        cols=2,
+        subplot_titles=(
+            'Success Metrics Comparison',
+            'Performance Improvement'
+        ),
+        specs=[[{}, {}]],
+        row_heights=[1]
+    )
+       
     # Comparative metrics
     current_interventions_no_mecc = results_no_mecc['Total Interventions'].iloc[step]
     current_interventions_mecc = results_mecc['Total Interventions'].iloc[step]
@@ -259,13 +503,6 @@ def create_comparison_figure(results_no_mecc, results_mecc, step):
     current_quits_no_mecc = results_no_mecc['Total Quit Smoking'].iloc[step]
     current_quits_mecc = results_mecc['Total Quit Smoking'].iloc[step]
      
-    #success_rate_no_mecc = (results_no_mecc['Total Quit Smoking'].iloc[step] / 
-    #                       results_no_mecc['Total Quit Attempts'].iloc[step] * 100 
-    #                                if results_no_mecc['Total Quit Attempts'].iloc[step] > 0 else 0)
-    #success_rate_mecc = (results_mecc['Total Quit Smoking'].iloc[step] / 
-    #                    results_mecc['Total Quit Attempts'].iloc[step] * 100
-    #                             if results_mecc['Total Quit Attempts'].iloc[step] > 0 else 0)
-    
     # Success metrics comparison
     fig.add_trace(
         go.Bar(
@@ -274,7 +511,7 @@ def create_comparison_figure(results_no_mecc, results_mecc, step):
             name='No MECC',
             marker_color='rgba(135, 206, 250, 0.8)'
         ),
-        row=3, col=1
+        row=1, col=1
     )
     
     fig.add_trace(
@@ -284,35 +521,26 @@ def create_comparison_figure(results_no_mecc, results_mecc, step):
             name='With MECC',
             marker_color='rgba(0, 0, 139, 0.8)'
         ),
-        row=3, col=2
+        row=1, col=2
     )
     
     # Update layout
     fig.update_layout(
-        height=1000,  # Increased height to accommodate new row
+        height=300,  
         showlegend=True,
         barmode='group'
     )
     
     # Update axes labels
-    fig.update_xaxes(title_text="Month", row=1, col=1)
-    fig.update_xaxes(title_text="Month", row=1, col=2)
-    fig.update_xaxes(title_text="Month", row=2, col=1)
-    fig.update_xaxes(title_text="Month", row=2, col=2)
-    fig.update_xaxes(title_text="Metrics", row=3, col=1)
-    fig.update_xaxes(title_text="Metrics", row=3, col=2)
+    fig.update_xaxes(title_text="Metrics", row=1, col=1)
+    fig.update_xaxes(title_text="Metrics", row=1, col=2)
     
     # Update y-axes labels
-    fig.update_yaxes(title_text="Number of People", row=1, col=1)
-    fig.update_yaxes(title_text="Number of People", row=1, col=2)
-    fig.update_yaxes(title_text="Count", row=2, col=1)
-    fig.update_yaxes(title_text="Count", row=2, col=2)
-    fig.update_yaxes(title_text="Value", row=3, col=1)
-    fig.update_yaxes(title_text="Value", row=3, col=2)
+    fig.update_yaxes(title_text="Value", row=1, col=1)
+    fig.update_yaxes(title_text="Value", row=1, col=2)
     
-    # Link the y-axes for each pair of charts in the same row
-    fig.update_yaxes(matches='y2', row=1)  # Matches y-axis for row 1 charts
-    fig.update_yaxes(matches='y3', row=2)  # Matches y-axis for row 2 charts
-    fig.update_yaxes(matches='y4', row=3)  # Matches y-axis for row 3 charts
+    # Link the axes for each pair of charts in the same row
+    fig.update_yaxes(matches='y', row=1)  
+    fig.update_xaxes(matches='x', row=1)
 
     return fig
