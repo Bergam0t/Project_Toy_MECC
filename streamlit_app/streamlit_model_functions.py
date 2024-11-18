@@ -382,11 +382,19 @@ def create_population_figure(results_no_mecc, results_mecc, step):
         barmode='group'
     )
 
+    # Update legend
+    fig.update_layout(legend=dict(
+        orientation="h",
+        yanchor="bottom",
+        y=1.1,
+        xanchor="center",
+        x=0.5
+    ))
+
     # Update axes labels
     fig.update_xaxes(title_text="Month", row=1, col=1)
     fig.update_xaxes(title_text="Month", row=1, col=2)
 
-    
     # Update y-axes labels
     fig.update_yaxes(title_text="Number of People", row=1, col=1)
     fig.update_yaxes(title_text="Number of People", row=1, col=2)
@@ -460,7 +468,16 @@ def create_intervention_figure(results_no_mecc, results_mecc, step):
         showlegend=True,
         barmode='group'
     )
-    
+
+    # Update legend
+    fig.update_layout(legend=dict(
+        orientation="h",
+        yanchor="bottom",
+        y=1.1,
+        xanchor="center",
+        x=0.5
+    ))
+
     # Update axes labels
     fig.update_xaxes(title_text="Month", row=1, col=1)
     fig.update_xaxes(title_text="Month", row=1, col=2)
@@ -531,6 +548,15 @@ def create_metrics_figure(results_no_mecc, results_mecc, step):
         barmode='group'
     )
     
+    # Update legend
+    fig.update_layout(legend=dict(
+        orientation="h",
+        yanchor="bottom",
+        y=1.1,
+        xanchor="center",
+        x=0.5
+    ))
+
     # Update axes labels
     fig.update_xaxes(title_text="Metrics", row=1, col=1)
     fig.update_xaxes(title_text="Metrics", row=1, col=2)
