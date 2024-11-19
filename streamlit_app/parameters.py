@@ -6,7 +6,7 @@ import streamlit as st
 #from plotly.subplots import make_subplots
 import time
 #from model_two_types_mecc import MECC_Model 
-from streamlit_model_functions import run_simulation_step, create_comparison_figure, create_MECC_model #, create_figure
+#from streamlit_model_functions import run_simulation_step, create_comparison_figure, create_MECC_model #, create_figure
 #import random
 
 st.title("Parameters - Enhanced Smoking Cessation Model with MECC Training")
