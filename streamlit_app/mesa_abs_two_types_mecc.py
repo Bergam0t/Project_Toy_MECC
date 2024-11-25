@@ -84,10 +84,12 @@ if st.button("Run Simulation"):
     
     model_no_mecc = create_MECC_model(
         model_parameters=model_parameters,
+        model_type='Smoke',
         mecc_trained=False
     )
     model_mecc = create_MECC_model(
         model_parameters=model_parameters,
+        model_type='Smoke',
         mecc_trained=True
     )
 

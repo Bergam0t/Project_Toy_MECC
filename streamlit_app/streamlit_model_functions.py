@@ -2,7 +2,7 @@
 #import pandas as pd
 #import numpy as np
 #import streamlit as st
-from model_two_types_mecc import MECC_Model 
+from model_two_types_mecc import MECC_Model,SmokeModel_MECC_Model
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 #import time
@@ -13,8 +13,20 @@ from plotly.subplots import make_subplots
 
 ## Function to create a model
 def create_MECC_model(model_parameters
+                      ,model_type = 'Generic'
                       ,mecc_trained = False):
+    if model_type == 'Generic':
         model = MECC_Model(
+            seed=model_parameters["model_seed"],
+            N_people=model_parameters["N_people"],
+            N_service=model_parameters["N_service"],
+            base_make_intervention_prob=model_parameters["base_make_intervention_prob"],
+            visit_prob=model_parameters["visit_prob"],
+            mecc_effect=model_parameters["mecc_effect"],            
+            mecc_trained=mecc_trained)
+        
+    elif model_type == 'Smoke':
+        model = SmokeModel_MECC_Model(
             seed=model_parameters["model_seed"],
             N_people=model_parameters["N_people"],
             N_service=model_parameters["N_service"],
@@ -25,8 +37,8 @@ def create_MECC_model(model_parameters
             base_smoke_relapse_prob = model_parameters["base_smoke_relapse_prob"],
             intervention_effect=model_parameters["intervention_effect"],  
             mecc_effect=model_parameters["mecc_effect"],            
-            mecc_trained=mecc_trained)
-        return model
+            mecc_trained=mecc_trained)   
+    return model
 
 ## Function to run simulation steps
 def run_simulation_step(model):
