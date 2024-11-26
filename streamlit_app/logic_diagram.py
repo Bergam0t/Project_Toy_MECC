@@ -22,8 +22,8 @@ def create_logic_diagram():
         m_start = flow.Start().label('Month Start').drop("S")
         
         flow.Arrow().down(d.unit/3).at(m_start.S)
-        visit = flow.Decision(S='Not Visit'
-                            ,E='Visit').label('Chance visit\na Service').drop("S")
+        visit = flow.Decision(S='Visit'
+                            ,E='Not Visit').label('Chance visit\na Service').drop("S")
         
         flow.Arrow().down(d.unit/2).at(visit.S)
 
@@ -84,8 +84,8 @@ def create_logic_diagram_SmokeModel():
         flow.Wire('n',k=-d.unit/6,arrow ='->').at(no_smoke.S).to(m_start.N)
         
         flow.Arrow().down(d.unit/3).at(m_start.S)
-        visit = flow.Decision(S='Not Visit'
-                            ,E='Visit').label('Chance visit\na Service').drop("S")
+        visit = flow.Decision(S='Visit'
+                            ,E='Not Visit').label('Chance visit\na Service').drop("S")
         
         flow.Arrow().down(d.unit/2).at(visit.S)
 
