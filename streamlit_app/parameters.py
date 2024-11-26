@@ -35,11 +35,11 @@ with tab1:
 
         if 'base_make_intervention_prob' not in st.session_state:
             st.session_state.base_make_intervention_prob = 0.1
-        st.session_state.base_make_intervention_prob = st.slider("Chance a Brief Intervention Made Without MECC", 0.0, 1.0, st.session_state.base_make_intervention_prob)
+        st.session_state.base_make_intervention_prob = st.slider("Chance a Brief Intervention Made Without MECC Training", 0.0, 1.0, st.session_state.base_make_intervention_prob)
 
         st.write("-----") #divider
 
-        st.markdown("#### MECC")
+        st.markdown("#### MECC Training")
 
         if 'mecc_effect' not in st.session_state:
             st.session_state.mecc_effect = 0.9
@@ -96,7 +96,7 @@ with tab2:
     with col5:
         st.markdown("#### Service")
 
-        st.write(f"Chance a Brief Intervention Made Without MECC: :blue-background[{st.session_state.base_make_intervention_prob}]")
+        st.write(f"Chance a Brief Intervention Made Without MECC Training: :blue-background[{st.session_state.base_make_intervention_prob}]")
 
         if 'intervention_effect' not in st.session_state:
             st.session_state.intervention_effect = 1.1
@@ -105,7 +105,7 @@ with tab2:
 
         st.write("-----") #divider
 
-        st.markdown("#### MECC")
+        st.markdown("#### MECC Training")
         st.write(f"Chance Making a Brief Intervention After MECC Training: :blue-background[{st.session_state.mecc_effect}]")
 
     with col6:
