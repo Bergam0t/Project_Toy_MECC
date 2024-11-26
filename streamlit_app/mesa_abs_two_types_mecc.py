@@ -9,7 +9,7 @@ import os
 import shutil
 import json
 
-st.title("Simulate - Enhanced Smoking Cessation Model with MECC Training")
+st.title("Simulate - Smoking Cessation Model with MECC Training")
 
 # initialise simulation_completed session state
 if 'simulation_completed' not in st.session_state:
