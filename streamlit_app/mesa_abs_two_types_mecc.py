@@ -9,7 +9,7 @@ import os
 import shutil
 import json
 
-st.title("Simulate - Enhanced Smoking Cessation Model with MECC Training")
+st.title("Simulate - Smoking Cessation Model with MECC Training")
 
 # initialise simulation_completed session state
 if 'simulation_completed' not in st.session_state:
@@ -36,12 +36,12 @@ with col1:
 with col2: 
     st.markdown("#### Service Parameters")
     st.write(f" - Chance a Brief Intervention Made Without MECC: :blue-background[{st.session_state.base_make_intervention_prob}]")
+    st.write(f" - Effect of a Brief Intervention on Chance Making a Quit Attempt: :blue-background[{st.session_state.intervention_effect}]  \n  *(Numbers less than 1 will decrease the probability)*")
 
     st.write("-----") #divider
 
     st.markdown("#### MECC Parameters")
     st.write(f" - Chance Making a Brief Intervention After MECC Training: :blue-background[{st.session_state.mecc_effect}]")
-    st.write(f" - Effect of a Brief Intervention on Chance Making a Quit Attempt: :blue-background[{st.session_state.intervention_effect}]  \n  *(Numbers less than 1 will decrease the probability)*")
 
 
 with col3:
@@ -84,10 +84,12 @@ if st.button("Run Simulation"):
     
     model_no_mecc = create_MECC_model(
         model_parameters=model_parameters,
+        model_type='Smoke',
         mecc_trained=False
     )
     model_mecc = create_MECC_model(
         model_parameters=model_parameters,
+        model_type='Smoke',
         mecc_trained=True
     )
 

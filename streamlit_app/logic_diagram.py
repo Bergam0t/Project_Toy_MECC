@@ -8,7 +8,59 @@ flow.Start.defaults['fill'] = '#ffeeee'
 flow.Decision.defaults['fill'] = '#ffffee'
 flow.Circle.defaults['fill'] = '#eeeeee'
 
+
+#################
+## Generic Model
+#################
 def create_logic_diagram():
+    with schemdraw.Drawing() as d:
+        
+        ## Population
+        person = flow.Circle(r=d.unit/2).label('Number of\nPeople').drop("S")
+        flow.Arrow().at(person.S).down(d.unit/2)
+
+        m_start = flow.Start().label('Month Start').drop("S")
+        
+        flow.Arrow().down(d.unit/3).at(m_start.S)
+        visit = flow.Decision(S='Not Visit'
+                            ,E='Visit').label('Chance visit\na Service').drop("S")
+        
+        flow.Arrow().down(d.unit/2).at(visit.S)
+
+        with d.container() as service_box:
+            service_box.linestyle(":")
+            service_box.label("Service",loc="NW",halign="left",valign="top")
+            visit_start = flow.Start().label('Visit Start').anchor('N')
+            flow.Arrow().down(d.unit/3).at(visit_start.S)
+            interv = flow.Decision(W='No\nIntervention'
+                                ,S='Intervention').label('Chance Service\nDelivers\nIntervention')
+            flow.Arrow().down(d.unit/3).at(interv.S)
+            interv_result = flow.Box().anchor('N').label('Person has an\nintervention')
+            flow.Arrow().down(d.unit/3).at(interv_result.S)
+            visit_end = flow.Start().label('Visit End').anchor('N')
+            flow.Wire('c',k=-d.unit/3 ,arrow ='->').at(interv.W).to(visit_end.W)
+
+        flow.Wire('c',arrow ='->').at(visit.E).to(visit_end.E)
+        flow.Arrow().down(d.unit/2).at(visit_end.S)
+
+        m_end = flow.Start().label('Month End').drop("E")
+        flow.Arrow().right(d.unit/3).at(m_end.E)
+        last_m = flow.Decision(E='No'
+                            ,S='Yes').label('Is Last Month?').drop("S")
+        flow.Arrow().down(d.unit/3).at(last_m.S)
+        model_end = flow.Circle(r=d.unit/2).label('Model End')
+        flow.Wire('c',k=d.unit/3,arrow ='->').at(last_m.E).to(m_start.E)
+
+    ## Save the drawing to a temporary file
+    img_path = "logic_diagram.png"
+    d.save(img_path)
+    return img_path
+
+
+#################
+## Smoking Model
+#################
+def create_logic_diagram_SmokeModel():
     with schemdraw.Drawing() as d:
         
         ## Population
@@ -90,7 +142,7 @@ def create_logic_diagram():
         flow.Wire('c',k=d.unit/3,arrow ='->').at(last_m.E).to(m_start.E)
 
     ## Save the drawing to a temporary file
-    img_path = "logic_diagram.png"
+    img_path = "smoke_logic_diagram.png"
     d.save(img_path)
     return img_path
 

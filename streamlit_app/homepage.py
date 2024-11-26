@@ -19,24 +19,26 @@ the source code is available on [GitHub](https://github.com/DomRowney/Project_To
 st.write("#### Explanation")
 st.write("""
 The model is an Agent based simulation:
-
 + There is an initial group of people (agents) and an initial group of services.
++ People have contact with government services at random with a certain probability
++ People in contact with services have a chance of having a Very Brief Intervention.        
++ Services can have MECC training, which increases the a probability that
+          any contact will lead to a Very Brief Intervention.
++ The model compares results for the same simultion with and without MECC training.
+
+_A specific smoking cessation model has additional rules:_
 + A certain proportion of people have lifestyle factors: smoking.
         People cannot start smoking if they never had to start with.
 + People may have a probability of making a smoking quit attempt each month
 + People have a chance of restarting smoking,
-          this chance decreases the longer a person is smoke free.
-+ People have contact with government services at random with a certain probability
-+ People in contact with services have a chance of having a Very Brief Intervention.        
+          this chance decreases the longer a person is smoke free.         
 + A Very Brief Intervention increases the probability that a person will make a quit attempt.
          It does not effect the chance that a person will stay smoke free.
-+ Services can have MECC training, which increases the a probability that
-          any contact will lead to a Very Brief Intervention.
-+ The model compares results for the same simultion with and without MECC training.
-                           
-You can change all these probabilites on the:""") 
+
+**You can change all these probabilites on the:**""") 
 st.page_link('./parameters.py',label='Parameters for Simulation')
 
+st.write("----") # divider
 st.write("#### Diagram of Agent Model Logic")
 st.write("This diagram shows how a a person agent moves through the system")
 
@@ -66,7 +68,7 @@ if 'base_make_intervention_prob' not in st.session_state:
     st.session_state.base_make_intervention_prob = 0.1
 
 if 'mecc_effect' not in st.session_state:
-    st.session_state.mecc_effect = 1.0
+    st.session_state.mecc_effect = 0.9
 
 if 'intervention_effect' not in st.session_state:
     st.session_state.intervention_effect = 1.1

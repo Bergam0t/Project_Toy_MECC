@@ -5,5 +5,5 @@ streamlit_app/downloads/*
 !streamlit_app/downloads/.gitkeep
 streamlit_app/outputs/*
 !streamlit_app/outputs/.gitkeep
-logic_diagram.png
+*logic_diagram.png
 streamlit_app/outputs/session_data.json
