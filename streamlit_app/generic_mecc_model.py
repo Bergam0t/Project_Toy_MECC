@@ -32,7 +32,7 @@ with col1:
 
 with col2: 
     st.markdown("#### Service Parameters")
-    st.write(f" - Chance a Brief Intervention Made Without MECC: :blue-background[{st.session_state.base_make_intervention_prob}]")
+    st.write(f" - Chance a Brief Intervention Made Without MECC Training: :blue-background[{st.session_state.base_make_intervention_prob}]")
 
     st.write("-----") #divider
 
@@ -135,14 +135,14 @@ if st.button("Run Simulation"):
     
     with col1:
         st.metric(
-            "Contacts with Intervention (No MECC)", 
+            "Contacts with Intervention\n\n(No MECC Training)", 
             f"{(data_no_mecc['Total Interventions'].iloc[-1] / data_no_mecc['Total Contacts'].iloc[-1] * 100):.1f}%",
             #f"{(data_no_mecc['Total Contacts'].iloc[-1] - data_no_mecc['Total Not Smoking'].iloc[0]):.0f}"
         )
     
     with col2:
         st.metric(
-            "Contacts with Intervention (With MECC)",
+            "Contacts with Intervention\n\n(MECC Trained)",
             f"{(data_mecc['Total Interventions'].iloc[-1] / data_mecc['Total Contacts'].iloc[-1] * 100):.1f}%",
             #f"{(data_mecc['Total Not Smoking'].iloc[-1] - data_mecc['Total Not Smoking'].iloc[0]):.0f}"
         )
@@ -153,13 +153,13 @@ if st.button("Run Simulation"):
             data_no_mecc['Total Interventions'].iloc[-1]
         )
         st.metric(
-            "MECC Impact",
+            "MECC Training\n\nImpact",
             f"{mecc_improvement:.0f} additional interventions",
             f"{(mecc_improvement / data_no_mecc['Total Interventions'].iloc[-1] * 100):.1f}%"
         )
 
     with st.expander("View Raw Data"):
-        tab1, tab2 = st.tabs(["Without MECC", "With MECC"])
+        tab1, tab2 = st.tabs(["No MECC Training", "MECC Trained"])
         with tab1:
             st.dataframe(data_no_mecc)
         with tab2:

@@ -340,19 +340,19 @@ def create_population_figure(results_no_mecc, results_mecc, step):
         rows=1, 
         cols=2,
         subplot_titles=(
-            'Without MECC Training',
-            'With MECC Training',
+            'Smoking Population (Without MECC Training)',
+            'Smoking Population (With MECC Training)',
         ),
         specs=[[{}, {}]],
         row_heights=[1]
     )
-    
+
     # Population changes over time - Without MECC
     fig.add_trace(
         go.Scatter(
             x=results_no_mecc.index[:step+1], 
             y=results_no_mecc['Total Smoking'][:step+1], 
-            name="Smoking (No MECC)", 
+            name="Smoking (No MECC Training)", 
             line=dict(color="red", dash='solid')
         ),
         row=1, col=1
@@ -361,7 +361,7 @@ def create_population_figure(results_no_mecc, results_mecc, step):
         go.Scatter(
             x=results_no_mecc.index[:step+1], 
             y=results_no_mecc['Total Not Smoking'][:step+1], 
-            name="Not Smoking (No MECC)", 
+            name="Not Smoking (No MECC Training)", 
             line=dict(color="green", dash='solid')
         ),
         row=1, col=1
@@ -372,7 +372,7 @@ def create_population_figure(results_no_mecc, results_mecc, step):
         go.Scatter(
             x=results_mecc.index[:step+1], 
             y=results_mecc['Total Smoking'][:step+1], 
-            name="Smoking (MECC)", 
+            name="Smoking (MECC Trained)", 
             line=dict(color="red", dash='dot')
         ),
         row=1, col=2
@@ -381,7 +381,7 @@ def create_population_figure(results_no_mecc, results_mecc, step):
         go.Scatter(
             x=results_mecc.index[:step+1], 
             y=results_mecc['Total Not Smoking'][:step+1], 
-            name="Not Smoking (MECC)", 
+            name="Not Smoking (MECC Trained)", 
             line=dict(color="green", dash='dot')
         ),
         row=1, col=2
@@ -431,10 +431,10 @@ def create_intervention_figure(results_no_mecc, results_mecc, step):
     
     no_mecc_subtitle = ('Interventions' +
                          (' & Quit Attempts' if no_mecc_quit else '') +
-                           ' (No MECC)')
+                           ' (No MECC Training)')
     mecc_subtitle = ('Interventions' +
                       (' & Quit Attempts' if mecc_quit else '') +
-                        ' (With MECC)')
+                        ' (MECC Trained)')
 
     fig = make_subplots(
         rows=1, 
@@ -446,13 +446,14 @@ def create_intervention_figure(results_no_mecc, results_mecc, step):
         specs=[[{}, {}]],
         row_heights=[1]
     )
+
         
     # Interventions and Quit Attempts - Without MECC
     fig.add_trace(
         go.Scatter(
             x=results_no_mecc.index[:step+1],
             y=results_no_mecc['Total Contacts'][:step+1],
-            name="Contacts (No MECC)",
+            name="Contacts (No MECC Training)",
             line=dict(color="grey", dash='solid')
         ),
         row=1, col=1
@@ -461,7 +462,7 @@ def create_intervention_figure(results_no_mecc, results_mecc, step):
         go.Scatter(
             x=results_no_mecc.index[:step+1],
             y=results_no_mecc['Total Interventions'][:step+1],
-            name="Interventions (No MECC)",
+            name="Interventions (No MECC Training)",
             line=dict(color="blue", dash='solid')
         ),
         row=1, col=1
@@ -471,7 +472,7 @@ def create_intervention_figure(results_no_mecc, results_mecc, step):
             go.Scatter(
                 x=results_no_mecc.index[:step+1],
                 y=results_no_mecc['Total Quit Attempts'][:step+1],
-                name="Quit Attempts (No MECC)",
+                name="Quit Attempts (No MECC Training)",
                 line=dict(color="purple", dash='solid')
             ),
             row=1, col=1
@@ -482,7 +483,7 @@ def create_intervention_figure(results_no_mecc, results_mecc, step):
         go.Scatter(
             x=results_mecc.index[:step+1],
             y=results_mecc['Total Contacts'][:step+1],
-            name="Contacts (MECC)",
+            name="Contacts (MECC Trained)",
             line=dict(color="grey", dash='dot')
         ),
         row=1, col=2
@@ -492,7 +493,7 @@ def create_intervention_figure(results_no_mecc, results_mecc, step):
         go.Scatter(
             x=results_mecc.index[:step+1],
             y=results_mecc['Total Interventions'][:step+1],
-            name="Interventions (MECC)",
+            name="Interventions (MECC Trained)",
             line=dict(color="blue", dash='dot')
         ),
         row=1, col=2
@@ -502,7 +503,7 @@ def create_intervention_figure(results_no_mecc, results_mecc, step):
             go.Scatter(
                 x=results_mecc.index[:step+1],
                 y=results_mecc['Total Quit Attempts'][:step+1],
-                name="Quit Attempts (MECC)",
+                name="Quit Attempts (MECC Trained)",
                 line=dict(color="purple", dash='dot')
             ),
             row=1, col=2
@@ -571,7 +572,7 @@ def create_metrics_figure(results_no_mecc, results_mecc, step):
         go.Bar(
             x=['Interventions', 'Quit Attempts','Current Quits'],# 'Success Rate (%)'],
             y=[current_interventions_no_mecc, current_quit_attempts_no_mecc,current_quits_no_mecc],#, success_rate_no_mecc],
-            name='No MECC',
+            name='No MECC Training',
             marker_color='rgba(135, 206, 250, 0.8)'
         ),
         row=1, col=1
@@ -581,7 +582,7 @@ def create_metrics_figure(results_no_mecc, results_mecc, step):
         go.Bar(
             x=['Interventions', 'Quit Attempts','Current Quits'],# 'Success Rate (%)'],
             y=[current_interventions_mecc, current_quit_attempts_mecc,current_quits_mecc],#, success_rate_mecc],
-            name='With MECC',
+            name='MECC Trained',
             marker_color='rgba(0, 0, 139, 0.8)'
         ),
         row=1, col=2
