@@ -52,7 +52,7 @@ with col2:
     st.markdown("#### MECC Parameters")
 
     if 'mecc_effect' not in st.session_state:
-        st.session_state.mecc_effect = 1.0
+        st.session_state.mecc_effect = 0.9
     st.session_state.mecc_effect = st.slider("Chance Making a Brief Intervention After MECC Training", 0.0, 1.0, st.session_state.mecc_effect)
 
     if 'intervention_effect' not in st.session_state:

@@ -423,12 +423,25 @@ def create_population_figure(results_no_mecc, results_mecc, step):
 
 def create_intervention_figure(results_no_mecc, results_mecc, step):
     """Create side-by-side comparison figures"""
+
+    no_mecc_quit = (True if 'Total Quit Attempts' 
+                    in results_no_mecc.columns else False)
+    mecc_quit = (True if 'Total Quit Attempts' 
+                    in results_mecc.columns else False)
+    
+    no_mecc_subtitle = ('Interventions' +
+                         (' & Quit Attempts' if no_mecc_quit else '') +
+                           ' (No MECC)')
+    mecc_subtitle = ('Interventions' +
+                      (' & Quit Attempts' if mecc_quit else '') +
+                        ' (With MECC)')
+
     fig = make_subplots(
         rows=1, 
         cols=2,
         subplot_titles=(
-            'Interventions & Quit Attempts (No MECC)',
-            'Interventions & Quit Attempts (With MECC)',
+            no_mecc_subtitle,
+            mecc_subtitle,
         ),
         specs=[[{}, {}]],
         row_heights=[1]
@@ -438,23 +451,43 @@ def create_intervention_figure(results_no_mecc, results_mecc, step):
     fig.add_trace(
         go.Scatter(
             x=results_no_mecc.index[:step+1],
-            y=results_no_mecc['Total Interventions'][:step+1],
-            name="Interventions (No MECC)",
-            line=dict(color="blue", dash='solid')
+            y=results_no_mecc['Total Contacts'][:step+1],
+            name="Contacts (No MECC)",
+            line=dict(color="grey", dash='solid')
         ),
         row=1, col=1
     )
     fig.add_trace(
         go.Scatter(
             x=results_no_mecc.index[:step+1],
-            y=results_no_mecc['Total Quit Attempts'][:step+1],
-            name="Quit Attempts (No MECC)",
-            line=dict(color="purple", dash='solid')
+            y=results_no_mecc['Total Interventions'][:step+1],
+            name="Interventions (No MECC)",
+            line=dict(color="blue", dash='solid')
         ),
         row=1, col=1
     )
+    if no_mecc_quit:
+        fig.add_trace(
+            go.Scatter(
+                x=results_no_mecc.index[:step+1],
+                y=results_no_mecc['Total Quit Attempts'][:step+1],
+                name="Quit Attempts (No MECC)",
+                line=dict(color="purple", dash='solid')
+            ),
+            row=1, col=1
+            )
     
     # Interventions and Quit Attempts - With MECC
+    fig.add_trace(
+        go.Scatter(
+            x=results_mecc.index[:step+1],
+            y=results_mecc['Total Contacts'][:step+1],
+            name="Contacts (MECC)",
+            line=dict(color="grey", dash='dot')
+        ),
+        row=1, col=2
+        )
+        
     fig.add_trace(
         go.Scatter(
             x=results_mecc.index[:step+1],
@@ -463,16 +496,17 @@ def create_intervention_figure(results_no_mecc, results_mecc, step):
             line=dict(color="blue", dash='dot')
         ),
         row=1, col=2
-    )
-    fig.add_trace(
-        go.Scatter(
-            x=results_mecc.index[:step+1],
-            y=results_mecc['Total Quit Attempts'][:step+1],
-            name="Quit Attempts (MECC)",
-            line=dict(color="purple", dash='dot')
-        ),
-        row=1, col=2
-    )
+        )
+    if mecc_quit:
+        fig.add_trace(
+            go.Scatter(
+                x=results_mecc.index[:step+1],
+                y=results_mecc['Total Quit Attempts'][:step+1],
+                name="Quit Attempts (MECC)",
+                line=dict(color="purple", dash='dot')
+            ),
+            row=1, col=2
+            )
     
     # Update layout
     fig.update_layout(

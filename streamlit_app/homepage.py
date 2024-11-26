@@ -66,7 +66,7 @@ if 'base_make_intervention_prob' not in st.session_state:
     st.session_state.base_make_intervention_prob = 0.1
 
 if 'mecc_effect' not in st.session_state:
-    st.session_state.mecc_effect = 1.0
+    st.session_state.mecc_effect = 0.9
 
 if 'intervention_effect' not in st.session_state:
     st.session_state.intervention_effect = 1.1

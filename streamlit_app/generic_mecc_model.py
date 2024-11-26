@@ -109,9 +109,9 @@ if st.button("Run Simulation"):
         #with chart_placeholder1:
         #    st.plotly_chart(fig1, use_container_width=True)
 
-        #fig2 = create_intervention_figure(data_no_mecc, data_mecc, step)
-        #with chart_placeholder2:
-        #    st.plotly_chart(fig2, use_container_width=True)
+        fig2 = create_intervention_figure(data_no_mecc, data_mecc, step)
+        with chart_placeholder2:
+            st.plotly_chart(fig2, use_container_width=True)
 
         #fig3 = create_metrics_figure(data_no_mecc, data_mecc, step)
         #with chart_placeholder3:
