@@ -187,7 +187,111 @@ def test_intervention_effectiveness_scenario():
     
     # High intervention effectiveness should show:
     # 1. Higher quit attempts per intervention
-    assert quit_attempts_per_intervention.mean() >= 0.2  # Adjusted based on actual behavior
+    assert quit_attempts_per_intervention.mean() >= 0.2
     # 2. Larger reduction in smoking population
     smoking_reduction = results["Total Smoking"].iloc[0] - results["Total Smoking"].iloc[-1]
-    assert smoking_reduction >= 150  # Adjusted based on actual behavior
+    assert smoking_reduction >= 150
+
+def test_long_term_behavior():
+    """Test model behavior over a longer time period"""
+    params = {
+        "N_people": 1000,
+        "N_service": 1,
+        "mecc_effect": 0.8,
+        "base_make_intervention_prob": 0.3,
+        "visit_prob": 0.2,
+        "initial_smoking_prob": 0.5,  # Start with 50% smokers
+        "quit_attempt_prob": 0.1,
+        "base_smoke_relapse_prob": 0.2,
+        "intervention_effect": 1.5,
+        "seed": 42,
+        "mecc_trained": True
+    }
+    
+    # Run for longer period
+    results = run_scenario(params, steps=24)
+    
+    # Calculate rates of change
+    smoking_changes = results["Total Smoking"].diff()
+    late_changes = smoking_changes.iloc[-6:]  # Last 6 months
+    
+    # Population should stabilize
+    assert abs(late_changes.mean()) < abs(smoking_changes.iloc[:6].mean()), \
+        "Rate of change should decrease over time"
+    
+    # Smoke-free months should increase
+    smoke_free_progression = results["Average Months Smoke Free"].diff()
+    assert (smoke_free_progression >= 0).all(), \
+        "Smoke-free months should not decrease"
+    
+    # Intervention effectiveness should persist
+    early_quit_rate = results["Total Quit Attempts"].iloc[6] / 6  # First 6 months
+    late_quit_rate = (results["Total Quit Attempts"].iloc[-1] - results["Total Quit Attempts"].iloc[-7]) / 6  # Last 6 months
+    assert late_quit_rate > 0, \
+        "Quit attempts should continue even in long term"
+
+def test_no_intervention_scenario():
+    """Test edge case with no interventions"""
+    params = {
+        "N_people": 1000,
+        "N_service": 1,
+        "mecc_effect": 0.0,  # No MECC effect
+        "base_make_intervention_prob": 0.0,  # No base interventions
+        "visit_prob": 0.2,
+        "initial_smoking_prob": 0.3,
+        "quit_attempt_prob": 0.1,
+        "base_smoke_relapse_prob": 0.2,
+        "intervention_effect": 1.5,
+        "seed": 42,
+        "mecc_trained": False
+    }
+    
+    results = run_scenario(params)
+    
+    # Should see:
+    # 1. No interventions
+    assert results["Total Interventions"].iloc[-1] == 0
+    # 2. Only baseline quit attempts
+    expected_attempts = params["quit_attempt_prob"] * params["N_people"] * 12  # rough estimate
+    assert abs(results["Total Quit Attempts"].iloc[-1] - expected_attempts) < expected_attempts * 0.5
+    # 3. Less reduction in smoking
+    smoking_reduction = results["Total Smoking"].iloc[0] - results["Total Smoking"].iloc[-1]
+    assert smoking_reduction < 100  # Lower than baseline scenario
+
+def test_recovery_scenario():
+    """Test recovery from high initial smoking rate"""
+    params = {
+        "N_people": 1000,
+        "N_service": 3,  # Multiple services
+        "mecc_effect": 1.0,  # Maximum effect
+        "base_make_intervention_prob": 0.5,
+        "visit_prob": 0.3,
+        "initial_smoking_prob": 0.8,  # High initial smoking
+        "quit_attempt_prob": 0.2,
+        "base_smoke_relapse_prob": 0.1,  # Low relapse
+        "intervention_effect": 2.0,
+        "seed": 42,
+        "mecc_trained": True
+    }
+    
+    results = run_scenario(params, steps=18)  # Longer run
+    
+    # Calculate recovery metrics
+    initial_smokers = results["Total Smoking"].iloc[0]
+    final_smokers = results["Total Smoking"].iloc[-1]
+    recovery_rate = (initial_smokers - final_smokers) / initial_smokers
+    
+    # Should see:
+    # 1. Significant reduction in smoking
+    assert recovery_rate >= 0.4, \
+        f"Expected at least 40% reduction, got {recovery_rate*100:.1f}%"
+    
+    # 2. Sustained quit attempts
+    quit_attempts = results["Total Quit Attempts"].diff()
+    assert (quit_attempts > 0).all(), \
+        "Quit attempts should continue throughout recovery"
+    
+    # 3. Increasing smoke-free duration
+    smoke_free_months = results["Average Months Smoke Free"]
+    assert smoke_free_months.iloc[-1] > smoke_free_months.iloc[6], \
+        "Smoke-free months should increase during recovery"
