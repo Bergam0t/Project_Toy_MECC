@@ -8,6 +8,8 @@ from streamlit_model_functions import run_simulation_step, create_MECC_model,cre
 import os
 import shutil
 import json
+from quarto_render_func import render_quarto
+import platform
 
 st.title("Simulate - Smoking Cessation Model with MECC Training")
 
@@ -27,13 +29,13 @@ col1, col2, col3 = st.columns(3)
 
 with col1:
     st.markdown("#### Population Parameters")
-    st.write(f" - Number of People: :blue-background[{st.session_state.N_people}]") 
+    st.write(f" - Number of People: :blue-background[{st.session_state.N_people}]")
     st.write(f" - Initial Smoking Probability: :blue-background[{st.session_state.initial_smoking_prob}]")
     st.write(f" - Chance of Visiting a Service per Month: :blue-background[{st.session_state.visit_prob}]")
     st.write(f" - Base Quit Attempt Probability per Month: :blue-background[{st.session_state.quit_attempt_prob}]")
     st.write(f" - Base Smoking Relapse per Month: :blue-background[{st.session_state.base_smoke_relapse_prob}]  \n  *(Relapse chance decreases over time of not smoking)*")
 
-with col2: 
+with col2:
     st.markdown("#### Service Parameters")
     st.write(f" - Chance a Brief Intervention Made Without MECC Training: :blue-background[{st.session_state.base_make_intervention_prob}]")
     st.write(f" - Effect of a Brief Intervention on Chance Making a Quit Attempt: :blue-background[{st.session_state.intervention_effect}]  \n  *(Numbers less than 1 will decrease the probability)*")
@@ -81,7 +83,7 @@ if st.button("Run Simulation"):
     # set simulation_completed to False before starting - to control the download report button
     st.session_state.simulation_completed = False
     st.session_state.download_clicked = False
-    
+
     model_no_mecc = create_MECC_model(
         model_parameters=model_parameters,
         model_type='Smoke',
@@ -140,24 +142,24 @@ if st.button("Run Simulation"):
 
     st.markdown("### Final Statistics")
     col1, col2, col3 = st.columns(3)
-    
+
     with col1:
         st.metric(
-            "Smoking Reduction\n\n(No MECC Training)", 
+            "Smoking Reduction\n\n(No MECC Training)",
             f"{(data_no_mecc['Total Not Smoking'].iloc[-1] / st.session_state.N_people * 100):.1f}%",
             f"{(data_no_mecc['Total Not Smoking'].iloc[-1] - data_no_mecc['Total Not Smoking'].iloc[0]):.0f}"
         )
-    
+
     with col2:
         st.metric(
             "Smoking Reduction\n\n(MECC Trained)",
             f"{(data_mecc['Total Not Smoking'].iloc[-1] / st.session_state.N_people * 100):.1f}%",
             f"{(data_mecc['Total Not Smoking'].iloc[-1] - data_mecc['Total Not Smoking'].iloc[0]):.0f}"
         )
-    
+
     with col3:
         mecc_improvement = (
-            data_mecc['Total Not Smoking'].iloc[-1] - 
+            data_mecc['Total Not Smoking'].iloc[-1] -
             data_no_mecc['Total Not Smoking'].iloc[-1]
         )
         st.metric(
@@ -180,10 +182,10 @@ if st.button("Run Simulation"):
 report_message = st.empty()
 
 if st.session_state.simulation_completed:
-    
+
     report_message.info("Generating Report...")
 
-    ## filepaths for 
+    ## filepaths for
     output_dir = os.path.join(os.getcwd(),'streamlit_app','downloads')
     qmd_filename = 'mecc_simulation_report.qmd'
     qmd_path = os.path.join(os.getcwd(),'streamlit_app',qmd_filename)
@@ -204,12 +206,14 @@ if st.session_state.simulation_completed:
     except:
         ## error message
         report_message.error(f"Report cannot be generated")
-    
+
     if os.path.exists(dest_html_path):
         with open(dest_html_path, "r") as f:
             html_data = f.read()
 
         report_message.success("Report Available for Download")
+
+
 
         if not st.session_state.download_clicked:
             st.download_button(
@@ -220,9 +224,9 @@ if st.session_state.simulation_completed:
                 # disabled=not st.session_state.simulation_completed,
                 on_click=disable_download
             )
-    else:
-        ## error message
-        report_message.error(f"Report failed to generate\n\n_{result}_")
+        else:
+            ## error message
+            report_message.error(f"Report failed to generate\n\n_{result}_")
 
 else:
     ## empty location for report message
