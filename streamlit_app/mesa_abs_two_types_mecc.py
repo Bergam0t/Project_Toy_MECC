@@ -211,7 +211,7 @@ if st.session_state.simulation_completed:
         with open(dest_html_path, "r") as f:
             html_data = f.read()
 
-    report_message.success("Report Available for Download")
+        report_message.success("Report Available for Download")
 
 
 
@@ -224,9 +224,9 @@ if st.session_state.simulation_completed:
                 # disabled=not st.session_state.simulation_completed,
                 on_click=disable_download
             )
-    else:
-        ## error message
-        report_message.error(f"Report failed to generate\n\n_{result}_")
+        else:
+            ## error message
+            report_message.error(f"Report failed to generate\n\n_{result}_")
 
 else:
     ## empty location for report message
