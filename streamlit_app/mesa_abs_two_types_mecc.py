@@ -187,7 +187,7 @@ if st.session_state.simulation_completed:
 
     ## filepaths for
     output_dir = os.path.join(os.getcwd(),'streamlit_app','downloads')
-    qmd_filename = 'mecc_simulation_report.qmd'
+    qmd_filename = 'smoking_cessation_sim_report.qmd'
     qmd_path = os.path.join(os.getcwd(),'streamlit_app',qmd_filename)
     html_filename = os.path.basename(qmd_filename).replace('.qmd', '.html')
     dest_html_path = os.path.join(output_dir,html_filename)

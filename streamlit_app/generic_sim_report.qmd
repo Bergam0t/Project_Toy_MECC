@@ -1,0 +1,133 @@
+---
+title: "Toy MECC Simulation Report"
+# execute:
+#   echo: false
+format:
+    html:
+        toc: false
+        code-fold: false
+        embed-resources: true
+        # URL options
+        link-external-icon: true
+        link-external-newwindow: true
+        # Reference options
+        citations-hover: true
+        footnotes-hover: true
+        #####################
+        # NHS Theme options #
+        #####################
+        css: "NHS_report_theme.css"
+        callout-appearance: simple
+        callout-collapse: true
+        # Caption options
+        cap-location: bottom
+        # Title options
+        title-block-banner: '#005EB8'
+        backgroundcolor: '#f0f4f5'
+        # Set font
+        mainfont: 'Open Sans'
+execute: 
+    echo: true
+    warning: false
+    message: false
+---
+
+<!-- ![](resources\MECC.jpg){height=100} -->
+
+```{python}
+#| echo: false
+#| label: get_data
+import pandas as pd
+import json
+import plotly.graph_objects as go
+
+# Load session data from JSON
+with open("./outputs/session_data.json", "r") as f:
+    session_data = json.load(f)
+
+data_no_mecc = pd.read_csv("./outputs/data_no_mecc.csv")
+data_mecc = pd.read_csv("./outputs/data_mecc.csv")
+
+```
+
+# Service with MECC Training
+
+## Simulation Results
+
+```{python}
+#| echo: false
+#| label: plots
+from streamlit_model_functions import create_population_figure
+from streamlit_model_functions import create_intervention_figure
+from streamlit_model_functions import create_metrics_figure
+
+step = len(data_no_mecc) - 1
+# fig1 = create_population_figure(data_no_mecc, data_mecc, step)
+# fig1.show()
+
+fig2 = create_intervention_figure(data_no_mecc, data_mecc, step)
+fig2.show()
+
+# fig3 = create_metrics_figure(data_no_mecc, data_mecc, step)
+# fig3.show()
+```
+
+## Final Statistics
+
+### Contacts with Intervention (No MECC Training)
+```{python}
+#| echo: false
+#| label: Contacts with Intervention No MECC Training
+
+contacts_no_mecc = data_no_mecc['Total Interventions'].iloc[-1]  / data_no_mecc['Total Contacts'].iloc[-1] * 100
+
+print(f"Contacts with Intervention (No MECC): {contacts_no_mecc:.1f}%")
+```
+
+### Contacts with Intervention (MECC Trained)
+```{python}
+#| echo: false
+#| label: Contacts with Intervention MECC Trained
+contacts_mecc = (data_mecc['Total Interventions'].iloc[-1] / data_mecc['Total Contacts'].iloc[-1] * 100)
+
+print(f"Contacts with Intervention (MECC Trained): {contacts_mecc:.1f}%")
+
+```
+
+### MECC Training Impact
+
+```{python}
+#| echo: false
+#| label: MECC Training Impact
+mecc_improvement = (
+            data_mecc['Total Interventions'].iloc[-1] - 
+            data_no_mecc['Total Interventions'].iloc[-1]
+        )
+
+mecc_impact_percentage = (mecc_improvement / data_no_mecc['Total Interventions'].iloc[-1] * 100)
+
+print(f"Additional interventions: {mecc_improvement:.0f}")
+print(f"Percentage: {mecc_impact_percentage:.1f}%")
+```
+
+
+## Toy MECC Parameters
+
+### Population Parameters
+ - Number of People: **`{python} session_data["N_people"]`** 
+ - Chance of Visiting a Service per Month: **`{python} session_data["visit_prob"]`**
+
+### Service Parameters
+- Chance a Brief Intervention Made Without MECC: **`{python} session_data["mecc_effect"]`**
+
+### MECC Parameters
+ - Chance Making a Brief Intervention After MECC Training: **`{python} session_data["base_make_intervention_prob"]`**
+
+### Simulation Parameters
+ - Random Seed: **`{python} session_data["model_seed"]`**
+ - Number of Months to Simulate: **`{python} session_data["num_steps"]`**
+ - Animation Speed (seconds): **`{python} session_data["animation_speed"]`**
+
+
+
+

@@ -122,11 +122,11 @@ if st.button("Run Simulation"):
     st.session_state.generic_simulation_completed = True  # set to True after completion
     
     # save csv files for use in quarto
-    #data_no_mecc_file = os.path.join(output_path,'data_no_mecc.csv')
-    #data_mecc_file = os.path.join(output_path,'data_mecc.csv')
+    data_no_mecc_file = os.path.join(output_path,'data_no_mecc.csv')
+    data_mecc_file = os.path.join(output_path,'data_mecc.csv')
 
-    #data_no_mecc.to_csv(data_no_mecc_file, index=False)
-    #data_mecc.to_csv(data_mecc_file, index=False)
+    data_no_mecc.to_csv(data_no_mecc_file, index=False)
+    data_mecc.to_csv(data_mecc_file, index=False)
     
 ######################################################
 
@@ -168,54 +168,54 @@ if st.button("Run Simulation"):
 
 ######################################################
 
-## empty location for report message
-#report_message = st.empty()
-#
-#if st.session_state.generic_simulation_completed:
-#    
-#    report_message.info("Generating Report...")
-#
-#    ## filepaths for 
-#    output_dir = os.path.join(os.getcwd(),'streamlit_app','downloads')
-#    qmd_filename = 'mecc_simulation_report.qmd'
-#    qmd_path = os.path.join(os.getcwd(),'streamlit_app',qmd_filename)
-#    html_filename = os.path.basename(qmd_filename).replace('.qmd', '.html')
-#    dest_html_path = os.path.join(output_dir,html_filename)
-#
-#    try:
-#        ## forces result to be html
-#        result = subprocess.run(["quarto"
-#                                , "render"
-#                                , qmd_path
-#                                , "--to"
-#                                , "html"
-#                                , "--output-dir"
-#                                , output_dir]
-#                                , capture_output=True
-#                                , text=True)
-#    except:
-#        ## error message
-#        report_message.error(f"Report cannot be generated")
-#    
-#    if os.path.exists(dest_html_path):
-#        with open(dest_html_path, "r") as f:
-#            html_data = f.read()
-#
-#        report_message.success("Report Available for Download")
-#
-#        if not st.session_state.generic_download_clicked:
-#            st.download_button(
-#                label="Download MECC Simulation Report and Clear Simulation Results",
-#                data=html_data,
-#                file_name=html_filename,
-#                mime="text/html",
-#                # disabled=not st.session_state.generic_simulation_completed,
-#                on_click=disable_download
-#            )
-#    else:
-#        ## error message
-#        report_message.error(f"Report failed to generate\n\n_{result}_")
-#
-#else:
-#    ## empty location for report message
-#    report_message = st.empty()
+# empty location for report message
+report_message = st.empty()
+
+if st.session_state.generic_simulation_completed:
+   
+   report_message.info("Generating Report...")
+
+   ## filepaths for 
+   output_dir = os.path.join(os.getcwd(),'streamlit_app','downloads')
+   qmd_filename = 'generic_sim_report.qmd'
+   qmd_path = os.path.join(os.getcwd(),'streamlit_app',qmd_filename)
+   html_filename = os.path.basename(qmd_filename).replace('.qmd', '.html')
+   dest_html_path = os.path.join(output_dir,html_filename)
+
+   try:
+       ## forces result to be html
+       result = subprocess.run(["quarto"
+                               , "render"
+                               , qmd_path
+                               , "--to"
+                               , "html"
+                               , "--output-dir"
+                               , output_dir]
+                               , capture_output=True
+                               , text=True)
+   except:
+       ## error message
+       report_message.error(f"Report cannot be generated")
+   
+   if os.path.exists(dest_html_path):
+       with open(dest_html_path, "r") as f:
+           html_data = f.read()
+
+       report_message.success("Report Available for Download")
+
+       if not st.session_state.generic_download_clicked:
+           st.download_button(
+               label="Download MECC Simulation Report and Clear Simulation Results",
+               data=html_data,
+               file_name=html_filename,
+               mime="text/html",
+               # disabled=not st.session_state.generic_simulation_completed,
+               on_click=disable_download
+           )
+   else:
+       ## error message
+       report_message.error(f"Report failed to generate\n\n_{result}_")
+
+else:
+   ## empty location for report message
+   report_message = st.empty()
