@@ -1,10 +1,11 @@
 ---
-title: "MECC Simulation Report"
-execute:
-  echo: false
+title: "Toy MECC Simulation Report"
+# execute:
+#   echo: false
 format:
     html:
-        # toc: true
+        toc: false
+        code-fold: false
         embed-resources: true
         # URL options
         link-external-icon: true
@@ -25,6 +26,10 @@ format:
         backgroundcolor: '#f0f4f5'
         # Set font
         mainfont: 'Open Sans'
+execute: 
+    echo: true
+    warning: false
+    message: false
 ---
 
 <!-- ![](resources\MECC.jpg){height=100} -->
@@ -34,6 +39,7 @@ format:
 #| label: get_data
 import pandas as pd
 import json
+import plotly.graph_objects as go
 
 # Load session data from JSON
 with open("./outputs/session_data.json", "r") as f:
@@ -44,7 +50,70 @@ data_mecc = pd.read_csv("./outputs/data_mecc.csv")
 
 ```
 
-## All Simulation Parameters
+# Smoking Cessation with MECC
+
+## Simulation Results
+
+```{python}
+#| echo: false
+#| label: plots
+from streamlit_model_functions import create_population_figure
+from streamlit_model_functions import create_intervention_figure
+from streamlit_model_functions import create_metrics_figure
+
+step = len(data_no_mecc) - 1
+fig1 = create_population_figure(data_no_mecc, data_mecc, step)
+fig1.show()
+
+fig2 = create_intervention_figure(data_no_mecc, data_mecc, step)
+fig2.show()
+
+fig3 = create_metrics_figure(data_no_mecc, data_mecc, step)
+fig3.show()
+```
+
+## Final Statistics
+
+### Smoking Reduction (No MECC) 
+```{python}
+#| echo: false
+#| label: Calculate smoking reduction for model without MECC
+initial_non_smokers_no_mecc = data_no_mecc['Total Not Smoking'].iloc[0]
+final_non_smokers_no_mecc = data_no_mecc['Total Not Smoking'].iloc[-1]
+reduction_no_mecc = (final_non_smokers_no_mecc / session_data["N_people"]) * 100
+total_quits_no_mecc = final_non_smokers_no_mecc - initial_non_smokers_no_mecc
+
+print(f"Smoking Reduction (No MECC): {reduction_no_mecc:.1f}%")
+print(f"Total Quits (No MECC): {total_quits_no_mecc:.0f}")
+```
+
+### Smoking Reduction (With MECC) 
+```{python}
+#| echo: false
+#| label: Calculate smoking reduction for model with MECC
+initial_non_smokers_mecc = data_mecc['Total Not Smoking'].iloc[0]
+final_non_smokers_mecc = data_mecc['Total Not Smoking'].iloc[-1]
+reduction_mecc = (final_non_smokers_mecc / session_data["N_people"]) * 100
+total_quits_mecc = final_non_smokers_mecc - initial_non_smokers_mecc
+
+print(f"Smoking Reduction (With MECC): {reduction_mecc:.1f}%")
+print(f"Total Quits (With MECC): {total_quits_mecc:.0f}")
+```
+
+### MECC Impact
+
+```{python}
+#| echo: false
+#| label: Calculate additional quits due to MECC
+mecc_improvement = final_non_smokers_mecc - final_non_smokers_no_mecc
+mecc_impact_percentage = (mecc_improvement / session_data["N_people"]) * 100
+
+print(f"MECC Impact: {mecc_improvement:.0f} additional quits")
+print(f"MECC Impact Percentage: {mecc_impact_percentage:.1f}%")
+```
+
+
+## Toy MECC Parameters
 
 ### Population Parameters
  - Number of People: **`{python} session_data["N_people"]`** 
@@ -67,43 +136,6 @@ data_mecc = pd.read_csv("./outputs/data_mecc.csv")
  - Number of Months to Simulate: **`{python} session_data["num_steps"]`**
  - Animation Speed (seconds): **`{python} session_data["animation_speed"]`**
 
-## Outputs
 
-### Smoking Reduction (No MECC) 
-```{python}
-#| echo: false
-# Calculate smoking reduction for model without MECC
-initial_non_smokers_no_mecc = data_no_mecc['Total Not Smoking'].iloc[0]
-final_non_smokers_no_mecc = data_no_mecc['Total Not Smoking'].iloc[-1]
-reduction_no_mecc = (final_non_smokers_no_mecc / session_data["N_people"]) * 100
-total_quits_no_mecc = final_non_smokers_no_mecc - initial_non_smokers_no_mecc
 
-print(f"Smoking Reduction (No MECC): {reduction_no_mecc:.1f}%")
-print(f"Total Quits (No MECC): {total_quits_no_mecc:.0f}")
-```
-
-### Smoking Reduction (With MECC) 
-```{python}
-#| echo: false
-# Calculate smoking reduction for model with MECC
-initial_non_smokers_mecc = data_mecc['Total Not Smoking'].iloc[0]
-final_non_smokers_mecc = data_mecc['Total Not Smoking'].iloc[-1]
-reduction_mecc = (final_non_smokers_mecc / session_data["N_people"]) * 100
-total_quits_mecc = final_non_smokers_mecc - initial_non_smokers_mecc
-
-print(f"Smoking Reduction (With MECC): {reduction_mecc:.1f}%")
-print(f"Total Quits (With MECC): {total_quits_mecc:.0f}")
-```
-
-### MECC Impact
-
-```{python}
-#| echo: false
-# Calculate additional quits due to MECC
-mecc_improvement = final_non_smokers_mecc - final_non_smokers_no_mecc
-mecc_impact_percentage = (mecc_improvement / session_data["N_people"]) * 100
-
-print(f"MECC Impact: {mecc_improvement:.0f} additional quits")
-print(f"MECC Impact Percentage: {mecc_impact_percentage:.1f}%")
-```
 
