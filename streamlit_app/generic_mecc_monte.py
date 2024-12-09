@@ -4,7 +4,7 @@ import pandas as pd
 import numpy as np
 import streamlit as st
 import time
-from streamlit_model_functions import run_simulation_step, create_MECC_model,create_population_figure,create_intervention_figure,create_metrics_figure
+from streamlit_model_functions import run_simulation_step, create_MECC_model,create_multi_intervention_figure
 import os
 import shutil
 import json
@@ -125,19 +125,9 @@ if st.button("Run Simulations"):
 
         list_data_no_mecc.append(data_no_mecc)
         list_data_mecc.append(data_mecc)
-        # fig1 = create_population_figure(data_no_mecc, data_mecc, step)
-        #with chart_placeholder1:
-        #    st.plotly_chart(fig1, use_container_width=True)
-
-        #fig2 = create_intervention_figure(data_no_mecc, data_mecc, step)
-        #with chart_placeholder2:
-        #    st.plotly_chart(fig2, use_container_width=True)
-
-        #fig3 = create_metrics_figure(data_no_mecc, data_mecc, step)
-        #with chart_placeholder3:
-        #    st.plotly_chart(fig3, use_container_width=True)
-        
-        time.sleep(st.session_state.animation_speed)
+         
+        ## No sleep for monte carlo
+        #time.sleep(st.session_state.animation_speed)
 
     data_no_mecc = pd.concat(list_data_no_mecc).reset_index(drop=True)
     data_mecc = pd.concat(list_data_mecc).reset_index(drop=True)
@@ -145,14 +135,22 @@ if st.button("Run Simulations"):
     st.session_state.generic_MC_simulation_completed = True  # set to True after completion
     
     # save csv files for use in quarto
-    #data_no_mecc_file = os.path.join(output_path,'data_no_mecc.csv')
-    #data_mecc_file = os.path.join(output_path,'data_mecc.csv')
+    #mc_data_no_mecc_file = os.path.join(output_path,'mc_data_no_mecc.csv')
+    #mc_data_mecc_file = os.path.join(output_path,'mc_data_mecc.csv')
 
-    #data_no_mecc.to_csv(data_no_mecc_file, index=False)
-    #data_mecc.to_csv(data_mecc_file, index=False)
+    #mc_data_no_mecc.to_csv(mc_data_no_mecc_file, index=False)
+    #mc_data_mecc.to_csv(mc_data_mecc_file, index=False)
     
 ######################################################
+## outputs
+######################################################
+    
+    ## figures
+    fig2 = create_multi_intervention_figure(data_no_mecc, data_mecc)
+    with chart_placeholder2:
+        st.plotly_chart(fig2, use_container_width=True)  
 
+    ## output cards
     def group_output_data(df):
         df = df[df['month']==(st.session_state.num_steps-1)]
         return df
@@ -183,11 +181,12 @@ if st.button("Run Simulations"):
             sum(data_no_mecc_total['Total Interventions']))/iterations
         )
         st.metric(
-            "MECC Training\n\nImpact",
-            f"{mecc_improvement:.1f} mean additional interventions",
+            "MECC Training\n\nImpact: mean additional interventions",
+            f"{mecc_improvement:.1f} interventions",
             #f"{(mecc_improvement / data_no_mecc['Total Interventions'].iloc[-1] * 100):.1f}%"
         )
 
+    ## raw data
     with st.expander("View Raw Data"):
         tab1, tab2 = st.tabs(["No MECC Training", "MECC Trained"])
         with tab1:
