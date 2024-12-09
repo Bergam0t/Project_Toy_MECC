@@ -13,22 +13,37 @@ flow.Circle.defaults['fill'] = '#eeeeee'
 #################
 ## Generic Model
 #################
-def create_logic_diagram(number_labels = False):
+def create_logic_diagram(number_labels = False, session_data = None):
 
     lb_N_people = 'Number of\nPeople'
     lb_visit_prob = 'Chance visit\na Service'
     lb_make_intervention =  'Chance Service\nDelivers\nIntervention'                             
     lb_last_month = 'Is Last Month?'
-    
+
     if number_labels:
-        lb_N_people = f'{lb_N_people}\n({st.session_state.N_people})'
-        lb_visit_prob = f'{lb_visit_prob}\n({(st.session_state.visit_prob*100):.0f}%)'
+        
+        if session_data == None:
+            N_people = st.session_state.N_people
+            visit_prob = st.session_state.visit_prob
+            base_make_intervention_prob = st.session_state.base_make_intervention_prob
+            mecc_effect = st.session_state.mecc_effect
+            num_steps = st.session_state.num_steps
+                                    
+        else:
+            N_people = session_data['N_people']
+            visit_prob = session_data['visit_prob']
+            base_make_intervention_prob = session_data['base_make_intervention_prob']
+            mecc_effect = session_data['mecc_effect']
+            num_steps = session_data['num_steps']
+
+        lb_N_people = f'{lb_N_people}\n({N_people})'
+        lb_visit_prob = f'{lb_visit_prob}\n({(visit_prob*100):.0f}%)'
         lb_make_intervention =  (f'{lb_make_intervention}\n' +
-                             f'({(st.session_state.base_make_intervention_prob*100):.0f}%' +
+                             f'({(base_make_intervention_prob*100):.0f}%' +
                              ' or ' +
-                             f'{(st.session_state.mecc_effect*100):.0f}%)' 
+                             f'{(mecc_effect*100):.0f}%)' 
                              )
-        lb_last_month = f'{lb_last_month}\n({st.session_state.num_steps})'
+        lb_last_month = f'{lb_last_month}\n({num_steps})'
 
     with schemdraw.Drawing() as d:
         
