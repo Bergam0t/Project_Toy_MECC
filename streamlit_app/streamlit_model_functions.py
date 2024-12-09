@@ -1,5 +1,5 @@
 ## streamlit_model_functions.py
-#import pandas as pd
+import pandas as pd
 #import numpy as np
 #import streamlit as st
 from model_two_types_mecc import MECC_Model,SmokeModel_MECC_Model
@@ -541,6 +541,144 @@ def create_intervention_figure(results_no_mecc, results_mecc, step):
 
 
 ##########################################
+## Multi-model Intervention Figure
+##########################################
+
+def create_multi_intervention_figure(results_no_mecc, results_mecc):
+    """
+    Create side-by-side aggregate comparison figures for multiple models
+    with mean and standard deviation.
+    """
+    def compute_aggregates(data):
+        """
+        Compute mean and standard deviation for each column except 'month' and 'seed'.
+        """
+        grouped = data.groupby('month').agg(['mean', 'std','min','max']).reset_index()
+        mean_cols = grouped.xs('mean', axis=1, level=1)
+        std_cols = grouped.xs('std', axis=1, level=1)
+        min_cols = grouped.xs('min', axis=1, level=1)
+        max_cols = grouped.xs('max', axis=1, level=1)
+
+        mean_cols['month'] = grouped['month']
+        std_cols['month'] = grouped['month']
+        min_cols['month'] = grouped['month']
+        max_cols['month'] = grouped['month']
+
+        return mean_cols, std_cols, min_cols, max_cols
+
+    no_mecc_mean, no_mecc_std, no_mecc_min, no_mecc_max = compute_aggregates(results_no_mecc)
+    mecc_mean, mecc_std, mecc_min, mecc_max = compute_aggregates(results_mecc)
+
+    fig = make_subplots(
+        rows=1,
+        cols=2,
+        subplot_titles=("Interventions (No MECC Training)", "Interventions (MECC Trained)"),
+        specs=[[{}, {}]],
+        row_heights=[1]
+    )
+
+    # Helper function to add traces
+    def add_traces(fig, mean_data, std_data,min_data,max_data, col, label_suffix, dash):
+        metric_colors = zip(['Total Contacts'
+                                  , 'Total Interventions'
+                                  , 'Total Quit Attempts'],
+                                 ['grey', 'blue', 'purple'])
+        for metric, color in metric_colors:
+            if metric in mean_data.columns:
+                # Add shaded area for minmax
+                fig.add_trace(
+                    go.Scatter(
+                        x=pd.concat([mean_data['month'], mean_data['month'][::-1]]),
+                        y=pd.concat([
+                            max_data[metric],
+                            (min_data[metric])[::-1]
+                        ]),
+                        name=f"{metric.replace('Total', 'Range')} {metric} ({label_suffix})",
+                        fill='toself',
+                        opacity=0.05,
+                        fillcolor=color,
+                        line=dict(color=color),
+                        showlegend=False
+                    ),
+                    row=1, col=col
+                )          
+                # Add shaded area for std dev 
+                fig.add_trace(
+                    go.Scatter(
+                        x=pd.concat([mean_data['month'], mean_data['month'][::-1]]),
+                        y=pd.concat([
+                            mean_data[metric] + std_data[metric],
+                            (mean_data[metric] - std_data[metric])[::-1]
+                        ]),
+                        name=f"{metric.replace('Total', '±1 StdDev')} {metric} ({label_suffix})",
+                        fill='toself',
+                        opacity=0.2,
+                        fillcolor=color,
+                        line=dict(color=color),
+                        showlegend=False
+                    ),
+                    row=1, col=col
+                )                               
+                # Add mean line      
+                fig.add_trace(
+                    go.Scatter(
+                        x=mean_data['month'],
+                        y=mean_data[metric],
+                        name=f"{metric.replace('Total', 'Mean')} ({label_suffix})",
+                        line=dict(color=color,dash=dash)
+                    ),
+                    row=1, col=col
+                )       
+
+
+
+    # Add traces for No MECC and MECC
+    add_traces(fig
+               , no_mecc_mean
+               , no_mecc_std
+               , no_mecc_min
+               , no_mecc_max               
+               , col=1
+               , label_suffix="No MECC"
+               , dash='solid')
+    add_traces(fig
+               , mecc_mean
+               , mecc_std
+               , mecc_min
+               , mecc_max                      
+               , col=2
+               , label_suffix="MECC Trained"
+               , dash='dot')
+
+    # Update layout
+    fig.update_layout(
+        height=400,
+        showlegend=True,
+        legend=dict(
+            orientation="h",
+            yanchor="bottom",
+            y=1.1,
+            xanchor="center",
+            x=0.5
+        ),
+        title_text="Aggregate Comparison of Interventions and Quit Attempts"
+    )
+
+    # Update axes labels
+    fig.update_xaxes(title_text="Month", row=1, col=1)
+    fig.update_xaxes(title_text="Month", row=1, col=2)
+    
+    # Update y-axes labels
+    fig.update_yaxes(title_text="Count", row=1, col=1)
+    fig.update_yaxes(title_text="Count", row=1, col=2)
+    
+    # Link the axes for each pair of charts in the same row
+    fig.update_yaxes(matches='y', row=1)
+    fig.update_xaxes(matches='x', row=1)
+
+    return fig
+
+##########################################
 ## Success Metrics Figure
 ##########################################
 
@@ -617,3 +755,4 @@ def create_metrics_figure(results_no_mecc, results_mecc, step):
     fig.update_xaxes(matches='x', row=1)
 
     return fig
+

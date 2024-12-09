@@ -12,7 +12,7 @@ from logic_diagram import create_logic_diagram, create_logic_diagram_SmokeModel
 
 st.title("Parameters")
 
-tab1, tab2 = st.tabs(['Generic','Smoking Cessation'])
+tab1, tab2, tab3 = st.tabs(['Generic','Smoking Cessation','Generic Monte Carlo'])
 
 with tab1:
     st.markdown("### Generic Parameters")
@@ -122,5 +122,50 @@ with tab2:
         col4a, col5a, col6a = st.columns(3)
         with col5a:
             st.image(create_logic_diagram_SmokeModel()
+                , caption="Diagram of Agent Model Logic"
+                , use_column_width=False)
+
+with tab3:
+    st.markdown("### Monte Carlo Parameters")
+
+    col4, col5, col6 = st.columns(3)
+
+    with col4:
+        st.markdown("#### Population")
+
+        st.write(f"Number of People: :blue-background[{st.session_state.N_people}]") 
+
+        st.write(f"Chance of Visiting a Service per Month: :blue-background[{st.session_state.visit_prob}]")
+
+    with col5:
+        st.markdown("#### Service")
+
+        st.write(f"Chance a Brief Intervention Made Without MECC Training: :blue-background[{st.session_state.base_make_intervention_prob}]")
+
+        st.write("-----") #divider
+
+        st.markdown("#### MECC Training")
+
+        st.write(f"Chance Making a Brief Intervention After MECC Training: :blue-background[{st.session_state.mecc_effect}]")
+
+    with col6:
+        st.markdown("#### Simulation")
+
+        if 'iterations' not in st.session_state:
+            st.session_state.iterations = 100
+        st.session_state.iterations = st.slider("Number of Reruns"
+                                                , 100, 1000
+                                                , st.session_state.iterations
+                                                , step=100)
+
+        st.write(f"Number of Months to Simulate: :blue-background[{st.session_state.num_steps}]")
+
+        st.write(f"Animation Speed (seconds): :blue-background[{st.session_state.animation_speed}]")
+
+    ## Logic Diagram
+    with st.expander("Click here to view the logic diagram"):
+        col1a, col2a, col3a = st.columns(3)
+        with col2a:
+            st.image(create_logic_diagram()
                 , caption="Diagram of Agent Model Logic"
                 , use_column_width=False)
