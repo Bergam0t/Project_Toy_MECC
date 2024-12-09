@@ -62,11 +62,11 @@ with tab1:
 
     ## Logic Diagram
     with st.expander("Click here to view the logic diagram"):
-        col1a, col2a, col3a = st.columns(3)
-        with col2a:
-            st.image(create_logic_diagram()
-                , caption="Diagram of Agent Model Logic"
-                , use_column_width=False)
+        #col1a, col2a, col3a = st.columns(3)
+        #with col2a:
+        st.image(create_logic_diagram(number_labels = True)
+            , caption="Diagram of Agent Model Logic"
+            , use_column_width=False)
 
 with tab2:
     st.markdown("### Smoking Cessation Parameters")
@@ -119,11 +119,11 @@ with tab2:
 
     ## Logic Diagram
     with st.expander("Click here to view the logic diagram"):
-        col4a, col5a, col6a = st.columns(3)
-        with col5a:
-            st.image(create_logic_diagram_SmokeModel()
-                , caption="Diagram of Agent Model Logic"
-                , use_column_width=False)
+       #col4a, col5a, col6a = st.columns(3)
+       #with col5a:
+        st.image(create_logic_diagram_SmokeModel(number_labels = True)
+            , caption="Diagram of Agent Model Logic"
+            , use_column_width=False)
 
 with tab3:
     st.markdown("### Monte Carlo Parameters")
@@ -164,8 +164,8 @@ with tab3:
 
     ## Logic Diagram
     with st.expander("Click here to view the logic diagram"):
-        col1a, col2a, col3a = st.columns(3)
-        with col2a:
-            st.image(create_logic_diagram()
-                , caption="Diagram of Agent Model Logic"
-                , use_column_width=False)
+        #col1a, col2a, col3a = st.columns(3)
+        #with col2a:
+        st.image(create_logic_diagram(number_labels = True)
+            , caption="Diagram of Agent Model Logic"
+            , use_column_width=False)
