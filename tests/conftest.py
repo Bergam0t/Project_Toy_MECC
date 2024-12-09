@@ -1,5 +1,15 @@
 import pytest
-from streamlit_app.model_two_types_mecc import MECC_Model, SmokeModel_MECC_Model
+
+import os
+import sys
+## Add the path of the functions folder
+current_dir = os.getcwd()  ## Gets the current working directory
+sub_dir = os.path.abspath(os.path.join(current_dir, '..'
+                                       , 'streamlit_app'))
+sys.path.append(sub_dir)
+
+# Now you can import functions
+from model_two_types_mecc import MECC_Model, SmokeModel_MECC_Model
 
 @pytest.fixture
 def base_model_params():
