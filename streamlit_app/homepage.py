@@ -82,6 +82,9 @@ if 'num_steps' not in st.session_state:
 if 'animation_speed' not in st.session_state:
     st.session_state.animation_speed = 0.1
 
+if 'iterations' not in st.session_state:
+    st.session_state.iterations = 100
+
 model_parameters = {
     "model_seed": st.session_state.model_seed,
     "N_people": st.session_state.N_people,
@@ -94,7 +97,8 @@ model_parameters = {
     "mecc_effect": st.session_state.mecc_effect,
     "intervention_effect": st.session_state.intervention_effect,
     "num_steps" : st.session_state.num_steps,
-    "animation_speed" : st.session_state.animation_speed
+    "animation_speed" : st.session_state.animation_speed,
+    "iterations":st.session_state.iterations
 }
 
 # save to json file to be used later for the quarto report

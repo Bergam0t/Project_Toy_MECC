@@ -69,7 +69,10 @@ pg = st.navigation(
              icon=":material/people:"),
     st.Page("mesa_abs_two_types_mecc.py",
              title="Smoking cessation with MECC",
-             icon=":material/smoke_free:")
+             icon=":material/smoke_free:"),
+    st.Page("generic_mecc_monte.py",
+             title="Simple Monte Carlo",
+             icon=":material/casino:")             
      ]
      )
 
