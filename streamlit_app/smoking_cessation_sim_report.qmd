@@ -40,6 +40,7 @@ execute:
 import pandas as pd
 import json
 import plotly.graph_objects as go
+from logic_diagram import create_logic_diagram_SmokeModel
 
 # Load session data from JSON
 with open("./outputs/session_data.json", "r") as f:
@@ -136,6 +137,9 @@ print(f"MECC Impact Percentage: {mecc_impact_percentage:.1f}%")
  - Number of Months to Simulate: **`{python} session_data["num_steps"]`**
  - Animation Speed (seconds): **`{python} session_data["animation_speed"]`**
 
+### Logic Diagram
+
+![Diagram of Agent Model Logic](`{python} create_logic_diagram_SmokeModel(number_labels = True, session_data = session_data)`)
 
 
 
