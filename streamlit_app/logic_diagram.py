@@ -13,23 +13,41 @@ flow.Circle.defaults['fill'] = '#eeeeee'
 #################
 ## Generic Model
 #################
-def create_logic_diagram(number_labels = False):
+def create_logic_diagram(number_labels = False, session_data = None):
 
+    ## general numberless labels
     lb_N_people = 'Number of\nPeople'
     lb_visit_prob = 'Chance visit\na Service'
     lb_make_intervention =  'Chance Service\nDelivers\nIntervention'                             
     lb_last_month = 'Is Last Month?'
-    
-    if number_labels:
-        lb_N_people = f'{lb_N_people}\n({st.session_state.N_people})'
-        lb_visit_prob = f'{lb_visit_prob}\n({(st.session_state.visit_prob*100):.0f}%)'
-        lb_make_intervention =  (f'{lb_make_intervention}\n' +
-                             f'({(st.session_state.base_make_intervention_prob*100):.0f}%' +
-                             ' or ' +
-                             f'{(st.session_state.mecc_effect*100):.0f}%)' 
-                             )
-        lb_last_month = f'{lb_last_month}\n({st.session_state.num_steps})'
 
+    if number_labels:
+        ## for use when session state available, so they update with sliders
+        if session_data == None:
+            N_people = st.session_state.N_people
+            visit_prob = st.session_state.visit_prob
+            base_make_intervention_prob = st.session_state.base_make_intervention_prob
+            mecc_effect = st.session_state.mecc_effect
+            num_steps = st.session_state.num_steps
+        ## for use with saved variables in quarto output                                    
+        else:
+            N_people = session_data['N_people']
+            visit_prob = session_data['visit_prob']
+            base_make_intervention_prob = session_data['base_make_intervention_prob']
+            mecc_effect = session_data['mecc_effect']
+            num_steps = session_data['num_steps']
+
+        ## general labels with numbers
+        lb_N_people = f'{lb_N_people}\n({N_people})'
+        lb_visit_prob = f'{lb_visit_prob}\n({(visit_prob*100):.0f}%)'
+        lb_make_intervention =  (f'{lb_make_intervention}\n' +
+                             f'({(base_make_intervention_prob*100):.0f}%' +
+                             ' or ' +
+                             f'{(mecc_effect*100):.0f}%)' 
+                             )
+        lb_last_month = f'{lb_last_month}\n({num_steps})'
+
+    ## create a drawing class
     with schemdraw.Drawing() as d:
         
         ## Population
@@ -78,12 +96,15 @@ def create_logic_diagram(number_labels = False):
 #################
 ## Smoking Model
 #################
-def create_logic_diagram_SmokeModel(number_labels = False):
+def create_logic_diagram_SmokeModel(number_labels = False, session_data = None):
+    
+    ## general numberless labels
     lb_N_people = 'Number of\nPeople'
     lb_visit_prob = 'Chance visit\na Service'
     lb_make_intervention =  'Chance Service\nDelivers\nIntervention'                             
     lb_last_month = 'Is Last Month?'
 
+    ## smoking numberless labels
     lb_smoking_prob ='Proportion\nof Population\nSmokers'
     lb_quit_attempt_prob = 'Chance Person\nMakes a\nQuit Attempt'
     lb_smoke_relapse_prob = 'Chance Person\nRestarts Smoking'
@@ -92,35 +113,64 @@ def create_logic_diagram_SmokeModel(number_labels = False):
     lb_interventions = ''
 
     if number_labels:
-        lb_N_people = f'{lb_N_people}\n({st.session_state.N_people})'
-        lb_visit_prob = f'{lb_visit_prob}\n({(st.session_state.visit_prob*100):.0f}%)'
-        lb_make_intervention =  (f'{lb_make_intervention}\n'
-                             + f'({(st.session_state.base_make_intervention_prob*100):.0f}%'
-                             + ' or '
-                             + f'{(st.session_state.mecc_effect*100):.0f}%)' 
-                             )
-        lb_last_month = f'{lb_last_month}\n({st.session_state.num_steps})'
+        ## for use when session state available, so they update with sliders
+        if session_data == None:
+            ## general
+            N_people = st.session_state.N_people
+            visit_prob = st.session_state.visit_prob
+            base_make_intervention_prob = st.session_state.base_make_intervention_prob
+            mecc_effect = st.session_state.mecc_effect
+            num_steps = st.session_state.num_steps
+            ## smoking specific
+            initial_smoking_prob = st.session_state.initial_smoking_prob
+            intervention_effect = st.session_state.intervention_effect  
+            quit_attempt_prob = st.session_state.quit_attempt_prob
+            base_smoke_relapse_prob = st.session_state.base_smoke_relapse_prob
 
-        lb_smoking_prob =f'{lb_smoking_prob}\n({(st.session_state.initial_smoking_prob*100):.0f}%)'
+        ## for use with saved variables in quarto output                                    
+        else:
+            ## general
+            N_people = session_data['N_people']
+            visit_prob = session_data['visit_prob']
+            base_make_intervention_prob = session_data['base_make_intervention_prob']
+            mecc_effect = session_data['mecc_effect']
+            num_steps = session_data['num_steps']
+            ## smoking specific
+            initial_smoking_prob = session_data['initial_smoking_prob']
+            intervention_effect = session_data['intervention_effect']
+            quit_attempt_prob = session_data['quit_attempt_prob']
+            base_smoke_relapse_prob = session_data['base_smoke_relapse_prob']
+
+        ## general labels with numbers
+        lb_N_people = f'{lb_N_people}\n({N_people})'
+        lb_visit_prob = f'{lb_visit_prob}\n({(visit_prob*100):.0f}%)'
+        lb_make_intervention =  (f'{lb_make_intervention}\n' +
+                             f'({(base_make_intervention_prob*100):.0f}%' +
+                             ' or ' +
+                             f'{(mecc_effect*100):.0f}%)' 
+                             )
+        lb_last_month = f'{lb_last_month}\n({num_steps})'
+
+        ## smoking labels with numbers
+        lb_smoking_prob =f'{lb_smoking_prob}\n({(initial_smoking_prob*100):.0f}%)'
         lb_intervention_effect = (f'{lb_intervention_effect}\n' 
-                                  #+ f'({(st.session_state.quit_attempt_prob*100):.0f}%'
+                                  #+ f'({(quit_attempt_prob*100):.0f}%'
                                   + '($\\times$ '
-                                  + f'{st.session_state.intervention_effect}$^i$)'
+                                  + f'{intervention_effect}$^i$)'
                                     )
         lb_quit_attempt_prob = (f'{lb_quit_attempt_prob}\n'
-                                  + f'({(st.session_state.quit_attempt_prob*100):.0f}%'
+                                  + f'({(quit_attempt_prob*100):.0f}%'
                                   + ' $\\times$ '
-                                  + f'{st.session_state.intervention_effect}$^i$)'
+                                  + f'{intervention_effect}$^i$)'
                                     )
         lb_smoke_relapse_prob = (f'{lb_smoke_relapse_prob}\n'
-                                 + f'({(st.session_state.base_smoke_relapse_prob*100):.0f}% '
+                                 + f'({(base_smoke_relapse_prob*100):.0f}% '
                                  + '$\\times$ 0.95$^m$)'                                 
                                 )
         lb_months_smoke_free = '$m$=Months\nSmoke Free' 
-        lb_interventions = '$i$=Number\nInterventions' 
-#r"$P_{\text{relapse}} = P_{\text{base}} \cdot (0.95)^{\text{Months\newline Smoke-Free}}$"
+        lb_interventions = '$i$=Number\nInterventions'         
 
-
+    ## create a drawing class
     with schemdraw.Drawing() as d:
         
         ## Population
@@ -221,13 +271,3 @@ def create_logic_diagram_SmokeModel(number_labels = False):
     img_path = "smoke_logic_diagram.png"
     d.save(img_path)
     return img_path
-
-
-#model_parameters = {
-#    "model_seed": st.session_state.model_seed,
-#    "N_people": st.session_state.N_people,
-#    "N_service": 1,
-
-#    "num_steps" : st.session_state.num_steps,
-#    "animation_speed" : st.session_state.animation_speed
-#}
