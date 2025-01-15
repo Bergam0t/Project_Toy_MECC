@@ -35,6 +35,9 @@ _A specific smoking cessation model has additional rules:_
 + A Very Brief Intervention increases the probability that a person will make a quit attempt.
          It does not effect the chance that a person will stay smoke free.
 
+There is a [Monte Carlo method](https://en.wikipedia.org/wiki/Monte_Carlo_method) version of the simple model.
+The simulations contain randomness so this method reruns the simulation multiple times to get average results.
+
 **You can change all these probabilites on the:**""") 
 st.page_link('./parameters.py',label='Parameters for Simulation')
 
