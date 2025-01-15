@@ -23,6 +23,13 @@ def disable_download():
     st.session_state.generic_MC_simulation_completed = False
     report_message.empty()
 
+
+st.info("""This is a [Monte Carlo method](https://en.wikipedia.org/wiki/Monte_Carlo_method) version of the simple model.
+The simulations contain randomness so this method reruns the simulation multiple times to get average results.
+""", icon="ℹ️")
+st.warning("""Running these simulations might take some time particularly for high numbers of reruns.
+""", icon="⚠️")
+
 col1, col2, col3 = st.columns(3)
 
 with col1:
