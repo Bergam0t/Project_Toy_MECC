@@ -122,13 +122,12 @@ class AlcoholModel_PersonAgent(PersonAgent):
                 probability = self.visit_prob[service]
                 service = f"{service.replace(" ","")}Agent"
                 self.visit(self,service,probability)
-
-                ## updates status after every visit
-                self.update_alcohol_status(self)
+                
 
     ## Defines actions at each step
     def step(self):
         super().step()
+        self.update_alcohol_status(self)
 
 
 
