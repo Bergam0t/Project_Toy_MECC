@@ -11,7 +11,7 @@ import json
 from alcohol_agents import Alcohol_MECC_Model
 
 N_people = 10
-seed = 0
+seed = 1
 
 contemplation_intervention =  { 'Job Centre': 0.2
                     ,'Benefits Office': 0.1
@@ -86,8 +86,9 @@ model = Alcohol_MECC_Model(
 
 for step in range(20):
     if step == 20 - 1:
-        print("Simulation Completed!")
+        print("**Simulation Completed!**")
     else:
-        progress = (step + 1) / 20
-        print(f"{progress*100}%")
+        print(f"**Step {step}**")
     data_model = run_simulation_step(model)
+
+data_model

@@ -76,6 +76,8 @@ class AlcoholModel_PersonAgent(PersonAgent):
             ):
             self.alcohol_status = {"status": end
                                     ,"time": 0}
+            print(f" > Person {self.unique_id} alcohol status changed "
+                  + f"from {start} to {end}")
             
     def update_alcohol_status(self):
         '''
@@ -98,6 +100,7 @@ class AlcoholModel_PersonAgent(PersonAgent):
 
     def visit(self,service,probability):
         if self.random.uniform(0,1) <= probability:
+            print(f" > Person {self.unique_id} visited a {service}")
             ## randomly selects a service agent
             ServiceAgent_list = [agent for agent in self.model.schedule.agents if isinstance(agent, AlcoholModel_ServiceAgent)]
             ServiceAgent_list = [agent for agent in ServiceAgent_list if agent.category == service]
@@ -106,7 +109,6 @@ class AlcoholModel_PersonAgent(PersonAgent):
                     visited_service = self.random.choice(ServiceAgent_list)
                     ## runs the chosen service's have contact function
                     visited_service.have_contact(self)
-                    print(f"Person {self.unique_id} visited a {service}")
 
     ## Replaces action to make a visit to a service in base agent
     def move(self,services = [ 'Job Centre'
@@ -124,6 +126,7 @@ class AlcoholModel_PersonAgent(PersonAgent):
 
     ## Defines actions at each step
     def step(self):
+        print(f"Person {self.unique_id}")
         super().step()
         self.update_alcohol_status()
 
@@ -166,6 +169,7 @@ class AlcoholModel_ServiceAgent(ServiceAgent):
     ## Override to perform alcohol-specific interventions
     def perform_intervention(self, PersonAgent):
         ## if the change probability is lower than the intervention,
+        print(f"  > {self.category} did an intervention on Person {PersonAgent.unique_id}")
         if PersonAgent.change_prob_contemplation < self.contemplation_intervention:
             PersonAgent.change_prob_contemplation = self.contemplation_intervention
         else: 
