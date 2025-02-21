@@ -59,43 +59,9 @@ visit_prob  =    { 'Job Centre': 0.8
                     ,'Housing Officer': 0.2
                     ,'Community Hub': 0.1}
 
-model = Alcohol_MECC_Model(
-                 N_people 
-                #, N_service
-                , seed
 
-                ## dictionaries of intervention chance
-                 , contemplation_intervention
-                 , preparation_intervention
-                 , action_intervention
 
-                 ## change state probability
-                 , change_prob_contemplation
-                 , change_prob_preparation
-                 , change_prob_action
 
-                 , lapse_prob_precontemplation
-                 , lapse_prob_contemplation
-                 , lapse_prob_preparation
-
-                ## visit probability
-                 , visit_prob
-
-                ## site properties
-                , mecc_effect
-                , base_make_intervention_prob
-                , mecc_trained
-)
-
-for step in range(steps):
-    print(f"\n**Step {step}**")
-    if step == steps - 1:
-        print("**Simulation Completed!**")
-    else:
-        pass
-    data_model = run_simulation_step(model)
-
-data_model
 
 ######################################################
 
@@ -113,26 +79,6 @@ def disable_download():
     st.session_state.simulation_completed = False
     report_message.empty()
 
-
-model_parameters = {
-    "model_seed": st.session_state.model_seed,
-    "num_steps" : st.session_state.num_steps,
-    "animation_speed" : st.session_state.animation_speed,    
-    "N_people": st.session_state.N_people,
-    "change_prob_contemplation": st.session_state.alcohol_change_prob_contemplation,
-    "change_prob_preparation":st.session_state.alcohol_change_prob_preparation,
-    "change_prob_action": st.session_state.alcohol_change_prob_action,
-    "lapse_prob_precontemplation": st.session_state.alcohol_lapse_prob_precontemplation,
-    "lapse_prob_contemplation": st.session_state.alcohol_lapse_prob_contemplation,
-    "lapse_prob_preparation": st.session_state.alcohol_lapse_prob_preparation,
-    "visit_prob": st.session_state.alcohol_visit_prob,
-    "base_make_intervention_prob": st.session_state.alcohol_base_make_intervention_prob,
-    "mecc_trained": st.session_state.alcohol_mecc_trained,
-    "mecc_effect": st.session_state.alcohol_mecc_effect,
-    "contemplation_intervention": st.session_state.alcohol_contemplation_intervention,
-    "preparation_intervention": st.session_state.alcohol_preparation_intervention,
-    "action_intervention": st.session_state.alcohol_action_intervention,
-}
 
 
 tab1, tab2 = st.tabs(['Model','Parameters'])
@@ -176,3 +122,75 @@ with tab2:
         st.write(f" - Post Intervention Pre-Contemplation to Contemplation chance: :blue-background[{st.session_state.alcohol_contemplation_intervention[service]}]")
         st.write(f" - Post Intervention Contemplation to Preparation chance: :blue-background[{st.session_state.alcohol_preparation_intervention[service]}]")
         st.write(f" - Post Intervention Preparation to Action chance: :blue-background[{st.session_state.alcohol_action_intervention[service]}]")
+
+with tab1:
+
+    model_parameters = {
+        "model_seed": st.session_state.model_seed,
+        "num_steps" : st.session_state.num_steps,
+        "animation_speed" : st.session_state.animation_speed,    
+        "N_people": st.session_state.N_people,
+        "change_prob_contemplation": st.session_state.alcohol_change_prob_contemplation,
+        "change_prob_preparation":st.session_state.alcohol_change_prob_preparation,
+        "change_prob_action": st.session_state.alcohol_change_prob_action,
+        "lapse_prob_precontemplation": st.session_state.alcohol_lapse_prob_precontemplation,
+        "lapse_prob_contemplation": st.session_state.alcohol_lapse_prob_contemplation,
+        "lapse_prob_preparation": st.session_state.alcohol_lapse_prob_preparation,
+        "visit_prob": st.session_state.alcohol_visit_prob,
+        "base_make_intervention_prob": st.session_state.alcohol_base_make_intervention_prob,
+        "mecc_trained": st.session_state.alcohol_mecc_trained,
+        "mecc_effect": st.session_state.alcohol_mecc_effect,
+        "contemplation_intervention": st.session_state.alcohol_contemplation_intervention,
+        "preparation_intervention": st.session_state.alcohol_preparation_intervention,
+        "action_intervention": st.session_state.alcohol_action_intervention,
+    }
+
+    model = Alcohol_MECC_Model(
+                 N_people = model_parameters["N_people"]
+                #, N_service
+                , seed = model_parameters["model_seed"]
+
+                ## dictionaries of intervention chance
+                 , contemplation_intervention = model_parameters["contemplation_intervention"]
+                 , preparation_intervention = model_parameters["preparation_intervention"]
+                 , action_intervention = model_parameters["action_intervention"]
+
+                 ## change state probability
+                 , change_prob_contemplation = model_parameters[ "change_prob_contemplation"]
+                 , change_prob_preparation = model_parameters["change_prob_preparation"]
+                 , change_prob_action = model_parameters["change_prob_action"]
+
+                 , lapse_prob_precontemplation = model_parameters["lapse_prob_precontemplation"]
+                 , lapse_prob_contemplation = model_parameters["lapse_prob_contemplation"]
+                 , lapse_prob_preparation = model_parameters["lapse_prob_preparation"]
+
+                ## visit probability
+                 , visit_prob = model_parameters["visit_prob"]
+
+                ## site properties
+                , mecc_effect = model_parameters["mecc_effect"]
+                , base_make_intervention_prob = model_parameters["base_make_intervention_prob"]
+                , mecc_trained = model_parameters["mecc_trained"]
+                )
+
+    for step in range(st.session_state.num_steps):
+        print(f"\n**Step {st.session_state.num_steps}**")
+        if step ==  st.session_state.num_steps - 1:
+            print("**Simulation Completed!**")
+        else:
+            pass
+        data_model = run_simulation_step(model)
+
+
+    with st.expander("View Raw Data"):
+        st.dataframe(data_model)
+        #tab1, tab2 = st.tabs(["No MECC Training", "MECC Trained"])
+        #with tab1:
+        #    st.dataframe(data_no_mecc)
+        #with tab2:
+        #    st.dataframe(data_mecc)
+
+######################################################
+
+# empty location for report message
+report_message = st.empty()
