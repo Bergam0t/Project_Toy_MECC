@@ -12,7 +12,7 @@ from logic_diagram import create_logic_diagram, create_logic_diagram_SmokeModel
 
 st.title("Parameters")
 
-tab1, tab2, tab3 = st.tabs(['Generic','Smoking Cessation','Generic Monte Carlo'])
+tab1, tab2, tab3, tab4  = st.tabs(['Generic','Alcohol Advice','Smoking Cessation','Generic Monte Carlo'])
 
 with tab1:
     st.markdown("### Generic Parameters")
@@ -69,6 +69,174 @@ with tab1:
             , use_column_width=False)
 
 with tab2:
+    st.markdown("### Alcohol Advice Parameters")
+
+
+    colA, colB = st.columns(2)
+    with colA:
+        st.markdown("#### Population")
+
+        if 'N_people' not in st.session_state:
+            st.session_state.N_people = 50
+        st.session_state.N_people = st.slider("Number of People", 5, 100
+                                                , st.session_state.N_people
+                                                ,key='alcohol N People')
+        
+
+        if 'alcohol_change_prob_contemplation' not in st.session_state: 
+            st.session_state.alcohol_change_prob_contemplation = 0.01
+        st.session_state.alcohol_change_prob_contemplation =  st.slider(
+                                                "Base Pre-Contemplation to Contemplation chance"
+                                                , 0.0, 1.0
+                                                , st.session_state.alcohol_change_prob_contemplation
+                                                ,key='alcohol Contemplation')
+
+        if 'alcohol_change_prob_preparation' not in st.session_state: 
+            st.session_state.alcohol_change_prob_preparation = 0.01
+        st.session_state.alcohol_change_prob_preparation =  st.slider(
+                                                "Base Contemplation to Preparation chance"
+                                                , 0.0, 1.0
+                                                , st.session_state.alcohol_change_prob_preparation
+                                                ,key='alcohol Preparation')
+
+        if 'alcohol_change_prob_action' not in st.session_state: 
+            st.session_state.alcohol_change_prob_action = 0.01
+        st.session_state.alcohol_change_prob_action =  st.slider(
+                                                "Base Preparation to Action chance"
+                                                , 0.0, 1.0
+                                                , st.session_state.alcohol_change_prob_action
+                                                ,key='alcohol Action')
+        
+        if 'alcohol_lapse_prob_precontemplation' not in st.session_state: 
+            st.session_state.alcohol_lapse_prob_precontemplation = 0.01
+        st.session_state.alcohol_lapse_prob_precontemplation =  st.slider(
+                                                "Base Contemplation to Pre-Contemplation lapse chance"
+                                                , 0.0, 1.0
+                                                , st.session_state.alcohol_lapse_prob_precontemplation
+                                                ,key='alcohol lapse Pre-Contemplation')
+
+        if 'alcohol_lapse_prob_contemplation' not in st.session_state: 
+            st.session_state.alcohol_lapse_prob_contemplation = 0.01
+        st.session_state.alcohol_lapse_prob_contemplation =  st.slider(
+                                                "Base Preparation to Contemplation lapse chance"
+                                                , 0.0, 1.0
+                                                , st.session_state.alcohol_lapse_prob_contemplation
+                                                ,key='alcohol lapse Contemplation')
+        
+        if 'alcohol_lapse_prob_preparation' not in st.session_state: 
+            st.session_state.alcohol_lapse_prob_preparation = 0.01
+        st.session_state.alcohol_lapse_prob_preparation =  st.slider(
+                                                "Base Action to Preparation lapse chance"
+                                                , 0.0, 1.0
+                                                , st.session_state.alcohol_lapse_prob_preparation
+                                                ,key='alcohol lapse Preparation')
+
+    with colB:        
+        st.markdown("#### Simulation")
+
+        if 'model_seed' not in st.session_state:
+            st.session_state.model_seed = 42
+        st.session_state.model_seed = st.number_input("Random Seed"
+                                                        , min_value=0, max_value=None, value=st.session_state.model_seed, step=1
+                                                        ,key = 'alcohol seed')
+
+        if 'num_steps' not in st.session_state:
+            st.session_state.num_steps = 24
+        st.session_state.num_steps = st.slider("Number of Months to Simulate"
+                                                , 1, 120
+                                                , st.session_state.num_steps
+                                                , key = 'alcohol steps')
+
+        if 'animation_speed' not in st.session_state:
+            st.session_state.animation_speed = 0.1
+        st.session_state.animation_speed = st.slider("Animation Speed (seconds)"
+                                                        , 0
+                                                        ,key = 'alcohol speed')
+        
+    st.markdown("#### Service")
+    ## sets up one column for each service type
+    col1, col2, col3, col4 = st.columns(4)
+    column_dict = { 'Job Centre': col1
+                    ,'Benefits Office': col2
+                    ,'Housing Officer': col3
+                    ,'Community Hub': col4}
+
+    ## makes sure service values exist in session state
+    ## Most service values default to zero
+    alcohol_services_dict = { 'Job Centre': 0.0
+                             ,'Benefits Office': 0.0
+                             ,'Housing Officer': 0.0
+                             ,'Community Hub': 0.0}    
+    if 'alcohol_visit_prob' not in st.session_state:
+        st.session_state.alcohol_visit_prob = alcohol_services_dict
+    if 'alcohol_base_make_intervention_prob' not in st.session_state:
+        st.session_state.alcohol_base_make_intervention_prob = alcohol_services_dict
+    if 'alcohol_contemplation_intervention' not in st.session_state:
+        st.session_state.alcohol_contemplation_intervention = alcohol_services_dict
+    if 'alcohol_preparation_intervention' not in st.session_state:
+        st.session_state.alcohol_preparation_intervention = alcohol_services_dict
+    if 'alcohol_action_intervention' not in st.session_state:
+        st.session_state.alcohol_action_intervention = alcohol_services_dict
+    if 'alcohol_mecc_trained' not in st.session_state:
+        st.session_state.alcohol_mecc_trained =  {
+                                                'Job Centre': False
+                                                ,'Benefits Office': False
+                                                ,'Housing Officer': False
+                                                ,'Community Hub': False}
+    if 'alcohol_mecc_effect' not in st.session_state:
+        st.session_state.alcohol_mecc_effect = alcohol_services_dict
+
+    ## Creates each columnn based on the dictionary
+    for service in column_dict:
+        with column_dict[service]:
+            st.write(f'{service}')
+            st.session_state.alcohol_visit_prob[service] = st.slider(
+                'Person Visit Probability', 0.0, 1.0
+                , st.session_state.alcohol_visit_prob[service]
+                ,key = f'Visit Probability {service}')            
+            st.session_state.alcohol_base_make_intervention_prob[service] = st.slider(
+                'Chance a Brief Intervention Made Without MECC Training', 0.0, 1.0
+                , st.session_state.alcohol_base_make_intervention_prob[service]
+                , key = f'Base Intervetion {service}')
+            st.session_state.alcohol_mecc_trained[service] = st.checkbox(
+                'MECC Trained'
+                ,key= f'MECC Trained {service}')    
+            ## only enable MECC training if true
+            if st.session_state.alcohol_mecc_trained[service]:
+                st.session_state.alcohol_mecc_effect[service] = st.slider(
+                    "Training Effect on Intervention Chance", 0.0, 1.0
+                    , st.session_state.alcohol_mecc_effect[service]
+                    , key = f'Training Effect {service}'
+                    ,disabled = False)
+            else:               
+                st.session_state.alcohol_mecc_effect[service] = 0.0
+                st.session_state.alcohol_mecc_effect[service] = st.slider(
+                    "Training Effect on Intervention Chance", 0.0, 1.0
+                    , st.session_state.alcohol_mecc_effect[service]                  
+                    , key = f'Training Effect {service}'
+                    , disabled = True)                                  
+            st.session_state.alcohol_contemplation_intervention[service] = st.slider(
+                'Post Intervention Pre-Contemplation to Contemplation chance', 0.0, 1.0
+                , st.session_state.alcohol_contemplation_intervention[service]
+                , key = f'Contemplation {service}')
+            st.session_state.alcohol_preparation_intervention[service] = st.slider(
+                'Post Intervention Contemplation to Preparation chance', 0.0, 1.0
+                , st.session_state.alcohol_preparation_intervention[service]
+                , key = f'Preparation {service}')
+            st.session_state.alcohol_action_intervention[service] = st.slider(
+                'Post Intervention Preparation to Action chance', 0.0, 1.0
+                , st.session_state.alcohol_action_intervention[service]
+                , key = f'Action {service}') 
+
+    ## Logic Diagram
+    #with st.expander("Click here to view the logic diagram"):
+        #col1a, col2a, col3a = st.columns(3)
+        #with col2a:
+        #st.image(create_logic_diagram(number_labels = True)
+        #    , caption="Diagram of Agent Model Logic"
+        #    , use_column_width=False)
+
+with tab3:
     st.markdown("### Smoking Cessation Parameters")
 
     col4, col5, col6 = st.columns(3)
@@ -125,7 +293,7 @@ with tab2:
             , caption="Diagram of Agent Model Logic"
             , use_column_width=False)
 
-with tab3:
+with tab4:
     st.markdown("### Monte Carlo Parameters")
 
     col4, col5, col6 = st.columns(3)
