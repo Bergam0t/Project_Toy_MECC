@@ -347,16 +347,16 @@ def calculate_number_status(model,status):
                 and agent.alcohol_status["status"] == status)
 
 def calculate_number_status_precontemplation(model):
-    calculate_number_status(model,"Pre-contemplation")
+    return calculate_number_status(model,"Pre-contemplation")
 
 def calculate_number_status_contemplation(model):
-    calculate_number_status(model,"Contemplation")
+    return calculate_number_status(model,"Contemplation")
 
 def calculate_number_status_preparation(model):
-    calculate_number_status(model,"Preparation")
+    return calculate_number_status(model,"Preparation")
 
 def calculate_number_status_action(model):
-    calculate_number_status(model,"Action")
+    return calculate_number_status(model,"Action")
 
 ## number of interventions by a service type
 def calculate_service_interventions(model,service):
@@ -365,16 +365,16 @@ def calculate_service_interventions(model,service):
                 and agent.category == service)
 
 def calculate_service_interventions_JobCentre(model): 
-    calculate_service_interventions(model,"Job Centre")
+    return calculate_service_interventions(model,"Job Centre")
 
 def calculate_service_interventions_BenefitsOffice(model):
-    calculate_service_interventions(model,"Benefits Office")
+    return calculate_service_interventions(model,"Benefits Office")
 
 def calculate_service_interventions_HousingOfficer(model): 
-    calculate_service_interventions(model,"Housing Officer")
+    return calculate_service_interventions(model,"Housing Officer")
  
 def calculate_service_interventions_CommunityHub(model):
-    calculate_service_interventions(model,"Community Hub")
+    return calculate_service_interventions(model,"Community Hub")
 
 ## number of contacts by a service type
 def calculate_service_contacts(model,service):
@@ -383,13 +383,13 @@ def calculate_service_contacts(model,service):
                 and agent.category == service)
 
 def calculate_service_contacts_JobCentre(model): 
-    calculate_service_contacts(model,"Job Centre")
+    return calculate_service_contacts(model,"Job Centre")
 
 def calculate_service_contacts_BenefitsOffice(model):
-    calculate_service_contacts(model,"Benefits Office")
+    return calculate_service_contacts(model,"Benefits Office")
 
 def calculate_service_contacts_HousingOfficer(model): 
-    calculate_service_contacts(model,"Housing Officer")
+    return calculate_service_contacts(model,"Housing Officer")
  
 def calculate_service_contacts_CommunityHub(model):
-    calculate_service_contacts(model,"Community Hub")
+    return calculate_service_contacts(model,"Community Hub")
