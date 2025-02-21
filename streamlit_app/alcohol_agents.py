@@ -41,15 +41,12 @@ class AlcoholModel_PersonAgent(PersonAgent):
                  , lapse_prob_preparation
 
                 ## visit probability
-                 , visit_prob_Job_centre
-                 , visit_prob_Benefits_office
-                 , visit_prob_Housing_officer
-                 , visit_prob_Community_hub                
+                 , visit_prob = {}            
                  
                 ## alcohol
                  , inital_alcohol_status = "Pre-contemplation"                 
                  ):
-        super().__init__(unique_id, model)
+        super().__init__(unique_id, model,  visit_prob)
 
 
         self.demographics = {"gender":gender
@@ -69,17 +66,13 @@ class AlcoholModel_PersonAgent(PersonAgent):
         self.lapse_prob_preparation = lapse_prob_preparation
 
         ## Visit properties
-        self.visit_prob = { 
-                  "Job Centre'": visit_prob_Job_centre
-                 ,"Benefits Office": visit_prob_Benefits_office
-                 ,"Housing Officer": visit_prob_Housing_officer
-                 ,"Community Hub": visit_prob_Community_hub }
+        self.visit_prob = visit_prob 
 
     ## function to update status
     def update_status(self,start,end,probability):
         if (
-            self.alcohol_status["status"] == start &
-                self.random.uniform(0, 1) <= probability
+            (self.alcohol_status["status"] == start) &
+                (self.random.uniform(0, 1) <= probability)
             ):
             self.alcohol_status = {"status": end
                                     ,"time": 0}
@@ -90,14 +83,14 @@ class AlcoholModel_PersonAgent(PersonAgent):
         then reverse order for lapses
         '''
         ## Positive Change
-        self.update_status(self,"Pre-contemplation","Contemplation",self.change_prob_contemplation)
-        self.update_status(self,"Contemplation","Preparation",self.change_prob_preparation)
-        self.update_status(self,"Preparation","Action",self.change_prob_action)
+        self.update_status("Pre-contemplation","Contemplation",self.change_prob_contemplation)
+        self.update_status("Contemplation","Preparation",self.change_prob_preparation)
+        self.update_status("Preparation","Action",self.change_prob_action)
 
         ## Lapse
-        self.update_status(self,"Action","Preparation",self.lapse_prob_preparation)
-        self.update_status(self,"Preparation","Contemplation",self.lapse_prob_contemplation)
-        self.update_status(self,"Contemplation","Pre-contemplation",self.lapse_prob_precontemplation)
+        self.update_status("Action","Preparation",self.lapse_prob_preparation)
+        self.update_status("Preparation","Contemplation",self.lapse_prob_contemplation)
+        self.update_status("Contemplation","Pre-contemplation",self.lapse_prob_precontemplation)
 
         ## Adds one to time
         self.alcohol_status["time"] += 1
@@ -106,12 +99,14 @@ class AlcoholModel_PersonAgent(PersonAgent):
     def visit(self,service,probability):
         if self.random.uniform(0,1) <= probability:
             ## randomly selects a service agent
-            ServiceAgent_list = [agent for agent in self.model.schedule.agents if isinstance(agent, service)]
+            ServiceAgent_list = [agent for agent in self.model.schedule.agents if isinstance(agent, AlcoholModel_ServiceAgent)]
+            ServiceAgent_list = [agent for agent in ServiceAgent_list if agent.category == service]
+
             if ServiceAgent_list:
                     visited_service = self.random.choice(ServiceAgent_list)
                     ## runs the chosen service's have contact function
                     visited_service.have_contact(self)
-
+                    print(f"Person {self.unique_id} visited a {service}")
 
     ## Replaces action to make a visit to a service in base agent
     def move(self,services = [ 'Job Centre'
@@ -120,18 +115,17 @@ class AlcoholModel_PersonAgent(PersonAgent):
                               ,'Community Hub']):
         
         ## randomises which service is first
-        services = self.random.shuffle(services)        
+        self.random.shuffle(services)
         
         for service in services:
                 probability = self.visit_prob[service]
-                service = f"{service.replace(' ','')}Agent"
-                self.visit(self,service,probability)
+                self.visit(service,probability)
                 
 
     ## Defines actions at each step
     def step(self):
         super().step()
-        self.update_alcohol_status(self)
+        self.update_alcohol_status()
 
 
 ##################################
@@ -171,9 +165,21 @@ class AlcoholModel_ServiceAgent(ServiceAgent):
 
     ## Override to perform alcohol-specific interventions
     def perform_intervention(self, PersonAgent):
-        PersonAgent.change_prob_contemplation += self.contemplation_intervention
-        PersonAgent.change_prob_preparation += self.preparation_intervention
-        PersonAgent.change_prob_action += self.action_intervention
+        ## if the change probability is lower than the intervention,
+        if PersonAgent.change_prob_contemplation < self.contemplation_intervention:
+            PersonAgent.change_prob_contemplation = self.contemplation_intervention
+        else: 
+            pass
+        
+        if PersonAgent.change_prob_preparation < self.preparation_intervention:
+            PersonAgent.change_prob_preparation = self.preparation_intervention
+        else: 
+            pass
+
+        if PersonAgent.change_prob_action < self.action_intervention:
+            PersonAgent.change_prob_action = self.action_intervention
+        else: 
+            pass          
 
     ## doesn't do anything at each step
     def step(self):
@@ -206,7 +212,6 @@ for service in services_list:
 class Alcohol_MECC_Model(MECC_Model): 
     def __init__(self
                 , N_people
-                #, N_service
                 , seed
 
                 ## dictionaries of intervention chance
@@ -224,21 +229,20 @@ class Alcohol_MECC_Model(MECC_Model):
                  , lapse_prob_preparation
 
                 ## visit probability
-                 , visit_prob_Job_centre
-                 , visit_prob_Benefits_office
-                 , visit_prob_Housing_officer
-                 , visit_prob_Community_hub
+                 , visit_prob = {}
 
                 ## site properties
                 , mecc_effect = {}
                 , base_make_intervention_prob = {}
-                , mecc_trained = {}         
+                , mecc_trained = {}   
+
+                , N_service = 0
                 ):
         super().__init__( N_people
-                #, N_service
+                , N_service
                 , mecc_effect
                 , base_make_intervention_prob 
-                #, visit_prob
+                , visit_prob
                 , mecc_trained     
                 , seed )  # Properly initialize the MECC_Model class
 
@@ -246,25 +250,17 @@ class Alcohol_MECC_Model(MECC_Model):
                     ,'Benefits Office'
                     ,'Housing Officer'
                     ,'Community Hub']
-        
-        ## Convert dictionary values if they're dictionaries
-        def extract_value(data):
-            """Extract 'value' key if data is a dictionary, otherwise return data as is."""
-            return data['value'] if isinstance(data, dict) else data
-
+    
         ## alcohol features for person agents
-        self.change_prob_contemplation   = extract_value(change_prob_contemplation)
-        self.change_prob_preparation     = extract_value(change_prob_preparation)
-        self.change_prob_action          = extract_value(change_prob_action)
+        self.change_prob_contemplation   = change_prob_contemplation
+        self.change_prob_preparation     = change_prob_preparation
+        self.change_prob_action          = change_prob_action
 
-        self.lapse_prob_precontemplation = extract_value(lapse_prob_precontemplation)
-        self.lapse_prob_contemplation    = extract_value(lapse_prob_contemplation)
-        self.lapse_prob_preparation      = extract_value(lapse_prob_preparation) 
+        self.lapse_prob_precontemplation = lapse_prob_precontemplation
+        self.lapse_prob_contemplation    = lapse_prob_contemplation
+        self.lapse_prob_preparation      = lapse_prob_preparation
 
-        self.visit_prob_Job_centre      = extract_value(visit_prob_Job_centre)
-        self.visit_prob_Benefits_office = extract_value(visit_prob_Benefits_office)
-        self.visit_prob_Housing_officer = extract_value(visit_prob_Housing_officer)
-        self.visit_prob_Community_hub   = extract_value(visit_prob_Community_hub)
+        self.visit_prob      = visit_prob
 
         ## Overwrite base properties with dict versions
         self.mecc_effect = mecc_effect
@@ -319,10 +315,7 @@ class Alcohol_MECC_Model(MECC_Model):
                             , lapse_prob_preparation = self.lapse_prob_preparation
 
                             ## visit probability
-                            , visit_prob_Job_centre = self.visit_prob_Job_centre
-                            , visit_prob_Benefits_office = self.visit_prob_Benefits_office
-                            , visit_prob_Housing_officer = self.visit_prob_Housing_officer
-                            , visit_prob_Community_hub = self.visit_prob_Community_hub
+                            , visit_prob = self.visit_prob
                             )
             self.schedule.add(a)
 
@@ -332,7 +325,7 @@ class Alcohol_MECC_Model(MECC_Model):
 
             a = Alcohol_Services[service_agent](unique_id = i + self.N_people
                     , model = self
-
+                    , category = service
                     , mecc_effect = self.mecc_effect[service]
                     , base_make_intervention_prob  = self.base_make_intervention_prob[service]
                     , mecc_trained = self.mecc_trained[service]
