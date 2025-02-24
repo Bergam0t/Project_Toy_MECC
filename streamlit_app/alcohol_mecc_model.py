@@ -4,64 +4,12 @@ import pandas as pd
 import numpy as np
 import streamlit as st
 import time
-from streamlit_model_functions import run_simulation_step, create_MECC_model,create_population_figure,create_intervention_figure,create_metrics_figure
+from streamlit_model_functions import run_simulation_step, create_MECC_model,create_metrics_figure
+from alcohol_outputs import create_population_figure,create_intervention_figure
 import os
 import shutil
 import json
 from alcohol_agents import Alcohol_MECC_Model
-
-######################################################
-
-N_people = 10
-seed = 1
-steps = 5
-
-contemplation_intervention =  { 'Job Centre': 0.2
-                    ,'Benefits Office': 0.1
-                    ,'Housing Officer': 0.1
-                    ,'Community Hub': 0.1}
-
-preparation_intervention =  { 'Job Centre': 0.2
-                    ,'Benefits Office': 0.1
-                    ,'Housing Officer': 0.1
-                    ,'Community Hub': 0.2}
-
-action_intervention =  { 'Job Centre': 0.1
-                    ,'Benefits Office': 0.1
-                    ,'Housing Officer': 0.1
-                    ,'Community Hub': 0.2 }
-
-mecc_effect =  { 'Job Centre': 0.2
-                    ,'Benefits Office': 0.2
-                    ,'Housing Officer': 0.5
-                    ,'Community Hub': 0.9 }
-
-base_make_intervention_prob =  { 'Job Centre': 0.0
-                    ,'Benefits Office': 0.0
-                    ,'Housing Officer': 0.0
-                    ,'Community Hub': 0.0 }
-
-mecc_trained =  { 'Job Centre': True
-                    ,'Benefits Office': False
-                    ,'Housing Officer': True
-                    ,'Community Hub': True}
-
-change_prob_contemplation = 0.1
-change_prob_preparation = 0.1
-change_prob_action = 0.1
-
-lapse_prob_precontemplation = 0.1
-lapse_prob_contemplation = 0.1
-lapse_prob_preparation = 0.5
-
-visit_prob  =    { 'Job Centre': 0.8
-                    ,'Benefits Office': 0.2
-                    ,'Housing Officer': 0.2
-                    ,'Community Hub': 0.1}
-
-
-
-
 
 ######################################################
 
@@ -80,8 +28,13 @@ def disable_download():
     report_message.empty()
 
 
-
 tab1, tab2 = st.tabs(['Model','Parameters'])
+
+######################################################
+
+##################################
+### Parameters 
+##################################
 
 with tab2:
     colA, colB = st.columns(2)
@@ -110,18 +63,25 @@ with tab2:
                     ,'Community Hub': col4}
     
     for service in column_dict:
-        st.write(f"{service}")
-        st.write(f" - Chance of a Person Visiting per Month: :blue-background[{st.session_state.alcohol_visit_prob[service]}]")
-        st.write(f" - Chance a Brief Intervention Made Without MECC Training: :blue-background[{st.session_state.alcohol_base_make_intervention_prob[service]}]")
-        st.write(f" - Service has had MECC Training: :blue-background[{st.session_state.alcohol_mecc_trained[service] }]")
-        if st.session_state.alcohol_mecc_trained[service]:
+        with column_dict[service]:
+            st.write(f"**{service}**")
+            st.write(f" - Chance of a Person Visiting per Month: :blue-background[{st.session_state.alcohol_visit_prob[service]}]")
+            st.write(f" - Chance a Brief Intervention Made Without MECC Training: :blue-background[{st.session_state.alcohol_base_make_intervention_prob[service]}]")
+            st.write(f" - Service has had MECC Training: :blue-background[{st.session_state.alcohol_mecc_trained[service] }]")
+            if st.session_state.alcohol_mecc_trained[service]:
+                st.write(f" - Chance Making a Brief Intervention After MECC Training: :blue-background[{st.session_state.alcohol_mecc_effect[service] }]")
+            else:
+                pass
             st.write(f" - Chance Making a Brief Intervention After MECC Training: :blue-background[{st.session_state.alcohol_mecc_effect[service] }]")
-        else:
-            pass
-        st.write(f" - Chance Making a Brief Intervention After MECC Training: :blue-background[{st.session_state.alcohol_mecc_effect[service] }]")
-        st.write(f" - Post Intervention Pre-Contemplation to Contemplation chance: :blue-background[{st.session_state.alcohol_contemplation_intervention[service]}]")
-        st.write(f" - Post Intervention Contemplation to Preparation chance: :blue-background[{st.session_state.alcohol_preparation_intervention[service]}]")
-        st.write(f" - Post Intervention Preparation to Action chance: :blue-background[{st.session_state.alcohol_action_intervention[service]}]")
+            st.write(f" - Post Intervention Pre-Contemplation to Contemplation chance: :blue-background[{st.session_state.alcohol_contemplation_intervention[service]}]")
+            st.write(f" - Post Intervention Contemplation to Preparation chance: :blue-background[{st.session_state.alcohol_preparation_intervention[service]}]")
+            st.write(f" - Post Intervention Preparation to Action chance: :blue-background[{st.session_state.alcohol_action_intervention[service]}]")
+
+######################################################
+
+##################################
+### Model 
+##################################
 
 with tab1:
 
@@ -145,50 +105,108 @@ with tab1:
         "action_intervention": st.session_state.alcohol_action_intervention,
     }
 
-    model = Alcohol_MECC_Model(
-                 N_people = model_parameters["N_people"]
-                #, N_service
-                , seed = model_parameters["model_seed"]
+    # save to json file to be used later for the quarto report
+    output_path = os.path.join(os.getcwd(),'streamlit_app','outputs')
+    json_path = os.path.join(output_path,'session_data.json')
 
-                ## dictionaries of intervention chance
-                 , contemplation_intervention = model_parameters["contemplation_intervention"]
-                 , preparation_intervention = model_parameters["preparation_intervention"]
-                 , action_intervention = model_parameters["action_intervention"]
+    with open(json_path, "w") as f:
+        json.dump(model_parameters, f, indent=4)
 
-                 ## change state probability
-                 , change_prob_contemplation = model_parameters[ "change_prob_contemplation"]
-                 , change_prob_preparation = model_parameters["change_prob_preparation"]
-                 , change_prob_action = model_parameters["change_prob_action"]
+    if "simulation_completed" not in st.session_state:
+        st.session_state.simulation_completed = False
 
-                 , lapse_prob_precontemplation = model_parameters["lapse_prob_precontemplation"]
-                 , lapse_prob_contemplation = model_parameters["lapse_prob_contemplation"]
-                 , lapse_prob_preparation = model_parameters["lapse_prob_preparation"]
+    if st.button("Run Simulation"):
+        # set simulation_completed to False before starting - to control the download report button
+        st.session_state.simulation_completed = False
+        st.session_state.download_clicked = False
 
-                ## visit probability
-                 , visit_prob = model_parameters["visit_prob"]
+        model_no_mecc = create_MECC_model(
+            model_parameters=model_parameters,
+            model_type='Alcohol',
+            mecc_trained=False
+        )
+        model_mecc = create_MECC_model(
+            model_parameters=model_parameters,
+            model_type='Alcohol',
+            mecc_trained=True
+        )
 
-                ## site properties
-                , mecc_effect = model_parameters["mecc_effect"]
-                , base_make_intervention_prob = model_parameters["base_make_intervention_prob"]
-                , mecc_trained = model_parameters["mecc_trained"]
-                )
+        model_message = st.info("Simulation Running")
+        progress_bar = st.progress(0)
+        chart_placeholder1 = st.empty()
+        chart_placeholder2 = st.empty()
+        chart_placeholder3 = st.empty()
+          
+        for step in range(st.session_state.num_steps):
+            if step == st.session_state.num_steps - 1:
+                model_message.success("Simulation Completed!")
+                progress_bar.empty()
+            else:
+                progress = (step + 1) / st.session_state.num_steps
+                progress_bar.progress(progress)
 
-    for step in range(st.session_state.num_steps):
-        print(f"\n**Step {st.session_state.num_steps}**")
-        if step ==  st.session_state.num_steps - 1:
-            print("**Simulation Completed!**")
-        else:
-            pass
-        data_model = run_simulation_step(model)
+            data_no_mecc = run_simulation_step(model_no_mecc)
+            data_mecc = run_simulation_step(model_mecc)
 
+            fig1 = create_population_figure(data_no_mecc, data_mecc, step)
+            with chart_placeholder1:
+                st.plotly_chart(fig1, use_container_width=True)
+            
+            fig2 = create_intervention_figure(data_no_mecc, data_mecc, step)
+            with chart_placeholder2:
+                st.plotly_chart(fig2, use_container_width=True)
+            
+            time.sleep(st.session_state.animation_speed)
+                
 
-    with st.expander("View Raw Data"):
-        st.dataframe(data_model)
-        #tab1, tab2 = st.tabs(["No MECC Training", "MECC Trained"])
-        #with tab1:
-        #    st.dataframe(data_no_mecc)
-        #with tab2:
-        #    st.dataframe(data_mecc)
+        st.session_state.simulation_completed = True  # set to True after completion
+
+        ## save csv files for use in quarto
+        data_no_mecc_file = os.path.join(output_path,'data_no_mecc.csv')
+        data_mecc_file = os.path.join(output_path,'data_mecc.csv')
+
+        data_no_mecc.to_csv(data_no_mecc_file, index=False)
+        data_mecc.to_csv(data_mecc_file, index=False)
+
+######################################################
+
+        st.markdown("### Final Statistics")
+        col1, col2, col3 = st.columns(3)
+
+        with col1:
+            st.empty()
+    #       st.metric(
+    #           "Smoking Reduction\n\n(No MECC Training)",
+    #           f"{(data_no_mecc['Total Not Smoking'].iloc[-1] / st.session_state.N_people * 100):.1f}%",
+    #           f"{(data_no_mecc['Total Not Smoking'].iloc[-1] - data_no_mecc['Total Not Smoking'].iloc[0]):.0f}"
+    #       )
+
+        with col2:
+            st.empty()
+    #        st.metric(
+    #            "Smoking Reduction\n\n(MECC Trained)",
+    #            f"{(data_mecc['Total Not Smoking'].iloc[-1] / st.session_state.N_people * 100):.1f}%",
+    #            f"{(data_mecc['Total Not Smoking'].iloc[-1] - data_mecc['Total Not Smoking'].iloc[0]):.0f}"
+    #        )
+
+        with col3:
+            st.empty()
+    #        mecc_improvement = (
+    #            data_mecc['Total Not Smoking'].iloc[-1] -
+    #            data_no_mecc['Total Not Smoking'].iloc[-1]
+    #        )
+    #        st.metric(
+    #            "MECC Training\n\nImpact",
+    #            f"{mecc_improvement:.0f} additional quits",
+    #            f"{(mecc_improvement / st.session_state.N_people * 100):.1f}%"
+    #        )
+
+        with st.expander("View Raw Data"):
+            tab1, tab2 = st.tabs(["No MECC Training", "MECC Trained"])
+            with tab1:
+                st.dataframe(data_no_mecc)
+            with tab2:
+                st.dataframe(data_mecc)
 
 ######################################################
 

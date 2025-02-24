@@ -76,13 +76,8 @@ with tab2:
     with colA:
         st.markdown("#### Population")
 
-        if 'N_people' not in st.session_state:
-            st.session_state.N_people = 50
-        st.session_state.N_people = st.slider("Number of People", 5, 100
-                                                , st.session_state.N_people
-                                                ,key='alcohol N People')
-        
-
+        st.write(f"Number of People: :blue-background[{st.session_state.N_people}]") 
+        st.markdown("**Base Positive Change Chance**")
         if 'alcohol_change_prob_contemplation' not in st.session_state: 
             st.session_state.alcohol_change_prob_contemplation = 0.01
         st.session_state.alcohol_change_prob_contemplation =  st.slider(
@@ -107,6 +102,7 @@ with tab2:
                                                 , st.session_state.alcohol_change_prob_action
                                                 ,key='alcohol Action')
         
+        st.markdown("**Lapse Chance**")
         if 'alcohol_lapse_prob_precontemplation' not in st.session_state: 
             st.session_state.alcohol_lapse_prob_precontemplation = 0.01
         st.session_state.alcohol_lapse_prob_precontemplation =  st.slider(
@@ -134,24 +130,12 @@ with tab2:
     with colB:        
         st.markdown("#### Simulation")
 
-        if 'model_seed' not in st.session_state:
-            st.session_state.model_seed = 42
-        st.session_state.model_seed = st.number_input("Random Seed"
-                                                        , min_value=0, max_value=None, value=st.session_state.model_seed, step=1
-                                                        ,key = 'alcohol seed')
+        st.write(f"Random Seed: :blue-background[{st.session_state.model_seed}]")
 
-        if 'num_steps' not in st.session_state:
-            st.session_state.num_steps = 24
-        st.session_state.num_steps = st.slider("Number of Months to Simulate"
-                                                , 1, 120
-                                                , st.session_state.num_steps
-                                                , key = 'alcohol steps')
+        st.write(f"Number of Months to Simulate: :blue-background[{st.session_state.num_steps}]")
 
-        if 'animation_speed' not in st.session_state:
-            st.session_state.animation_speed = 0.1
-        st.session_state.animation_speed = st.slider("Animation Speed (seconds)"
-                                                        , 0
-                                                        ,key = 'alcohol speed')
+        st.write(f"Animation Speed (seconds): :blue-background[{st.session_state.animation_speed}]")
+
         
     st.markdown("#### Service")
     ## sets up one column for each service type
@@ -179,17 +163,17 @@ with tab2:
         st.session_state.alcohol_action_intervention = alcohol_services_dict
     if 'alcohol_mecc_trained' not in st.session_state:
         st.session_state.alcohol_mecc_trained =  {
-                                                'Job Centre': False
-                                                ,'Benefits Office': False
-                                                ,'Housing Officer': False
-                                                ,'Community Hub': False}
+                                                'Job Centre': True
+                                                ,'Benefits Office': True
+                                                ,'Housing Officer': True
+                                                ,'Community Hub': True}
     if 'alcohol_mecc_effect' not in st.session_state:
         st.session_state.alcohol_mecc_effect = alcohol_services_dict
 
     ## Creates each columnn based on the dictionary
     for service in column_dict:
         with column_dict[service]:
-            st.write(f'{service}')
+            st.write(f'**{service}**')
             st.session_state.alcohol_visit_prob[service] = st.slider(
                 'Person Visit Probability', 0.0, 1.0
                 , st.session_state.alcohol_visit_prob[service]
@@ -200,21 +184,26 @@ with tab2:
                 , key = f'Base Intervetion {service}')
             st.session_state.alcohol_mecc_trained[service] = st.checkbox(
                 'MECC Trained'
-                ,key= f'MECC Trained {service}')    
+                ,key= f'MECC Trained {service}')
+            st.session_state.alcohol_mecc_effect[service] = st.slider(
+                "Training Effect on Intervention Chance", 0.0, 1.0
+                , st.session_state.alcohol_mecc_effect[service]
+                , key = f'Training Effect {service}'
+                ,disabled = False)            
             ## only enable MECC training if true
-            if st.session_state.alcohol_mecc_trained[service]:
-                st.session_state.alcohol_mecc_effect[service] = st.slider(
-                    "Training Effect on Intervention Chance", 0.0, 1.0
-                    , st.session_state.alcohol_mecc_effect[service]
-                    , key = f'Training Effect {service}'
-                    ,disabled = False)
-            else:               
-                st.session_state.alcohol_mecc_effect[service] = 0.0
-                st.session_state.alcohol_mecc_effect[service] = st.slider(
-                    "Training Effect on Intervention Chance", 0.0, 1.0
-                    , st.session_state.alcohol_mecc_effect[service]                  
-                    , key = f'Training Effect {service}'
-                    , disabled = True)                                  
+            #if st.session_state.alcohol_mecc_trained[service]:
+            #    st.session_state.alcohol_mecc_effect[service] = st.slider(
+            #        "Training Effect on Intervention Chance", 0.0, 1.0
+            #        , st.session_state.alcohol_mecc_effect[service]
+            #        , key = f'Training Effect {service}'
+            #        ,disabled = False)
+            #else:               
+            #    st.session_state.alcohol_mecc_effect[service] = 0.0
+            #    st.session_state.alcohol_mecc_effect[service] = st.slider(
+            #        "Training Effect on Intervention Chance", 0.0, 1.0
+            #        , st.session_state.alcohol_mecc_effect[service]                  
+            #        , key = f'Training Effect {service}'
+            #        , disabled = True)                                  
             st.session_state.alcohol_contemplation_intervention[service] = st.slider(
                 'Post Intervention Pre-Contemplation to Contemplation chance', 0.0, 1.0
                 , st.session_state.alcohol_contemplation_intervention[service]
