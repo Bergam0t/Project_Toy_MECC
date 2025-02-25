@@ -138,217 +138,109 @@ with tab2:
 
         
     st.markdown("#### Service")
-    ## sets up one column for each service type
 
-    alcohol_services = pd.DataFrame(
-             {'Service': ['Job Centre','Benefits Office','Housing Officer','Community Hub']
-            ,'Person Visit Probability': [0.0,0.0,0.0,0.0]
-            ,'Chance a Brief Intervention Made Without MECC Training': [0.0,0.0,0.0,0.0]
-            ,'MECC Trained': [True,True,True,True]
-            ,'Chance Making a Brief Intervention After MECC Training': [0.0,0.0,0.0,0.0]
-            ,'Post Intervention Pre-Contemplation to Contemplation chance': [0.0,0.0,0.0,0.0]
-            ,'Post Intervention Contemplation to Preparation chance': [0.0,0.0,0.0,0.0]
-            ,'Post Intervention Preparation to Action chance': [0.0,0.0,0.0,0.0]}
-    )    
-
-    alcohol_services = alcohol_services.set_index('Service')
-
+    ## adds to session state if does not exist
     if 'alcohol_services_table' not in st.session_state:
-        st.session_state.alcohol_services_table = alcohol_services
+        ## sets a dataframe up one row for each service type
+        alcohol_services = pd.DataFrame(
+                {'Service': ['Job Centre','Benefits Office','Housing Officer','Community Hub']
+                ,'Person Visit Probability': [0.0,0.0,0.0,0.0]
+                ,'Chance a Brief Intervention Made Without MECC Training': [0.0,0.0,0.0,0.0]
+                ,'MECC Trained': [True,True,True,True]
+                ,'Chance Making a Brief Intervention After MECC Training': [0.0,0.0,0.0,0.0]
+                ,'Post Intervention Pre-Contemplation to Contemplation chance': [0.0,0.0,0.0,0.0]
+                ,'Post Intervention Contemplation to Preparation chance': [0.0,0.0,0.0,0.0]
+                ,'Post Intervention Preparation to Action chance': [0.0,0.0,0.0,0.0]}
+        )    
 
-#    if 'alcohol_visit_prob' not in st.session_state:
-#        st.session_state.alcohol_visit_prob = {
-#                                'Job Centre': 0.0
-#                            ,'Benefits Office': 0.0
-#                            ,'Housing Officer': 0.0
-#                            ,'Community Hub': 0.0}
-#    if 'alcohol_base_make_intervention_prob' not in st.session_state:
-#        st.session_state.alcohol_base_make_intervention_prob = {
-#                                'Job Centre': 0.0
-#                            ,'Benefits Office': 0.0
-#                            ,'Housing Officer': 0.0
-#                            ,'Community Hub': 0.0}
-#    if 'alcohol_contemplation_intervention' not in st.session_state:
-#        st.session_state.alcohol_contemplation_intervention = {
-#                                'Job Centre': 0.0
-#                            ,'Benefits Office': 0.0
-#                            ,'Housing Officer': 0.0
-#                            ,'Community Hub': 0.0}
-#    if 'alcohol_preparation_intervention' not in st.session_state:
-#        st.session_state.alcohol_preparation_intervention = {
-#                                'Job Centre': 0.0
-#                            ,'Benefits Office': 0.0
-#                            ,'Housing Officer': 0.0
-#                            ,'Community Hub': 0.0}
-#    if 'alcohol_action_intervention' not in st.session_state:
-#        st.session_state.alcohol_action_intervention = {
-#                                'Job Centre': 0.0
-#                            ,'Benefits Office': 0.0
-#                            ,'Housing Officer': 0.0
-#                            ,'Community Hub': 0.0}
-#    if 'alcohol_mecc_trained' not in st.session_state:
-#        st.session_state.alcohol_mecc_trained =  {
-#                                                'Job Centre': True
-#                                                ,'Benefits Office': True
-#                                                ,'Housing Officer': True
-#                                                ,'Community Hub': True}
-#    if 'alcohol_mecc_effect' not in st.session_state:
-#        st.session_state.alcohol_mecc_effect = {
-#                                'Job Centre': 0.0
-#                            ,'Benefits Office': 0.0
-#                            ,'Housing Officer': 0.0
-#                            ,'Community Hub': 0.0}
-#
-#    def update_alcohol_service_params():
-#        alcohol_services_list = [ 'Job Centre'
-#                                    ,'Benefits Office'
-#                                    ,'Housing Officer'
-#                                    ,'Community Hub']
-#        print('Update alcohol service parameters')
-#        for service in alcohol_services_list:
-#            st.session_state.alcohol_visit_prob[service] = (
-#                alcohol_services_edit.loc[service]['Person Visit Probability'])
-#            print(f"{alcohol_services_edit.loc[service]['Person Visit Probability']}")
-#        for service in alcohol_services_list:          
-#            st.session_state.alcohol_base_make_intervention_prob[service] = (
-#                alcohol_services_edit.loc[service]['Chance a Brief Intervention Made Without MECC Training'])        
-#            #st.session_state.alcohol_mecc_trained[service] = (
-#            #    alcohol_services_edit.loc[service]['MECC Trained'])
-#            #st.session_state.alcohol_mecc_effect[service] = (
-#            #    alcohol_services_edit.loc[service]['Chance Making a Brief Intervention After MECC Training'])
-#            #st.session_state.alcohol_contemplation_intervention[service] = (
-#            #    alcohol_services_edit.loc[service]['Post Intervention Pre-Contemplation to Contemplation chance'])
-#            #st.session_state.alcohol_preparation_intervention[service] = (
-#            #    alcohol_services_edit.loc[service]['Post Intervention Contemplation to Preparation chance'])
-#            #st.session_state.alcohol_action_intervention[service] = (
-#            #    alcohol_services_edit.loc[service]['Post Intervention Preparation to Action chance'])
+        ## Sets service as index
+        alcohol_services = alcohol_services.set_index('Service')
 
-    st.session_state.alcohol_services_table = st.data_editor(
-        alcohol_services,
-        disabled=["Service"],
-        #on_change = update_alcohol_service_params,
-        column_config={
-            "Service": "Service",
-            "Person Visit Probability": st.column_config.NumberColumn(
-                "Person Visit Probability",
-                width='medium',
-                help="How likely is someone to visit in a month (0.0-1.0)?",
-                min_value=0.0,
-                max_value=1.0,
-                step=0.01,),
-            "Chance a Brief Intervention Made Without MECC Training": st.column_config.NumberColumn(
-                "Chance a Brief Intervention Made Without MECC Training",
-                width='medium',
-                help="How likely is an intervention before MECC training (0.0-1.0)?",
-                min_value=0.0,
-                max_value=1.0,
-                step=0.01,),                
-            "MECC Trained":"MECC Trained",
-            "Chance Making a Brief Intervention After MECC Training": st.column_config.NumberColumn(
-                "Chance Making a Brief Intervention After MECC Training",
-                width='medium',                
-                help="How likely is an intervention after MECC training (0.0-1.0)?",
-                min_value=0.0,
-                max_value=1.0,
-                step=0.01,),
-            "Post Intervention Pre-Contemplation to Contemplation chance": st.column_config.NumberColumn(
-                "Post Intervention Pre-Contemplation to Contemplation chance",
-                width='medium',
-                help="What does a person's chance of changing from" +
-                        "Pre-Contemplation to Contemplation become" + 
-                        "post-intervention (0.0-1.0)?",
-                min_value=0.0,
-                max_value=1.0,
-                step=0.01,), 
-            "Post Intervention Contemplation to Preparation chance": st.column_config.NumberColumn(
-                "Post Intervention Contemplation to Preparation chance",
-                width='medium',
-                help="What does a person's chance of changing from" +
-                        "Contemplation to Preparation become" + 
-                        "post-intervention (0.0-1.0)?",
-                min_value=0.0,
-                max_value=1.0,
-                step=0.01,),            
-            "Post Intervention Preparation to Action chance": st.column_config.NumberColumn(
-                "Post Intervention Preparation to Action chance",
-                width='medium',           
-                help="What does a person's chance of changing from" +
-                        "Preparation to Action become" + 
-                        "post-intervention (0.0-1.0)?",
-                min_value=0.0,
-                max_value=1.0,
-                step=0.01,),                                                                    
-                },
-        )
+        st.session_state.alcohol_services_table = alcohol_services.copy()
+    #else:
+    #   alcohol_services = st.session_state.alcohol_services_table.copy()
 
-    #update_alcohol_service_params()
+    #def update_alcohol_services_table():
+    #    st.session_state.alcohol_services_table = alcohol_services_edit
+
+    with st.form('alcohol_services_form'):
+    ## creates a data editor of the variables
+        alcohol_services_edit = st.data_editor(
+            st.session_state.alcohol_services_table,
+            #alcohol_services,
+            disabled=["Service"],
+            key='alcohol_services_editor',
+            #on_change = update_alcohol_services_table,
+            column_config={
+                "Service": "Service",
+                "Person Visit Probability": st.column_config.NumberColumn(
+                    "Person Visit Probability",
+                    width='medium',
+                    help="How likely is someone to visit in a month (0.0-1.0)?",
+                    min_value=0.0,
+                    max_value=1.0,
+                    step=0.01,),
+                "Chance a Brief Intervention Made Without MECC Training": st.column_config.NumberColumn(
+                    "Chance a Brief Intervention Made Without MECC Training",
+                    width='medium',
+                    help="How likely is an intervention before MECC training (0.0-1.0)?",
+                    min_value=0.0,
+                    max_value=1.0,
+                    step=0.01,),                
+                "MECC Trained":"MECC Trained",
+                "Chance Making a Brief Intervention After MECC Training": st.column_config.NumberColumn(
+                    "Chance Making a Brief Intervention After MECC Training",
+                    width='medium',                
+                    help="How likely is an intervention after MECC training (0.0-1.0)?",
+                    min_value=0.0,
+                    max_value=1.0,
+                    step=0.01,),
+                "Post Intervention Pre-Contemplation to Contemplation chance": st.column_config.NumberColumn(
+                    "Post Intervention Pre-Contemplation to Contemplation chance",
+                    width='medium',
+                    help="What does a person's chance of changing from" +
+                            "Pre-Contemplation to Contemplation become" + 
+                            "post-intervention (0.0-1.0)?",
+                    min_value=0.0,
+                    max_value=1.0,
+                    step=0.01,), 
+                "Post Intervention Contemplation to Preparation chance": st.column_config.NumberColumn(
+                    "Post Intervention Contemplation to Preparation chance",
+                    width='medium',
+                    help="What does a person's chance of changing from" +
+                            "Contemplation to Preparation become" + 
+                            "post-intervention (0.0-1.0)?",
+                    min_value=0.0,
+                    max_value=1.0,
+                    step=0.01,),            
+                "Post Intervention Preparation to Action chance": st.column_config.NumberColumn(
+                    "Post Intervention Preparation to Action chance",
+                    width='medium',           
+                    help="What does a person's chance of changing from" +
+                            "Preparation to Action become" + 
+                            "post-intervention (0.0-1.0)?",
+                    min_value=0.0,
+                    max_value=1.0,
+                    step=0.01,),                                                                    
+                    },
+            )
+        
+        submitted = st.form_submit_button("Submit")
+    
+    if 'submit_count' not in st.session_state:
+        st.session_state.submit_count = 0
+
+    if submitted:
+        st.session_state.alcohol_services_table = alcohol_services_edit.copy()
+        submitted = False
+        st.session_state.submit_count += 1
+
+    st.write("submit count:",st.session_state.submit_count)
     st.write(f"{st.session_state.alcohol_services_table.loc['Job Centre']['Person Visit Probability']}")
     
     for service in st.session_state.alcohol_services_table.index:
         st.write(f"{service}  visti prob = {st.session_state.alcohol_services_table.loc[service]['Person Visit Probability']}")
     
-    #st.write(f'Job Centre Visit probability = {st.session_state.alcohol_visit_prob}')
-    #st.write(f'Chance a Brief Intervention = {st.session_state.alcohol_base_make_intervention_prob}')
-
-    #col1, col2, col3, col4 = st.columns(4)
-    #column_dict = { 'Job Centre': col1
-    #                ,'Benefits Office': col2
-    #                ,'Housing Officer': col3
-    #                ,'Community Hub': col4}
-
-    ## makes sure service values exist in session state
-    ## Most service values default to zero
-
-
-    
-    ### Creates each columnn based on the dictionary
-    #for service in column_dict:
-    #    with column_dict[service]:
-    #        st.write(f'**{service}**')
-    #        st.session_state.alcohol_visit_prob[service] = st.slider(
-    #            'Person Visit Probability', 0.0, 1.0
-    #            , st.session_state.alcohol_visit_prob[service]
-    #            ,key = f'Visit Probability {service}')            
-    #        st.session_state.alcohol_base_make_intervention_prob[service] = st.slider(
-    #            'Chance a Brief Intervention Made Without MECC Training', 0.0, 1.0
-    #            , st.session_state.alcohol_base_make_intervention_prob[service]
-    #            , key = f'Base Intervetion {service}')
-    #        st.session_state.alcohol_mecc_trained[service] = st.checkbox(
-    #            'MECC Trained'
-    #            ,key= f'MECC Trained {service}')
-    #        st.session_state.alcohol_mecc_effect[service] = st.slider(
-    #            "Training Effect on Intervention Chance", 0.0, 1.0
-    #            , st.session_state.alcohol_mecc_effect[service]
-    #            , key = f'Training Effect {service}'
-    #            ,disabled = False)            
-    #        ## only enable MECC training if true
-    #        #if st.session_state.alcohol_mecc_trained[service]:
-    #        #    st.session_state.alcohol_mecc_effect[service] = st.slider(
-    #        #        "Training Effect on Intervention Chance", 0.0, 1.0
-    #        #        , st.session_state.alcohol_mecc_effect[service]
-    #        #        , key = f'Training Effect {service}'
-    #        #        ,disabled = False)
-    #        #else:               
-    #        #    st.session_state.alcohol_mecc_effect[service] = 0.0
-    #        #    st.session_state.alcohol_mecc_effect[service] = st.slider(
-    #        #        "Training Effect on Intervention Chance", 0.0, 1.0
-    #        #        , st.session_state.alcohol_mecc_effect[service]                  
-    #        #        , key = f'Training Effect {service}'
-    #        #        , disabled = True)                                  
-    #        st.session_state.alcohol_contemplation_intervention[service] = st.slider(
-    #            'Post Intervention Pre-Contemplation to Contemplation chance', 0.0, 1.0
-    #            , st.session_state.alcohol_contemplation_intervention[service]
-    #            , key = f'Contemplation {service}')
-    #        st.session_state.alcohol_preparation_intervention[service] = st.slider(
-    #            'Post Intervention Contemplation to Preparation chance', 0.0, 1.0
-    #            , st.session_state.alcohol_preparation_intervention[service]
-    #            , key = f'Preparation {service}')
-    #        st.session_state.alcohol_action_intervention[service] = st.slider(
-    #            'Post Intervention Preparation to Action chance', 0.0, 1.0
-    #            , st.session_state.alcohol_action_intervention[service]
-    #            , key = f'Action {service}') 
-    
-
     ## Logic Diagram
     #with st.expander("Click here to view the logic diagram"):
         #col1a, col2a, col3a = st.columns(3)

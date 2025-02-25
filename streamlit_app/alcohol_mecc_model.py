@@ -65,17 +65,17 @@ with tab2:
     for service in column_dict:
         with column_dict[service]:
             st.write(f"**{service}**")
-            st.write(f" - Chance of a Person Visiting per Month: :blue-background[{st.session_state.alcohol_visit_prob[service]}]")
-            st.write(f" - Chance a Brief Intervention Made Without MECC Training: :blue-background[{st.session_state.alcohol_base_make_intervention_prob[service]}]")
-            st.write(f" - Service has had MECC Training: :blue-background[{st.session_state.alcohol_mecc_trained[service] }]")
-            if st.session_state.alcohol_mecc_trained[service]:
-                st.write(f" - Chance Making a Brief Intervention After MECC Training: :blue-background[{st.session_state.alcohol_mecc_effect[service] }]")
+            st.write(f" - Chance of a Person Visiting per Month: :blue-background[{st.session_state.alcohol_services_table.loc[service]['Person Visit Probability']}]")
+            st.write(f" - Chance a Brief Intervention Made Without MECC Training: :blue-background[{st.session_state.alcohol_services_table.loc[service]['Chance a Brief Intervention Made Without MECC Training']}]")
+            st.write(f" - Service has had MECC Training: :blue-background[{st.session_state.alcohol_services_table.loc[service]['MECC Trained']}]")
+            if st.session_state.alcohol_services_table.loc[service]['MECC Trained']:
+                st.write(f" - Chance Making a Brief Intervention After MECC Training: :blue-background[{st.session_state.alcohol_services_table.loc[service]['Chance Making a Brief Intervention After MECC Training']}]")
             else:
                 pass
-            st.write(f" - Chance Making a Brief Intervention After MECC Training: :blue-background[{st.session_state.alcohol_mecc_effect[service] }]")
-            st.write(f" - Post Intervention Pre-Contemplation to Contemplation chance: :blue-background[{st.session_state.alcohol_contemplation_intervention[service]}]")
-            st.write(f" - Post Intervention Contemplation to Preparation chance: :blue-background[{st.session_state.alcohol_preparation_intervention[service]}]")
-            st.write(f" - Post Intervention Preparation to Action chance: :blue-background[{st.session_state.alcohol_action_intervention[service]}]")
+            #st.write(f" - Chance Making a Brief Intervention After MECC Training: :blue-background[{st.session_state.alcohol_services_table.loc[service]['Person Visit Probability']}]")
+            st.write(f" - Post Intervention Pre-Contemplation to Contemplation chance: :blue-background[{st.session_state.alcohol_services_table.loc[service]['Post Intervention Pre-Contemplation to Contemplation chance']}]")
+            st.write(f" - Post Intervention Contemplation to Preparation chance: :blue-background[{st.session_state.alcohol_services_table.loc[service]['Post Intervention Contemplation to Preparation chance']}]")
+            st.write(f" - Post Intervention Preparation to Action chance: :blue-background[{st.session_state.alcohol_services_table.loc[service]['Post Intervention Preparation to Action chance']}]")
 
 ######################################################
 
@@ -96,13 +96,13 @@ with tab1:
         "lapse_prob_precontemplation": st.session_state.alcohol_lapse_prob_precontemplation,
         "lapse_prob_contemplation": st.session_state.alcohol_lapse_prob_contemplation,
         "lapse_prob_preparation": st.session_state.alcohol_lapse_prob_preparation,
-        "visit_prob": st.session_state.alcohol_visit_prob,
-        "base_make_intervention_prob": st.session_state.alcohol_base_make_intervention_prob,
-        "mecc_trained": st.session_state.alcohol_mecc_trained,
-        "mecc_effect": st.session_state.alcohol_mecc_effect,
-        "contemplation_intervention": st.session_state.alcohol_contemplation_intervention,
-        "preparation_intervention": st.session_state.alcohol_preparation_intervention,
-        "action_intervention": st.session_state.alcohol_action_intervention,
+        "visit_prob": st.session_state.alcohol_services_table['Person Visit Probability'].to_dict(),
+        "base_make_intervention_prob": st.session_state.alcohol_services_table['Chance a Brief Intervention Made Without MECC Training'].to_dict(),
+        "mecc_trained": st.session_state.alcohol_services_table['MECC Trained'].to_dict(),
+        "mecc_effect": st.session_state.alcohol_services_table['Chance Making a Brief Intervention After MECC Training'].to_dict(),
+        "contemplation_intervention": st.session_state.alcohol_services_table['Post Intervention Pre-Contemplation to Contemplation chance'].to_dict(),
+        "preparation_intervention": st.session_state.alcohol_services_table['Post Intervention Contemplation to Preparation chance'].to_dict(),
+        "action_intervention": st.session_state.alcohol_services_table['Post Intervention Preparation to Action chance'].to_dict(),
     }
 
     # save to json file to be used later for the quarto report
