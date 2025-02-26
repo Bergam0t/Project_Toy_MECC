@@ -136,41 +136,47 @@ with tab2:
 
         st.write(f"Animation Speed (seconds): :blue-background[{st.session_state.animation_speed}]")
 
-        
-    st.markdown("#### Service")
+    ## sets a dataframe up one row for each service type
+    alcohol_services = pd.DataFrame(
+            {'Service': ['Job Centre','Benefits Office','Housing Officer','Community Hub']
+            ,'Person Visit Probability': [0.0,0.0,0.0,0.0]
+            ,'Chance a Brief Intervention Made Without MECC Training': [0.0,0.0,0.0,0.0]
+            ,'MECC Trained': [True,True,True,True]
+            ,'Chance Making a Brief Intervention After MECC Training': [0.0,0.0,0.0,0.0]
+            ,'Post Intervention Pre-Contemplation to Contemplation chance': [0.0,0.0,0.0,0.0]
+            ,'Post Intervention Contemplation to Preparation chance': [0.0,0.0,0.0,0.0]
+            ,'Post Intervention Preparation to Action chance': [0.0,0.0,0.0,0.0]}
+    )    
+    ## Sets service as index
+    alcohol_services = alcohol_services.set_index('Service')
 
     ## adds to session state if does not exist
     if 'alcohol_services_table' not in st.session_state:
-        ## sets a dataframe up one row for each service type
-        alcohol_services = pd.DataFrame(
-                {'Service': ['Job Centre','Benefits Office','Housing Officer','Community Hub']
-                ,'Person Visit Probability': [0.0,0.0,0.0,0.0]
-                ,'Chance a Brief Intervention Made Without MECC Training': [0.0,0.0,0.0,0.0]
-                ,'MECC Trained': [True,True,True,True]
-                ,'Chance Making a Brief Intervention After MECC Training': [0.0,0.0,0.0,0.0]
-                ,'Post Intervention Pre-Contemplation to Contemplation chance': [0.0,0.0,0.0,0.0]
-                ,'Post Intervention Contemplation to Preparation chance': [0.0,0.0,0.0,0.0]
-                ,'Post Intervention Preparation to Action chance': [0.0,0.0,0.0,0.0]}
-        )    
-
-        ## Sets service as index
-        alcohol_services = alcohol_services.set_index('Service')
-
         st.session_state.alcohol_services_table = alcohol_services.copy()
     #else:
-    #   alcohol_services = st.session_state.alcohol_services_table.copy()
+    #   alcohol_services = st.session_state.alcohol_services_table.copy() 
+
+    #def update_alcohol_services_table():
+    #    st.session_state.alcohol_services_table = alcohol_services_edit.copy()
+
+    @st.fragment
+    def alcohol_service_input(alcohol_services):
+        st.markdown("#### Service")
+
 
     #def update_alcohol_services_table():
     #    st.session_state.alcohol_services_table = alcohol_services_edit
 
-    with st.form('alcohol_services_form'):
+        #with st.form('alcohol_services_form'):
     ## creates a data editor of the variables
         alcohol_services_edit = st.data_editor(
-            st.session_state.alcohol_services_table,
-            #alcohol_services,
+            #st.session_state.alcohol_services_table,
+            alcohol_services,
             disabled=["Service"],
             key='alcohol_services_editor',
-            #on_change = update_alcohol_services_table,
+            on_change = lambda: setattr(st.session_state
+                                        , 'alcohol_services_table'
+                                        , alcohol_services_edit.copy()),
             column_config={
                 "Service": "Service",
                 "Person Visit Probability": st.column_config.NumberColumn(
@@ -224,30 +230,29 @@ with tab2:
                     step=0.01,),                                                                    
                     },
             )
-        
-        submitted = st.form_submit_button("Submit")
+            #st.session_state.alcohol_services_table = alcohol_services_edit.copy()
+            #print(alcohol_services_edit.__dataframe__)
+            #alcohol_services_edit
+            #submitted = st.form_submit_button("Submit")
+            #if submitted:
+            #    st.session_state.alcohol_services_table = alcohol_services_edit.copy()
     
-    if 'submit_count' not in st.session_state:
-        st.session_state.submit_count = 0
+    #    submitted = False
+    #    st.session_state.submit_count += 1
+    #if 'submit_count' not in st.session_state:
+    #    st.session_state.submit_count = 0
 
-    if submitted:
-        st.session_state.alcohol_services_table = alcohol_services_edit.copy()
-        submitted = False
-        st.session_state.submit_count += 1
-
-    st.write("submit count:",st.session_state.submit_count)
-    st.write(f"{st.session_state.alcohol_services_table.loc['Job Centre']['Person Visit Probability']}")
+    #st.write("submit count:",st.session_state.submit_count)
     
+    #st.session_state.alcohol_services_table =  
+    alcohol_service_input(st.session_state.alcohol_services_table)
+
+    print(st.session_state.alcohol_services_table)
+
     for service in st.session_state.alcohol_services_table.index:
-        st.write(f"{service}  visti prob = {st.session_state.alcohol_services_table.loc[service]['Person Visit Probability']}")
+        st.write(f"{service}  visit prob = ",st.session_state.alcohol_services_table.loc[service]['Person Visit Probability'])
     
-    ## Logic Diagram
-    #with st.expander("Click here to view the logic diagram"):
-        #col1a, col2a, col3a = st.columns(3)
-        #with col2a:
-        #st.image(create_logic_diagram(number_labels = True)
-        #    , caption="Diagram of Agent Model Logic"
-        #    , use_column_width=False)
+
 
 with tab3:
     st.markdown("### Smoking Cessation Parameters")
