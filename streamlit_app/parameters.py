@@ -225,9 +225,9 @@ with tab2:
             alcohol_services,
             disabled=["Service"],
             key='alcohol_services_editor',
-            on_change = lambda: setattr(st.session_state
-                                        , 'alcohol_services_table'
-                                        , alcohol_services_edit.copy()),
+            # on_change = lambda: setattr(st.session_state
+            #                             ,'alcohol_services_table'
+            #                             , alcohol_services_edit.copy()),
             column_config={
                 "Service": "Service",
                 "Person Visit Probability": st.column_config.NumberColumn(
@@ -281,6 +281,15 @@ with tab2:
                     step=0.01,),
                     },
             )
+
+        st.session_state['alcohol_services_table'] = alcohol_services_edit.copy()
+
+        print(st.session_state.alcohol_services_table)
+
+        for service in st.session_state.alcohol_services_table.index:
+            st.write(f"{service}  visit prob = ",st.session_state.alcohol_services_table.loc[service]['Person Visit Probability'])
+
+
             #st.session_state.alcohol_services_table = alcohol_services_edit.copy()
             #print(alcohol_services_edit.__dataframe__)
             #alcohol_services_edit
@@ -297,12 +306,6 @@ with tab2:
 
     #st.session_state.alcohol_services_table =
     alcohol_service_input(st.session_state.alcohol_services_table)
-
-    print(st.session_state.alcohol_services_table)
-
-    for service in st.session_state.alcohol_services_table.index:
-        st.write(f"{service}  visit prob = ",st.session_state.alcohol_services_table.loc[service]['Person Visit Probability'])
-
 
 
 with tab3:
